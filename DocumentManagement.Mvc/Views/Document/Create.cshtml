@@ -1,0 +1,526 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles{
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.light.css" type="text/css" />
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Scripts/admin_lte/bower_components/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="~/Content/jquery.fileupload-ui.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/jquery.fileupload.css" type="text/css" />
+
+}
+<div class="box box-info">
+
+    <form role="form" action="/" id="formDocument">
+        @Html.AntiForgeryToken()
+        <div class="box-header with-border">
+            <h3 class="box-title">Thêm tài liệu</h3>
+            <div class="mailbox-controls">
+                <div class="btn-group">
+                    <a href="@Url.Action("List")" class="btn btn-success btn-sm">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Danh sách
+                    </a>
+                    <button id="submit-button" type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="box-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Mã tài liệu <span style="color: red">(*)</span></label>
+                        <i id="code-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Mã tài liệu là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               name="Code"
+                               id="Code"
+                               data-validation="length"
+                               data-validation-length="4-128"
+                               data-validation-allowing=" "
+                               data-validation-error-msg="Số ký tự trong khoảng 4 đến 128" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Tên tài liệu <span style="color: red">(*)</span></label>
+                        <i id="code-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Tên tài liệu là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               name="Name"
+                               id="Name"
+                               data-validation="length"
+                               data-validation-length="4-512"
+                               data-validation-allowing=" "
+                               data-validation-error-msg="Số ký tự trong khoảng 4 đến 512" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Loại tài liệu <span style="color: red">(*)</span></label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Loại tài liệu là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="DocumentType"
+                               data-validation="required"
+                               data-validation-error-msg="Loại tài liệu là bắt buộc không được bỏ trống" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Công ty <span style="color: red">(*)</span></label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Công ty là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="CompanyCode"
+                               data-validation="required"
+                               data-validation-error-msg="Công ty là bắt buộc không được bỏ trống" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Phòng ban <span style="color: red">(*)</span></label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phòng ban là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="DepartmentCode"
+                               data-validation="required"
+                               data-validation-error-msg="Phòng ban là bắt buộc không được bỏ trống" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Phân hệ <span style="color: red">(*)</span></label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phân hệ là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="Module"
+                               data-validation="required"
+                               data-validation-error-msg="Phân hệ là bắt buộc không được bỏ trống" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Người soạn thảo <span style="color: red">(*)</span></label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Người soạn thảo là bắt buộc không được bỏ trống"></i>
+                        <select class="form-control"
+                                id="Drafter"
+                                multiple
+                                data-validation="required"
+                                data-validation-error-msg="Người soạn thảo là bắt buộc không được bỏ trống"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Người kiểm tra <span style="color: red">(*)</span></label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Người kiểm tra là bắt buộc không được bỏ trống"></i>
+                        <select class="form-control"
+                                id="Auditor"
+                                multiple
+                                data-validation="required"
+                                data-validation-error-msg="Người kiểm tra là bắt buộc không được bỏ trống"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Người phê duyệt <span style="color: red">(*)</span></label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Người phê duyệt là bắt buộc không được bỏ trống"></i>
+                        <select type="text"
+                                class="form-control"
+                                id="Approver"
+                                multiple
+                                data-validation="required"
+                                data-validation-error-msg="Người phê duyệt là bắt buộc không được bỏ trống"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Diễn giải</label>
+                <i id="code-help"
+                   class="fa fa-info-circle red-text"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   title="Diễn giải vắn tắt các thông tin về tài liệu"></i>
+                <textarea class="form-control"
+                          name="Description"
+                          id="Description"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Nội dung thay đổi</label>
+                <i id="code-help"
+                   class="fa fa-info-circle red-text"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   title="Nội dung thay đổi nếu có"></i>
+                <textarea class="form-control"
+                          name="ContentChange"
+                          id="ContentChange"></textarea>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Ngày hiệu lực <span style="color: red">(*)</span></label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Người soạn thảo là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="EffectiveDate" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Xoán xét lại <span style="color: red">(*)</span></label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phòng ban là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="ReviewDate" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Phạm vi áp dụng <span style="color: red">(*)</span></label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Người soạn thảo là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="ScopeOfApplication" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Phạm vi triển khai <span style="color: red">(*)</span></label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phòng ban là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="ScopeOfDeloyment" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Thay thế cho</label>
+                        <i id="replaceof-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Được thay thế cho tài liệu nào"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="ReplaceOf" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Được DCC kiểm tra?</label>
+                        <i id="replaceof-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Được thay thế cho tài liệu nào"></i>
+                        <br>
+                        <input type="checkbox"
+                               id="DCCAudited" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Tài liệu liên quan</label>
+                        <i id="RelateToDocuments-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Các tài liệu liên quan"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="RelateToDocuments" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Link files:</label>
+                        <i id="LinkFiles-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Các tài liệu liên quan"></i>
+                        <br>
+                        <span class="btn btn-success fileinput-button">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>Chọn files...</span>
+                            <!-- The file input field used as target for the file upload widget -->
+                            <input id="fileupload" type="file" name="files[]" multiple>
+                        </span>
+                        <table role="presentation" class="table table-striped">
+                            <tbody class="files"></tbody>
+                        </table>
+                        <!-- The template to display files available for upload -->
+                        <script id="template-upload" type="text/x-tmpl">
+                            {% for (var i=0, file; file=o.files[i]; i++) { %}
+                            <tr>
+                                <td>
+                                    <span class="preview"></span>
+                                </td>
+                                <td>
+                                    {% if (window.innerWidth > 480 || !o.options.loadImageFileTypes.test(file.type)) { %}
+                                    <p class="name" data-file="{%=file.name%}" name="fileName">{%=file.name%}</p>
+                                    {% } %}
+                                    <strong class="error text-danger">{%=file.error%}</strong>
+                                </td>
+                                <td>
+                                    <p class="size">{%=formatFileSize(file.size)%}</p>
+
+                                </td>
+                                <td>
+                                    <button type="button" name="deleteFile" class="btn btn-warning cancel">
+                                        <i class="glyphicon glyphicon-ban-circle"></i>
+                                        <span>Xóa</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% } %}
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        const hostUrl = '@Url.GetHost()';
+        let departments = [];
+        let users = [];
+
+        let $Approver = $('#Approver');
+        let $Drafter = $('#Drafter');
+        let $Auditor = $('#Auditor');
+    </script>
+    <!-- Select 2-->
+    <script src="~/Scripts/admin_lte/bower_components/select2/dist/js/select2.full.min.js"></script>
+    <!--Auto numeric-->
+    <script src="~/Scripts/autoNumeric-1.9.41.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcheckbox.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/tmpl.min.js"></script>
+    <script type="text/javascript">
+        $('#DCCAudited').jqxCheckBox();
+        const uploadTemplate = tmpl('template-upload');
+        let storedFiles = [];
+        $(document).ready(function () {
+            $('#fileupload').fileupload({
+                autoUpload: false,
+                disableImageResize: /Android(?!.*Chrome)|Opera/
+                    .test(window.navigator.userAgent),
+                maxFileSize: 9990000,
+                change: function (e, data) {
+                    renderUpload(data.files);
+                    $('button[name=deleteFile]').click(deleteHandler);
+                },
+                acceptFileTypes: /(\.|\/)(gif|jpe?g|png|xls|pdf|xslx)$/i
+            });
+        });
+
+        function renderTemplate(func, files) {
+            if (!func) {
+                return $();
+            }
+            var result = func({
+                files: files,
+                formatFileSize: this._formatFileSize,
+                options: this.options
+            });
+            if (result instanceof $) {
+                return result;
+            }
+            storedFiles = files;
+            return $('.files').html(result).children();
+        }
+
+        function renderUpload(files) {
+            return renderTemplate(
+                uploadTemplate,
+                files
+            );
+        }
+
+        function formatFileSize(bytes) {
+            if (typeof bytes !== 'number') {
+                return '';
+            }
+            if (bytes >= 1000000000) {
+                return (bytes / 1000000000).toFixed(2) + ' GB';
+            }
+            if (bytes >= 1000000) {
+                return (bytes / 1000000).toFixed(2) + ' MB';
+            }
+            return (bytes / 1000).toFixed(2) + ' KB';
+        }
+
+        function deleteHandler(e) {
+            e.preventDefault();
+            const tr = $(this).closest('tr');
+            let fileName = tr.find('p[name=fileName]').data("file");
+
+            for (let i = 0; i < storedFiles.length; i++) {
+                if (storedFiles[i].name === fileName) {
+                    storedFiles.splice(i, 1);
+                    tr.remove();
+                    break;
+                }
+            }
+        }
+    </script>
+    <!--Script get masterdata-->
+    <script>
+        const getAllDepartmentsUrl = `${hostUrl}/api/masterdatas/getalldepartments`;
+        const getAllUsersUrl = `${hostUrl}/api/masterdatas/getallusers`;
+
+
+        // Get departments
+        function getAllDepartments() {
+            return $.getJSON(getAllDepartmentsUrl,
+                function (data) {
+                    departments = data;
+                });
+        }
+
+        // Get Users
+        function getAllUsers() {
+            return $.getJSON(getAllUsersUrl,
+                function (data) {
+                    users = data;
+                });
+        }
+
+        function formatUserResult(user) {
+            if (!user.id)
+                return user.text;
+            const text = user.text;
+            const fullName = text;
+            const department = user.departmentName;
+            return $(`<span>${fullName}</span><div><small style="color: #a5a0a0">Phòng ban: ${department}</small></div>`);
+        }
+
+        function formatUserSelection(user) {
+            if (!user.id)
+                return user.text;
+            const text = user.text;
+            return $(`<span>${text}</span>`);
+        }
+
+        Promise.all([getAllUsers(),
+        getAllDepartments(),
+        ]).then(() => {
+            $Approver.select2({
+                data: users,
+                templateResult: formatUserResult,
+                templateSelection: formatUserSelection
+            });
+
+            $Drafter.select2({
+                data: users,
+                templateResult: formatUserResult,
+                templateSelection: formatUserSelection
+            });
+
+            $Auditor.select2({
+                data: users,
+                templateResult: formatUserResult,
+                templateSelection: formatUserSelection
+            });
+            // all requests finished successfully
+        }).catch(() => {
+            // all requests finished but one or more failed
+        })
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $.validate({
+                form: '#formDocument',
+                addValidClassOnAll: true
+            });
+            $('#formDocument').submit(function (event) {
+                event.preventDefault();
+
+                return;
+            });
+        });
+    </script>
+}

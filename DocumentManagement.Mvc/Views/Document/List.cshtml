@@ -1,0 +1,228 @@
+﻿
+@{
+    ViewBag.Title = "Danh sách tài liệu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@IsGranted("documentmvc_permission", "read").ToString()
+@section styles{
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.light.css" type="text/css" />
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-info">
+            <div class="box-header">
+                <h3 class="box-title">Danh sách tài liệu</h3>
+                <div class="box-tools pull-right">
+                </div>
+                <div class="mailbox-controls">
+                    <div class="btn-group">
+                        <!-- Check all button -->
+                        <a href="@Url.ActionWithHost("DataExport", "ExportAllAirTicketToExcel")" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> Export to Excel</a>
+                        <a href="@Url.Action("Create")" class="btn btn-success btn-sm">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Thêm mới
+                        </a>
+                    </div>
+                    <div class="box-tools pull-right">
+                        <input id="txtSearch"
+                               class="form-control"
+                               placeholder="Tìm kiếm" />
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div id='jqxWidget'>
+                        <div id="grdDocument"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        const hostUrl = '@Url.GetHost()';
+    </script>
+    <!--Auto numeric-->
+    <script src="~/Scripts/autoNumeric-1.9.41.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.edit.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.selection.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.columnsresize.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxtextarea.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxnumberinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.pager.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/globalization/globalize.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/localization.js"></script>
+    <script type="text/javascript" src="~/Scripts/demos.js"></script>
+    <script type="text/javascript">
+        Globalize.cultureSelector = "vi";
+    </script>
+    <script>
+        const txtSearch = $('#txtSearch');
+        const grdDocument = $("#grdDocument");
+        txtSearch.on("keyup", function (e) {
+            const key = event.charCode ? event.charCode : event.keyCode ? event.keyCode : 0;
+            if (key === 13) {
+                grdDocument.jqxGrid('updatebounddata');
+                grdDocument.jqxGrid('gotopage', 0);
+            }
+        });
+               
+        let documents = [];
+
+        let source =
+        {
+            url: '@Url.ActionApiWithHost("documents", "searchdocumentsbytokenpaged")',
+            datatype: "json",
+            id: "id",
+            updaterow: function (rowid, rowdata, commit) {
+                // synchronize with the server - send update command
+                // call commit with parameter true if the synchronization with the server is successful
+                // and with parameter false if the synchronization failder.
+                commit(true);
+            },
+            cache: false,
+            pagesize: 20,
+            pagesizeoptions: ["20", "40", "60"],
+            datafields:
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'code', type: 'string' },
+                    { name: 'companyName', type: 'string' },
+                    { name: 'departmentName', type: 'string' },
+                    { name: 'module', type: 'string' },
+                    { name: 'documentType', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'documentNumber', type: 'string' },
+                    { name: 'reviewNumber', type: 'string' },
+                    { name: 'description', type: 'string' },
+                    { name: 'contentChange', type: 'string'}
+                ],
+            root: 'data',
+            beforeprocessing: function (data) { source.totalrecords = data.total; }
+        };
+        let dataAdapter = new $.jqx.dataAdapter(source,
+            {
+                beforeSend: function (jqXHR, settings) {
+                    settings.url = `${settings.url}&token=${txtSearch.val()}`;
+                    jqXHR.setRequestHeader('token', txtSearch.val());
+                }
+            });
+
+        grdDocument.jqxGrid(
+            {
+                width: '100%',
+                height: 600,
+                source: dataAdapter,
+                pageable: true,
+                autorowheight: true,
+                columnsresize: true,
+                altrows: true,
+                editable: true,
+                pagesizeoptions: ["20", "40", "60"],
+                localization: getLocalization('vi'),
+                selectionmode: 'singlerow',
+                editmode: 'singlecell',
+                showstatusbar: false,
+                virtualMode: true,
+                renderGridRows: function (obj) {
+                    return obj.data;
+                },
+                columns: [
+                    {
+                        text: 'STT',
+                        sortable: false,
+                        filterable: false,
+                        editable: false,
+                        groupable: false,
+                        draggable: false,
+                        pinned: true,
+                        datafield: '',
+                        columntype: 'number',
+                        width: 30,
+                        cellsrenderer: function (row, column, value) {
+                            return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                        }
+                    },
+                    {
+                        text: 'Mã tài liệu',
+                        columntype: 'textbox',
+                        datafield: 'code',
+                        pinned: true,
+                        editable: false,
+                        width: 150
+                    },
+                    {
+                        text: 'Tên tài liệu',
+                        columntype: 'textbox',
+                        datafield: 'name',
+                        pinned: true,
+                        editable: false,
+                        width: 150
+                    },
+                    {
+                        text: 'Công ty',
+                        columntype: 'textbox',
+                        datafield: 'companyName',
+                        pinned: true,
+                        editable: false,
+                        width: 150
+                    },
+                    {
+                        text: 'Phòng ban',
+                        columntype: 'textbox',
+                        datafield: 'departmentName',
+                        pinned: true,
+                        editable: false,
+                        width: 150
+                    },
+                    {
+                        text: 'Phân hệ',
+                        columntype: 'textbox',
+                        datafield: 'module',
+                        editable: false,
+                        width: 150
+                    },
+                    {
+                        text: 'Loại tài liệu',
+                        columntype: 'textbox',
+                        datafield: 'firstName',
+                        editable: false,
+                        width: 150
+                    },
+                    {
+                        text: 'Số hiệu',
+                        columntype: 'textbox',
+                        datafield: 'documentNumber',
+                        editable: false,
+                        width: 150
+                    },
+                    {
+                        text: 'Số soán xét',
+                        datafield: 'reviewNumber',
+                        editable: false,
+                        width: 150
+                    }
+                ]
+            });
+
+    </script>
+
+    <script>
+        
+    </script>
+}
