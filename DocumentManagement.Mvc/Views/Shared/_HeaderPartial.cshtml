@@ -14,6 +14,7 @@
         </a>
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
+                @Html.Action("_LanguagesPartial", "Account")
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -21,7 +22,8 @@
                             {
                                 <img src="~/images/avatar5.png" class="user-image" alt="User Image">
                             }
-                            else { 
+                            else
+                            {
                                 @Html.Image(User.Identity.GetUserImage())
                             }
                         }
@@ -41,8 +43,8 @@
                 </li>
                 <!-- Control Sidebar Toggle Button -->
                 <!-- <li>
-         <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-     </li>-->
+        <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+    </li>-->
             </ul>
         </div>
     </nav>

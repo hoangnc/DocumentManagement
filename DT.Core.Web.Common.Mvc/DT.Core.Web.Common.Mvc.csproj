@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacFilterAttributeFilterProvider.cs" />
+    <Compile Include="Controllers\LocalizationController.cs" />
     <Compile Include="Extensions\ContainerBuilderExtension.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
@@ -95,6 +96,14 @@
     <ProjectReference Include="..\DT.Core.Localization\DT.Core.Localization.csproj">
       <Project>{7F2A145E-75A2-41C6-BED2-C006FF0127BA}</Project>
       <Name>DT.Core.Localization</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DT.Core.Web.Common\DT.Core.Web.Common.csproj">
+      <Project>{CB247751-1335-4104-82CF-442E8D47E9F7}</Project>
+      <Name>DT.Core.Web.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DT.Core.Web\DT.Core.Web.csproj">
+      <Project>{F4506D4A-75B0-48F1-A1AE-72A987F1F286}</Project>
+      <Name>DT.Core.Web</Name>
     </ProjectReference>
     <ProjectReference Include="..\DT.Core\DT.Core.csproj">
       <Project>{B2422E85-7353-466D-80DE-4A3D0D759A52}</Project>

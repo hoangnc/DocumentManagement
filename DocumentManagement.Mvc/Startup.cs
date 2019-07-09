@@ -1,7 +1,11 @@
-﻿using Autofac;
+﻿using Abp.Localization;
+using Abp.Localization.Dictionaries;
+using Abp.Localization.Dictionaries.Json;
+using Autofac;
+using DT.Core.Localization;
+using DT.Core.Web.Common;
 using DT.Core.Web.Common.Identity.Configurations;
 using IdentityModel.Client;
-using IdentityServer3.AccessTokenValidation;
 using IdentityServer3.Core;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.Owin;
@@ -13,12 +17,14 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Helpers;
 
 [assembly: OwinStartup(typeof(DocumentManagement.Mvc.Startup))]
@@ -30,13 +36,19 @@ namespace DocumentManagement.Mvc
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
-            AntiForgeryConfig.UniqueClaimTypeIdentifier = Constants.ClaimTypes.Subject;
-            JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
+            AntiForgeryConfig.UniqueClaimTypeIdentifier = IdentityServer3.Core.Constants.ClaimTypes.Subject;
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap = new Dictionary<string, string>();
             // Adjust the configuration for anti-CSRF protection to the new unique sub claim type
-            JwtSecurityTokenHandler.InboundClaimTypeMap.Clear();
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             IContainer container = AutofacConfig.ConfigureContainer();
+
             app.UseAutofacMiddleware(container);
+            // app.UseDTWebCommonLocalization(container.Resolve<ILocalizationConfiguration>());
+
+            LocalizationManager localizationManager = container.Resolve<ILocalizationManager>() as LocalizationManager;
+            localizationManager.Initialize();
+
             app.UseResourceAuthorization(new AuthorizationManager());
             app.UseKentorOwinCookieSaver();
 
@@ -66,8 +78,8 @@ namespace DocumentManagement.Mvc
                         {
                             ClaimsIdentity nid = new ClaimsIdentity(
                                 n.AuthenticationTicket.Identity.AuthenticationType,
-                                Constants.ClaimTypes.GivenName,
-                                Constants.ClaimTypes.Role);
+                                IdentityServer3.Core.Constants.ClaimTypes.GivenName,
+                                IdentityServer3.Core.Constants.ClaimTypes.Role);
 
                             // get userinfo data
                             UserInfoClient userInfoClient = new UserInfoClient(
@@ -93,7 +105,7 @@ namespace DocumentManagement.Mvc
 
                         RedirectToIdentityProvider = n =>
                         {
-                            if (n.ProtocolMessage.RequestType == OpenIdConnectRequestType.LogoutRequest)
+                            if (n.ProtocolMessage.RequestType == Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectRequestType.Logout)
                             {
                                 Claim idTokenHint = n.OwinContext.Authentication.User.FindFirst("id_token");
 
@@ -107,8 +119,8 @@ namespace DocumentManagement.Mvc
                         }
                     }
                 });
-      
-            }   
+
+            }
         }
     }
 }

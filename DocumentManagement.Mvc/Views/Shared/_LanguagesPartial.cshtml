@@ -1,0 +1,12 @@
+﻿@model DocumentManagement.Mvc.Models.Localizations.LanguageSelectionViewModel
+<li class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+        <i class="@Model.CurrentLanguage.Icon"></i> @Model.CurrentLanguage.DisplayName<span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+        @foreach (var languageInfo in Model.Languages)
+        {
+            <li><a href="@Url.GetHost()/Localization/ChangeCulture?cultureName=@(languageInfo.Name)&returnUrl=@(Request.Url)"><i class="@languageInfo.Icon"></i> @languageInfo.DisplayName</a></li>
+        }
+    </ul>
+</li>

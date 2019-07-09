@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DT.Core.Web.Common.Api.WebApi.Formatter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -13,6 +14,8 @@ namespace DocumentManagement.Mvc
 
             // Web API routes
             config.MapHttpAttributeRoutes();
+
+            config.Formatters.Add(new FormMultipartEncodedMediaTypeFormatter());
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

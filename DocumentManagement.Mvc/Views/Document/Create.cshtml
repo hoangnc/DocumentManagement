@@ -17,14 +17,14 @@
     <form role="form" action="/" id="formDocument">
         @Html.AntiForgeryToken()
         <div class="box-header with-border">
-            <h3 class="box-title">Thêm tài liệu</h3>
+            <h3 class="box-title">@L(DocumentResourceNames.CreateDocument)</h3>
             <div class="mailbox-controls">
                 <div class="btn-group">
                     <a href="@Url.Action("List")" class="btn btn-success btn-sm">
-                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Danh sách
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.List)
                     </a>
-                    <button id="submit-button" type="submit" class="btn btn-primary btn-sm">
-                        <i class="fa fa-floppy-o" aria-hidden="true"></i> Lưu
+                    <button id="btnSubmit" type="button" class="btn btn-primary btn-sm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Save)
                     </button>
                 </div>
             </div>
@@ -34,7 +34,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Mã tài liệu <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.Code) <span style="color: red">(*)</span></label>
                         <i id="code-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -52,7 +52,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Tên tài liệu <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.Name) <span style="color: red">(*)</span></label>
                         <i id="code-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -70,7 +70,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Loại tài liệu <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.DocumentType) <span style="color: red">(*)</span></label>
                         <i id="companycode-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -79,6 +79,7 @@
                         <input type="text"
                                class="form-control"
                                id="DocumentType"
+                               name="DocumentType"
                                data-validation="required"
                                data-validation-error-msg="Loại tài liệu là bắt buộc không được bỏ trống" />
                     </div>
@@ -87,7 +88,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Công ty <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.CompanyCode) <span style="color: red">(*)</span></label>
                         <i id="companycode-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -96,13 +97,17 @@
                         <input type="text"
                                class="form-control"
                                id="CompanyCode"
+                               name="CompanyCode"
                                data-validation="required"
                                data-validation-error-msg="Công ty là bắt buộc không được bỏ trống" />
+                        <input type="hidden"
+                               id="CompanyName"
+                               name="CompanyName" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Phòng ban <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.DepartmentCode) <span style="color: red">(*)</span></label>
                         <i id="clientid-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -111,13 +116,17 @@
                         <input type="text"
                                class="form-control"
                                id="DepartmentCode"
+                               name="DepartmentCode"
                                data-validation="required"
                                data-validation-error-msg="Phòng ban là bắt buộc không được bỏ trống" />
+                        <input type="hidden"
+                               id="DepartmentName"
+                               name="DepartmentName" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Phân hệ <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.Module) <span style="color: red">(*)</span></label>
                         <i id="clientid-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -126,6 +135,7 @@
                         <input type="text"
                                class="form-control"
                                id="Module"
+                               name="Module"
                                data-validation="required"
                                data-validation-error-msg="Phân hệ là bắt buộc không được bỏ trống" />
                     </div>
@@ -134,7 +144,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label>Người soạn thảo <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.Drafter) <span style="color: red">(*)</span></label>
                         <i id="companycode-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -142,6 +152,7 @@
                            title="Người soạn thảo là bắt buộc không được bỏ trống"></i>
                         <select class="form-control"
                                 id="Drafter"
+                                name="Drafter"
                                 multiple
                                 data-validation="required"
                                 data-validation-error-msg="Người soạn thảo là bắt buộc không được bỏ trống"></select>
@@ -151,7 +162,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label>Người kiểm tra <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.Auditor) <span style="color: red">(*)</span></label>
                         <i id="clientid-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -159,6 +170,7 @@
                            title="Người kiểm tra là bắt buộc không được bỏ trống"></i>
                         <select class="form-control"
                                 id="Auditor"
+                                name="Auditor"
                                 multiple
                                 data-validation="required"
                                 data-validation-error-msg="Người kiểm tra là bắt buộc không được bỏ trống"></select>
@@ -168,7 +180,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label>Người phê duyệt <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.Approver) <span style="color: red">(*)</span></label>
                         <i id="clientid-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -177,6 +189,7 @@
                         <select type="text"
                                 class="form-control"
                                 id="Approver"
+                                name="Approver"
                                 multiple
                                 data-validation="required"
                                 data-validation-error-msg="Người phê duyệt là bắt buộc không được bỏ trống"></select>
@@ -184,7 +197,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label>Diễn giải</label>
+                <label>@L(DocumentResourceNames.Description)</label>
                 <i id="code-help"
                    class="fa fa-info-circle red-text"
                    data-toggle="tooltip"
@@ -195,7 +208,7 @@
                           id="Description"></textarea>
             </div>
             <div class="form-group">
-                <label>Nội dung thay đổi</label>
+                <label>@L(DocumentResourceNames.ContentChange)</label>
                 <i id="code-help"
                    class="fa fa-info-circle red-text"
                    data-toggle="tooltip"
@@ -209,7 +222,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Ngày hiệu lực <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.EffectiveDate) <span style="color: red">(*)</span></label>
                         <i id="companycode-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -217,12 +230,13 @@
                            title="Người soạn thảo là bắt buộc không được bỏ trống"></i>
                         <input type="text"
                                class="form-control"
-                               id="EffectiveDate" />
+                               id="EffectiveDate"
+                               name="EffectiveDate" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Xoán xét lại <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.ReviewDate)<span style="color: red">(*)</span></label>
                         <i id="clientid-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -230,7 +244,8 @@
                            title="Phòng ban là bắt buộc không được bỏ trống"></i>
                         <input type="text"
                                class="form-control"
-                               id="ReviewDate" />
+                               id="ReviewDate"
+                               name="ReviewDate" />
                     </div>
                 </div>
             </div>
@@ -238,7 +253,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Phạm vi áp dụng <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.ScopeOfApplication) <span style="color: red">(*)</span></label>
                         <i id="companycode-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -246,12 +261,13 @@
                            title="Người soạn thảo là bắt buộc không được bỏ trống"></i>
                         <input type="text"
                                class="form-control"
-                               id="ScopeOfApplication" />
+                               id="ScopeOfApplication"
+                               name="ScopeOfApplication" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Phạm vi triển khai <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.ScopeOfDeloyment) <span style="color: red">(*)</span></label>
                         <i id="clientid-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -259,14 +275,15 @@
                            title="Phòng ban là bắt buộc không được bỏ trống"></i>
                         <input type="text"
                                class="form-control"
-                               id="ScopeOfDeloyment" />
+                               id="ScopeOfDeloyment"
+                               name="ScopeOfDeloyment" />
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Thay thế cho</label>
+                        <label>@L(DocumentResourceNames.ReplaceOf)</label>
                         <i id="replaceof-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -274,12 +291,13 @@
                            title="Được thay thế cho tài liệu nào"></i>
                         <input type="text"
                                class="form-control"
-                               id="ReplaceOf" />
+                               id="ReplaceOf"
+                               name="ReplaceOf" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>Được DCC kiểm tra?</label>
+                        <label>@L(DocumentResourceNames.DCCAudited)</label>
                         <i id="replaceof-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -287,14 +305,15 @@
                            title="Được thay thế cho tài liệu nào"></i>
                         <br>
                         <input type="checkbox"
-                               id="DCCAudited" />
+                               id="DCCAudited"
+                               name="DCCAudited" />
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label>Tài liệu liên quan</label>
+                        <label>@L(DocumentResourceNames.RelateToDocuments)</label>
                         <i id="RelateToDocuments-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -302,7 +321,8 @@
                            title="Các tài liệu liên quan"></i>
                         <input type="text"
                                class="form-control"
-                               id="RelateToDocuments" />
+                               id="RelateToDocuments"
+                               name="RelateToDocuments" />
                     </div>
                 </div>
             </div>
@@ -364,11 +384,21 @@
     <script>
         const hostUrl = '@Url.GetHost()';
         let departments = [];
+        let documentTypes = [];
         let users = [];
+        let companies = [];
 
         let $Approver = $('#Approver');
         let $Drafter = $('#Drafter');
         let $Auditor = $('#Auditor');
+        let $CompanyCode = $('#CompanyCode');
+        let $DepartmentCode = $('#DepartmentCode');
+        let $CompanyName = $('#CompanyName');
+        let $DepartmentName = $('#DepartmentName');
+        let $DocumentType = $('#DocumentType');
+
+        let $btnSubmit = $('#btnSubmit');
+        let storedFiles = [];
     </script>
     <!-- Select 2-->
     <script src="~/Scripts/admin_lte/bower_components/select2/dist/js/select2.full.min.js"></script>
@@ -381,7 +411,6 @@
     <script type="text/javascript">
         $('#DCCAudited').jqxCheckBox();
         const uploadTemplate = tmpl('template-upload');
-        let storedFiles = [];
         $(document).ready(function () {
             $('#fileupload').fileupload({
                 autoUpload: false,
@@ -450,13 +479,17 @@
     <script>
         const getAllDepartmentsUrl = `${hostUrl}/api/masterdatas/getalldepartments`;
         const getAllUsersUrl = `${hostUrl}/api/masterdatas/getallusers`;
-
+        const getAllCompaniesUrl = `${hostUrl}/api/masterdatas/getallcompanies`;
+        const getAllDocumentTypesUrl = `${hostUrl}/api/documenttypes/getalldocumenttypes`;
+        const createDocumentUrl = `${hostUrl}/api/documents/create`;
 
         // Get departments
         function getAllDepartments() {
             return $.getJSON(getAllDepartmentsUrl,
                 function (data) {
-                    departments = data;
+                    departments = data.map((department) => {
+                        return { id: department.code, text: department.name };
+                    });
                 });
         }
 
@@ -464,7 +497,29 @@
         function getAllUsers() {
             return $.getJSON(getAllUsersUrl,
                 function (data) {
-                    users = data;
+                    users = data.map((user) => {
+                        return { id: user.userName, text: user.text, departmentName: user.departmentName };
+                    });
+                });
+        }
+
+        // Get companies
+        function getAllCompanies() {
+            return $.getJSON(getAllCompaniesUrl,
+                function (data) {
+                    companies = data.map((company) => {
+                        return { id: company.code, text: company.name };
+                    });
+                });
+        }
+
+        // Get documenttypes
+        function getAllDocumentTypes() {
+            return $.getJSON(getAllDocumentTypesUrl,
+                function (data) {
+                    documentTypes = data.map((documentType) => {
+                        return { id: documentType.code, text: documentType.name };
+                    });
                 });
         }
 
@@ -486,6 +541,8 @@
 
         Promise.all([getAllUsers(),
         getAllDepartments(),
+        getAllCompanies(),
+        getAllDocumentTypes()
         ]).then(() => {
             $Approver.select2({
                 data: users,
@@ -504,22 +561,86 @@
                 templateResult: formatUserResult,
                 templateSelection: formatUserSelection
             });
+
+            $CompanyCode.select2({
+                data: companies
+            });
+
+            $DepartmentCode.select2({
+                data: departments
+            });
+
+            $DocumentType.select2({
+                data: documentTypes
+            });
             // all requests finished successfully
         }).catch(() => {
             // all requests finished but one or more failed
         })
 
     </script>
+    <!--Actions-->
+    <script>
+        function create() {
+            // Create an FormData object
+            let formData = $("#formDocument").submit(function (e) {
+                return;
+            });
+            //formData[0] contain form data only
+            // You can directly make object via using form id but it require all ajax operation inside $("form").submit(<!-- Ajax Here   -->)
+            formData = new FormData(formData[0]);
+            for (var i = 0, len = storedFiles.length; i < len; i++) {
+                formData.append('files', storedFiles[i]);
+            }
+
+            $.ajax({
+                url: createDocumentUrl,
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (event, settings, xhr) {
+                    xhr.message = {
+                        infor: 'Ban hành tài liệu mới thành công',
+                        returnUrl: `${hostUrl}/document/list`
+                    };
+                }
+            });
+
+        }
+    </script>
+    <!--Events-->
     <script>
         $(document).ready(function () {
             $.validate({
                 form: '#formDocument',
                 addValidClassOnAll: true
             });
-            $('#formDocument').submit(function (event) {
-                event.preventDefault();
 
-                return;
+            $btnSubmit.click(function () {
+                create();
+            });
+
+            $CompanyCode.on('change', function (e) {
+                const selectedCompany = $CompanyCode.select2('data');
+                if (!isVariableHaveDefaltVal(selectedCompany)) {
+                    if (typeof (selectedCompany) === 'array') {
+                        if (selectedCompany.length > 0) {
+                            $CompanyName.val(selectedCompany[0].text);
+                        }
+                    } else {
+                        $CompanyName.val(selectedCompany.text);
+                    }
+                    $CompanyName.val(selectedCompany[0].text);
+                 }
+            });
+
+            $DepartmentCode.on('change', function (e) {
+                const selectedDepartment = $DepartmentCode.select2('data');
+                if (!isVariableHaveDefaltVal(selectedDepartment)) {
+                    $DepartmentName.val(selectedDepartment[0].text);
+                }
             });
         });
     </script>

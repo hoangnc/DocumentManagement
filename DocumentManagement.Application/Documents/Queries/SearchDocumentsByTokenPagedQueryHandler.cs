@@ -1,13 +1,13 @@
 ﻿using DocumentManagement.Application.Mapper;
 using DocumentManagement.Domain.Entities;
 using DocumentManagement.Persistence;
+using DT.Core.Data;
 using DT.Core.Data.Models;
 using DT.Core.Data.Paged;
+using DT.Core.Text;
 using MediatR;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,7 +44,29 @@ namespace DocumentManagement.Application.Documents.Queries
                 || c.ScopeOfDeloyment.Contains(request.Token)
                 || c.Description.Contains(request.Token));
             }
-            query = query.OrderByDescending(u => u.CreatedOn);
+
+            if (!request.DataSourceRequest.SortDataField.IsNullOrEmpty())
+            {
+                if (QueryHelper.PropertyExists<Document>(request.DataSourceRequest.SortDataField))
+                {
+                    switch (request.DataSourceRequest.SortOrder)
+                    {
+                        case "asc":
+                            query = QueryHelper.OrderByProperty(query, request.DataSourceRequest.SortDataField);
+                            break;
+                        case "desc":
+                            query = QueryHelper.OrderByPropertyDescending(query, request.DataSourceRequest.SortDataField);
+                            break;
+                        default:
+                            query = query.OrderByDescending(u => u.CreatedOn);
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                query = query.OrderByDescending(u => u.CreatedOn);
+            }
 
             PagedList<Document> queryResult = new PagedList<Document>();
             await queryResult.CreateAsync(query, request.DataSourceRequest.PageNum, request.DataSourceRequest.PageSize);

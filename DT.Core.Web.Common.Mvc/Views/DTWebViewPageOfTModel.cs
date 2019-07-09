@@ -2,12 +2,7 @@
 using Abp.Localization.Sources;
 using DT.Core.Authorization;
 using DT.Core.Text;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 namespace DT.Core.Web.Common.Mvc.Views
@@ -21,7 +16,7 @@ namespace DT.Core.Web.Common.Mvc.Views
         {
             get
             {
-                var appPath = HttpContext.Current.Request.ApplicationPath;
+                string appPath = HttpContext.Current.Request.ApplicationPath;
                 if (appPath == null)
                 {
                     return "/";
@@ -39,8 +34,8 @@ namespace DT.Core.Web.Common.Mvc.Views
         /// </summary>
         protected string LocalizationSourceName
         {
-            get { return _localizationSource.Name; }
-            set { _localizationSource = LocalizationHelper.GetSource(value); }
+            get => _localizationSource.Name;
+            set => _localizationSource = LocalizationHelper.GetSource(value);
         }
         private ILocalizationSource _localizationSource;
 
@@ -49,7 +44,9 @@ namespace DT.Core.Web.Common.Mvc.Views
         /// </summary>
         protected DTWebViewPage()
         {
-            _localizationSource = NullLocalizationSource.Instance;
+            _localizationSource = DependencyResolver.Current.GetService<ILocalizationSource>();
+            if (_localizationSource == null)
+                _localizationSource = NullLocalizationSource.Instance;
         }
 
         /// <summary>

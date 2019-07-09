@@ -1,0 +1,33 @@
+﻿{
+  "culture": "vi-VN",
+  "texts": {
+    "DocumentList": "Danh sách tài liệu",
+    "CreateDocument": "Thêm tài liệu",
+    "Code": "Mã tài liệu",
+    "CompanyCode": "Công ty",
+    "CompanyName": "Phòng ban",
+    "DepartmentCode": "Công ty",
+    "DepartmentName": "Phòng ban",
+    "Module": "Phân hệ",
+    "DocumentType": "Loại tài liệu",
+    "Name": "Tên tài liệu",
+    "FileName": "Tên files",
+    "DocumentNumber": "Số hiệu",
+    "ReviewNumber": "Số xoán xét",
+    "Description": "Mục đích",
+    "ContentChange": "Nội dung thay đổi",
+    "Drafter": "Người soạn thảo",
+    "Auditor": "Người kiểm tra",
+    "Approver": "Người phê duyệt",
+    "EffectiveDate": "Ngày hiệu lực",
+    "ReviewDate": "Soán xét lại",
+    "ScopeOfApplication": "Phạm vi áp dụng",
+    "ScopeOfDeloyment": "Phạm vi triển khai",
+    "ReplaceOf": "Thay thế cho",
+    "ReplaceEffectiveDate": "Replace effective date",
+    "RelateToDocuments": "Tài liệu liên quan",
+    "DdcAudited": "Đã được DDC kiểm tra",
+    "FolderName": "Tên folder",
+    "LinkFile": "Đường dẫn file"
+  }
+}

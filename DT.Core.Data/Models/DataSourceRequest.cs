@@ -3,6 +3,8 @@
     public class DataSourceRequest
     {
         public int FiltersCount { get; set; }
+        public string SortDataField { get; set; }
+        public string SortOrder { get; set; }
         public int GroupsCount { get; set; }
         public int PageNum { get; set; }
         public int PageSize { get; set; }

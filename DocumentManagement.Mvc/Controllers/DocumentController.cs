@@ -11,7 +11,7 @@ using static DT.Core.Web.Common.Identity.Constants;
 namespace DocumentManagement.Mvc.Controllers
 {
     [Authorize]
-    public class DocumentController : Controller
+    public class DocumentController : DocumentManagementControllerBase
     {
         // GET: Document
         public ActionResult Index()

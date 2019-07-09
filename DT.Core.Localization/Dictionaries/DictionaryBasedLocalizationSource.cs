@@ -35,7 +35,7 @@ namespace Abp.Localization.Dictionaries
         }
 
         /// <inheritdoc/>
-        public virtual void Initialize(ILocalizationConfiguration configuration, IDependencyResolver iocResolver)
+        public virtual void Initialize(ILocalizationConfiguration configuration, IDependencyResolver iocResolver = null)
         {
             LocalizationConfiguration = configuration;
                       

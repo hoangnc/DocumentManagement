@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Security.Claims;
 using System.Configuration;
+using Newtonsoft.Json;
 
 namespace DocumentManagement.Mvc.Controllers.Apis
 {
@@ -35,6 +36,15 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             return await CallApi(new Uri($"{MasterDataEndpoint}/api/v1/masterdatas/getallusers"), token);
         }
 
+        [Route("api/masterdatas/getallcompanies")]
+        [HttpGet]
+        public async Task<dynamic> GetAllCompanies()
+        {
+            var user = User as ClaimsPrincipal;
+            var token = user.FindFirst("access_token").Value;
+            return await CallApi(new Uri($"{MasterDataEndpoint}/api/v1/masterdatas/getallcompanies"), token);
+        }
+
         private async Task<TokenResponse> GetTokenAsync()
         {
             var client = new TokenClient(
@@ -50,7 +60,7 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             var client = new HttpClient();
             client.SetBearerToken(token);
 
-            var json = Newtonsoft.Json.JsonConvert.DeserializeObject(await client.GetStringAsync(uri));
+            object json = JsonConvert.DeserializeObject(await client.GetStringAsync(uri));
             return json;
         }
     }

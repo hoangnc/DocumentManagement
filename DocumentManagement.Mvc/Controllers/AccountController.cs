@@ -3,7 +3,7 @@ using System.Web.Mvc;
 
 namespace DocumentManagement.Mvc.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : DocumentManagementControllerBase
     {
         [Route("account/signout")]
         [AllowAnonymous]

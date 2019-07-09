@@ -1,0 +1,10 @@
+﻿{
+  "culture": "vi-VN",
+  "texts": {
+    "List": "Danh sách",
+    "Save": "Lưu",
+    "AddNew": "Thêm mới",
+    "ExportToExcel": "Đổ giữ liệu ra file excel",
+    "ImportFromExcel": "Đẩy giữ liệu từ file excel"
+  }
+}

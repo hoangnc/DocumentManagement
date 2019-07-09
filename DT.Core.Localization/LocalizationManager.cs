@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace Abp.Localization
 {
-    internal class LocalizationManager : ILocalizationManager
+    public class LocalizationManager : ILocalizationManager
     {
         private readonly ILanguageManager _languageManager;
         private readonly ILocalizationConfiguration _configuration;

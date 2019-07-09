@@ -31,11 +31,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.9.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.9.2\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -69,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbpDisplayNameAttribute.cs" />
+    <Compile Include="AppBuilderExtensions.cs" />
     <Compile Include="CultureInfoHelper.cs" />
     <Compile Include="DefaultLanguageProvider.cs" />
     <Compile Include="Dictionaries\DictionaryBasedLocalizationSource.cs" />
@@ -100,6 +107,7 @@
     <Compile Include="LocalizableString.cs" />
     <Compile Include="LocalizableStringExtensions.cs" />
     <Compile Include="LocalizableStringToStringJsonConverter.cs" />
+    <Compile Include="LocalizationConfiguration.cs" />
     <Compile Include="LocalizationContext.cs" />
     <Compile Include="LocalizationHelper.cs" />
     <Compile Include="LocalizationManager.cs" />
@@ -107,6 +115,7 @@
     <Compile Include="LocalizationSettingNames.cs" />
     <Compile Include="LocalizationSettingProvider.cs" />
     <Compile Include="LocalizationSourceHelper.cs" />
+    <Compile Include="LocalizationSourceList.cs" />
     <Compile Include="LocalizedString.cs" />
     <Compile Include="NullLocalizationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

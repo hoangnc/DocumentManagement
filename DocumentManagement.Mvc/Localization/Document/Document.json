@@ -1,0 +1,33 @@
+{
+  "culture": "en",
+  "texts": {
+    "DocumentList":  "Document list",
+    "CreateDocument": "Add new document",
+    "Code": "Code",
+    "CompanyCode": "Company code",
+    "CompanyName": "Company name",
+    "DepartmentCode": "Department code",
+    "DepartmentName": "Department name",
+    "Module": "Module",
+    "DocumentType": "Document type",
+    "Name": "Name",
+    "FileName": "FileName",
+    "DocumentNumber": "Document number",
+    "ReviewNumber": "Review number",
+    "Description": "Description",
+    "ContentChange": "Content change",
+    "Drafter": "Drafter",
+    "Auditor": "Auditor",
+    "Approver": "Approver",
+    "EffectiveDate": "Effective date",
+    "ReviewDate": "Review date",
+    "ScopeOfApplication": "Scope of application",
+    "ScopeOfDeloyment": "Scope of deloyment",
+    "ReplaceOf": "Replace of",
+    "ReplaceEffectiveDate": "Replace effective date",
+    "RelateToDocuments": "Relate to documents",
+    "DdcAudited": "DDC audited?",
+    "FolderName": "Folder name",
+    "LinkFile": "Link file"
+  }
+}

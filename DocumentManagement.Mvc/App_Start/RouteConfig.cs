@@ -16,7 +16,7 @@ namespace DocumentManagement.Mvc
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Document", action = "Create", id = UrlParameter.Optional }
+                defaults: new { controller = "Document", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

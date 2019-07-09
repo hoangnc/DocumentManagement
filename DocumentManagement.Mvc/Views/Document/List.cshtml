@@ -3,7 +3,7 @@
     ViewBag.Title = "Danh sách tài liệu";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@IsGranted("documentmvc_permission", "read").ToString()
+
 @section styles{
     <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.base.css" type="text/css" />
     <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.light.css" type="text/css" />
@@ -12,15 +12,15 @@
     <div class="col-xs-12">
         <div class="box box-info">
             <div class="box-header">
-                <h3 class="box-title">Danh sách tài liệu</h3>
+                <h3 class="box-title">@L(DocumentResourceNames.DocumentList)</h3>
                 <div class="box-tools pull-right">
                 </div>
                 <div class="mailbox-controls">
                     <div class="btn-group">
                         <!-- Check all button -->
-                        <a href="@Url.ActionWithHost("DataExport", "ExportAllAirTicketToExcel")" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> Export to Excel</a>
+                        <a href="@Url.ActionWithHost("DataExport", "ExportAllAirTicketToExcel")" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.ExportToExcel)</a>
                         <a href="@Url.Action("Create")" class="btn btn-success btn-sm">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Thêm mới
+                            <i class="fa fa-plus" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.AddNew)
                         </a>
                     </div>
                     <div class="box-tools pull-right">
@@ -64,12 +64,23 @@
     <script type="text/javascript" src="~/Scripts/jqwidgets/jqxnumberinput.js"></script>
     <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdatetimeinput.js"></script>
     <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.pager.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.sort.js"></script>
     <script type="text/javascript" src="~/Scripts/jqwidgets/jqxinput.js"></script>
     <script type="text/javascript" src="~/Scripts/jqwidgets/globalization/globalize.js"></script>
     <script type="text/javascript" src="~/Scripts/jqwidgets/localization.js"></script>
     <script type="text/javascript" src="~/Scripts/demos.js"></script>
     <script type="text/javascript">
         Globalize.cultureSelector = "vi";
+    </script>
+    <script>
+        const documentCodeText = '@L(DocumentResourceNames.Code)';
+        const documentNameText = '@L(DocumentResourceNames.Name)';
+        const companyText = '@L(DocumentResourceNames.CompanyCode)';
+        const departmentText = '@L(DocumentResourceNames.DepartmentCode)';
+        const moduleText = '@L(DocumentResourceNames.Module)';
+        const documentNumberText = '@L(DocumentResourceNames.DocumentNumber)';
+        const reviewNumberText = '@L(DocumentResourceNames.ReviewNumber)';
+        const documentTypeText = '@L(DocumentResourceNames.DocumentType)';
     </script>
     <script>
         const txtSearch = $('#txtSearch');
@@ -81,7 +92,7 @@
                 grdDocument.jqxGrid('gotopage', 0);
             }
         });
-               
+
         let documents = [];
 
         let source =
@@ -97,6 +108,10 @@
             },
             cache: false,
             pagesize: 20,
+            sort: function () {
+                // update the grid and send a request to the server.
+                grdDocument.jqxGrid('updatebounddata', 'sort');
+            },
             pagesizeoptions: ["20", "40", "60"],
             datafields:
                 [
@@ -133,6 +148,7 @@
                 columnsresize: true,
                 altrows: true,
                 editable: true,
+                sortable: true,
                 pagesizeoptions: ["20", "40", "60"],
                 localization: getLocalization('vi'),
                 selectionmode: 'singlerow',
@@ -159,7 +175,7 @@
                         }
                     },
                     {
-                        text: 'Mã tài liệu',
+                        text: documentCodeText,
                         columntype: 'textbox',
                         datafield: 'code',
                         pinned: true,
@@ -167,7 +183,7 @@
                         width: 150
                     },
                     {
-                        text: 'Tên tài liệu',
+                        text: documentNameText,
                         columntype: 'textbox',
                         datafield: 'name',
                         pinned: true,
@@ -175,7 +191,7 @@
                         width: 150
                     },
                     {
-                        text: 'Công ty',
+                        text: companyText,
                         columntype: 'textbox',
                         datafield: 'companyName',
                         pinned: true,
@@ -183,7 +199,7 @@
                         width: 150
                     },
                     {
-                        text: 'Phòng ban',
+                        text: departmentText,
                         columntype: 'textbox',
                         datafield: 'departmentName',
                         pinned: true,
@@ -191,28 +207,28 @@
                         width: 150
                     },
                     {
-                        text: 'Phân hệ',
+                        text: moduleText,
                         columntype: 'textbox',
                         datafield: 'module',
                         editable: false,
                         width: 150
                     },
                     {
-                        text: 'Loại tài liệu',
+                        text: documentTypeText,
                         columntype: 'textbox',
                         datafield: 'firstName',
                         editable: false,
                         width: 150
                     },
                     {
-                        text: 'Số hiệu',
+                        text: documentNumberText,
                         columntype: 'textbox',
                         datafield: 'documentNumber',
                         editable: false,
                         width: 150
                     },
                     {
-                        text: 'Số soán xét',
+                        text: reviewNumberText,
                         datafield: 'reviewNumber',
                         editable: false,
                         width: 150
@@ -223,6 +239,6 @@
     </script>
 
     <script>
-        
+
     </script>
 }

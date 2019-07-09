@@ -49,6 +49,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,9 +59,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DocumentManagementApplicationModule.cs" />
+    <Compile Include="Documents\Commands\CreateDocumentCommand.cs" />
+    <Compile Include="Documents\Commands\CreateDocumentCommandHandler.cs" />
     <Compile Include="Documents\Queries\SearchDocumentsByTokenPagedDto.cs" />
     <Compile Include="Documents\Queries\SearchDocumentsByTokenPagedQuery.cs" />
     <Compile Include="Documents\Queries\SearchDocumentsByTokenPagedQueryHandler.cs" />
+    <Compile Include="DocumentTypes\Queries\GetAllDocumentTypesDto.cs" />
+    <Compile Include="DocumentTypes\Queries\GetAllDocumentTypesQuery.cs" />
+    <Compile Include="DocumentTypes\Queries\GetAllDocumentTypesQueryHandler.cs" />
     <Compile Include="Mapper\AutoMapperConfiguration.cs" />
     <Compile Include="Mapper\MappingExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,6 +87,14 @@
     <ProjectReference Include="..\DT.Core.Data\DT.Core.Data.csproj">
       <Project>{49eb794f-9a38-4b1b-8ca9-6732f991c11e}</Project>
       <Name>DT.Core.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DT.Core.Web.Common.Api\DT.Core.Web.Common.Api.csproj">
+      <Project>{A376FDDC-1B16-477D-B2DE-0792C53100BF}</Project>
+      <Name>DT.Core.Web.Common.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DT.Core\DT.Core.csproj">
+      <Project>{b2422e85-7353-466d-80de-4a3d0d759a52}</Project>
+      <Name>DT.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

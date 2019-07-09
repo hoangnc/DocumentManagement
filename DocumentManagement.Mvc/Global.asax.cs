@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Abp.Web.Localization;
 using System.Web;
-using System.Web.Http;
 using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
 
 namespace DocumentManagement.Mvc
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
+        protected void Application_BeginRequest()
+        {
+            DependencyResolver.Current.GetService<ICurrentCultureSetter>().SetCurrentCulture(Context);
+        }
+
         protected void Application_Start()
         {
-            
+
         }
     }
 }

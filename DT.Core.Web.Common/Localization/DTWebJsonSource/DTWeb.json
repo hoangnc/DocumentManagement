@@ -1,0 +1,10 @@
+{
+  "culture": "en",
+  "texts": {
+    "List": "List",
+    "Save": "Save",
+    "AddNew": "Add new",
+    "ExportToExcel": "Export to excel",
+    "ImportFromExcel": "Import from excel"
+  }
+}
