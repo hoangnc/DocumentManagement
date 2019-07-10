@@ -7,6 +7,7 @@
 
     public static class DTWebResourceNames
     {
+        public const string Search = "Search";
         public const string List = "List";
         public const string AddNew = "AddNew";
         public const string Save = "Save";

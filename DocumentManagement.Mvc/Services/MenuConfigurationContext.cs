@@ -1,4 +1,6 @@
-﻿using DT.Core.Web.Common.Models;
+﻿using Abp.Localization;
+using DocumentManagement.Mvc.Constants;
+using DT.Core.Web.Common.Models;
 using DT.Core.Web.Ui.Navigation;
 using System;
 
@@ -17,6 +19,11 @@ namespace DocumentManagement.Mvc.Services
 
     public class MenuConfigurationContext : IMenuConfigurationContext
     {
+        private readonly ILocalizationManager _localizationManager;
+        public MenuConfigurationContext(ILocalizationManager localizationManager)
+        {
+            _localizationManager = localizationManager;
+        }
         public ModuleMenuItems Menu => BuildDocumentMenu();
 
         private ModuleMenuItems BuildDocumentMenu()
@@ -25,14 +32,14 @@ namespace DocumentManagement.Mvc.Services
 
             ModuleMenuItem moduleMenuItem = new ModuleMenuItem();
             moduleMenuItem.Name = MenuNameConstants.DocumentManagement;
-            moduleMenuItem.DisplayName = "Quản lý tài liệu ISO";
+            moduleMenuItem.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.ApplicationName);
             moduleMenuItem.Order = 0;
 
             #region Release Document
 
             MenuItem menuReleaseDocument = new MenuItem();
             menuReleaseDocument.Name = MenuNameConstants.ReleaseDocument;
-            menuReleaseDocument.DisplayName = "Ban hành tài liệu";
+            menuReleaseDocument.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReleaseDocument);
             menuReleaseDocument.Order = 0;
             menuReleaseDocument.Url = "#";
             menuReleaseDocument.Icon = "fa fa-cog";
@@ -41,7 +48,7 @@ namespace DocumentManagement.Mvc.Services
             menuReleaseDocument.Items.Add(new MenuItem
             {
                 Name = MenuNameConstants.ReleaseNewDocument,
-                DisplayName = "Ban hành tài liệu mới",
+                DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReleaseNewDocument),
                 Url = "#",
                 Order = 0
             });
@@ -49,7 +56,7 @@ namespace DocumentManagement.Mvc.Services
             menuReleaseDocument.Items.Add(new MenuItem
             {
                 Name = MenuNameConstants.ReviewDocument,
-                DisplayName = "Xoán xét tài liệu",
+                DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReviewDocument),
                 Url = "#",
                 Order = 1
             });

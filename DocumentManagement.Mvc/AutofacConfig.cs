@@ -1,21 +1,16 @@
-﻿using Abp.Localization;
-using Abp.Localization.Dictionaries;
-using Abp.Localization.Dictionaries.Json;
-using Abp.Localization.Sources;
-using Autofac;
+﻿using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using DocumentManagement.Application;
+using DocumentManagement.Application.Documents.Commands;
 using DocumentManagement.Persistence;
-using DT.Core.Localization;
-using DT.Core.Web.Common;
+using DT.Core.Application.Validation;
+using FluentValidation;
+using FluentValidation.Mvc;
 using MediatR;
 using Newtonsoft.Json.Serialization;
 using System.Configuration;
-using System.Globalization;
 using System.Reflection;
-using System.Threading;
-using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -28,7 +23,7 @@ namespace DocumentManagement.Mvc
         public static IContainer ConfigureContainer()
         {
             ContainerBuilder builder = new ContainerBuilder();
-     
+
             // Register out persistence dependencies
             builder.RegisterModule(new DocumentManagementPersistenceModule(ConfigurationManager.ConnectionStrings["DocumentConnectionString"].ConnectionString));
 
@@ -36,7 +31,7 @@ namespace DocumentManagement.Mvc
 
             // Register out DocumentManagment MVC dependencies
             builder.RegisterModule(new DocumentManagementMvcModule());
- 
+
             // Get your HttpConfiguration.
             HttpConfiguration config = GlobalConfiguration.Configuration;
 
@@ -64,6 +59,15 @@ namespace DocumentManagement.Mvc
             builder.RegisterAssemblyTypes(typeof(IMediator).GetTypeInfo().Assembly)
                 .AsImplementedInterfaces();
 
+            builder.RegisterAssemblyTypes(typeof(CreateDocumentCommandValidator).Assembly)
+                .AsImplementedInterfaces() ;
+
+            builder.RegisterType<FluentValidationModelValidatorProvider>().As<ModelValidatorProvider>();
+            builder.RegisterType<FluentValidation.WebApi.FluentValidationModelValidatorProvider>().As<System.Web.Http.Validation.ModelValidatorProvider>();
+            builder.RegisterType<AutofacValidatorFactory>()
+                .As<IValidatorFactory>()
+                .SingleInstance();
+
             IContainer container = builder.Build();
             // Set MVC DI resolver to use our Autofac container
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
@@ -76,19 +80,7 @@ namespace DocumentManagement.Mvc
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            GlobalConfiguration.Configuration.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
-            #if DEBUG
-                 // Pretty json for developers.
-                 GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.None;
-            #else
-                 GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.None;
-            #endif
-            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("vi-VN");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("vi-VN");
-
-            CultureInfo.CurrentCulture = new CultureInfo("vi-VN");
-            CultureInfo.CurrentUICulture = new CultureInfo("vi-VN");
+           
             return container;
         }
     }

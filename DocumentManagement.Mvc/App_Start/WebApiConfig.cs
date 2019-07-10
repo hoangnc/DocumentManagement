@@ -1,7 +1,7 @@
-﻿using DT.Core.Web.Common.Api.WebApi.Formatter;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using DT.Core.Web.Common.Api.WebApi.Filters;
+using DT.Core.Web.Common.Api.WebApi.Formatter;
+using FluentValidation.WebApi;
+using Newtonsoft.Json.Serialization;
 using System.Web.Http;
 
 namespace DocumentManagement.Mvc
@@ -15,7 +15,18 @@ namespace DocumentManagement.Mvc
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+            config.Formatters.XmlFormatter.SupportedMediaTypes.Clear();
+#if DEBUG
+            // Pretty json for developers.
+            config.Formatters.JsonFormatter.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.None;
+#else
+                 config.Formatters.JsonFormatter.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.None;
+#endif
+            config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
             config.Formatters.Add(new FormMultipartEncodedMediaTypeFormatter());
+
+            config.Filters.Add(new DtExceptionFilterAttribute());
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

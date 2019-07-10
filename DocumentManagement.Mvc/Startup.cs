@@ -44,7 +44,6 @@ namespace DocumentManagement.Mvc
             IContainer container = AutofacConfig.ConfigureContainer();
 
             app.UseAutofacMiddleware(container);
-            // app.UseDTWebCommonLocalization(container.Resolve<ILocalizationConfiguration>());
 
             LocalizationManager localizationManager = container.Resolve<ILocalizationManager>() as LocalizationManager;
             localizationManager.Initialize();

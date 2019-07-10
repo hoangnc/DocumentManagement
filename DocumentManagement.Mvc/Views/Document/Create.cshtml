@@ -23,7 +23,7 @@
                     <a href="@Url.Action("List")" class="btn btn-success btn-sm">
                         <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.List)
                     </a>
-                    <button id="btnSubmit" type="button" class="btn btn-primary btn-sm">
+                    <button id="btnSubmit" type="submit" class="btn btn-primary btn-sm">
                         <i class="fa fa-floppy-o" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Save)
                     </button>
                 </div>
@@ -338,7 +338,7 @@
                         <br>
                         <span class="btn btn-success fileinput-button">
                             <i class="glyphicon glyphicon-plus"></i>
-                            <span>Chọn files...</span>
+                            <span>@L(DocumentResourceNames.SelectFiles)</span>
                             <!-- The file input field used as target for the file upload widget -->
                             <input id="fileupload" type="file" name="files[]" multiple>
                         </span>
@@ -584,6 +584,7 @@
         function create() {
             // Create an FormData object
             let formData = $("#formDocument").submit(function (e) {
+                e.preventDefault();
                 return;
             });
             //formData[0] contain form data only
@@ -607,7 +608,6 @@
                     };
                 }
             });
-
         }
     </script>
     <!--Events-->
@@ -618,7 +618,8 @@
                 addValidClassOnAll: true
             });
 
-            $btnSubmit.click(function () {
+            $("#formDocument").submit(function (e) {
+                e.preventDefault();
                 create();
             });
 
@@ -633,7 +634,7 @@
                         $CompanyName.val(selectedCompany.text);
                     }
                     $CompanyName.val(selectedCompany[0].text);
-                 }
+                }
             });
 
             $DepartmentCode.on('change', function (e) {

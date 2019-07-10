@@ -1,12 +1,16 @@
 ﻿{
   "culture": "vi-VN",
   "texts": {
+    "ApplicationName": "Quản lý tài liệu ISO",
+    "MenuReleaseDocument": "Ban hành tài liệu",
+    "MenuReleaseNewDocument": "Ban hành tài liệu mới",
+    "MenuReviewDocument": "Soán xét tài liệu",
     "DocumentList": "Danh sách tài liệu",
     "CreateDocument": "Thêm tài liệu",
     "Code": "Mã tài liệu",
     "CompanyCode": "Công ty",
     "CompanyName": "Phòng ban",
-    "DepartmentCode": "Công ty",
+    "DepartmentCode": "Phòng ban",
     "DepartmentName": "Phòng ban",
     "Module": "Phân hệ",
     "DocumentType": "Loại tài liệu",
@@ -28,6 +32,7 @@
     "RelateToDocuments": "Tài liệu liên quan",
     "DdcAudited": "Đã được DDC kiểm tra",
     "FolderName": "Tên folder",
-    "LinkFile": "Đường dẫn file"
+    "LinkFile": "Đường dẫn file",
+    "SelectFiles": "Chọn files"
   }
 }

@@ -7,6 +7,7 @@ using Abp.Web.Localization;
 using Autofac;
 using Autofac.Integration.Mvc;
 using DocumentManagement.Mvc.Services;
+using DT.Core.Application.Validation;
 using DT.Core.Authorization;
 using DT.Core.Localization;
 using DT.Core.Web.Common;
@@ -34,14 +35,9 @@ namespace DocumentManagement.Mvc
             builder.RegisterGeneric(typeof(RequestPostProcessorBehavior<,>))
                .As(typeof(IPipelineBehavior<,>));
 
-            builder.RegisterType<MenuConfigurationContext>()
-                .As<IMenuConfigurationContext>()
-                .InstancePerRequest();
-
-            builder.RegisterType<MenuManager>()
-                .As<IMenuManager>()
-                .InstancePerRequest();
-
+            builder.RegisterGeneric(typeof(RequestValidationBehavior<,>))
+              .As(typeof(IPipelineBehavior<,>));
+                        
             builder.RegisterType<PermissionChecker>()
                 .As<IPermissionChecker>()
                 .InstancePerRequest();
@@ -86,6 +82,14 @@ namespace DocumentManagement.Mvc
                                          c.Resolve<ILocalizationConfiguration>(), null))
                 .As<ILocalizationManager>()
                 .SingleInstance();
+
+            builder.RegisterType<MenuConfigurationContext>()
+               .As<IMenuConfigurationContext>()
+               .InstancePerRequest();
+
+            builder.RegisterType<MenuManager>()
+                .As<IMenuManager>()
+                .InstancePerRequest();
 
             builder.RegisterControllers(typeof(LocalizationController).Assembly);
 

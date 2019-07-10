@@ -146,14 +146,37 @@
         }
 
         $.busyLoadSetup({ background: "rgba(100, 100, 0, 0.86)" });
+
         $(document).ajaxStart(function () {
             $.busyLoadFull("show", {
                 spinner: "cubes"
             });
         });
+
         $(document).ajaxStop(function () {
             $.busyLoadFull("hide");
         });
+
+        $(document).ajaxError(function (event, xhr, settings, error) {
+            if (xhr.responseText.includes('401')) {
+                window.location = `${hostUrl}/account/Signout`;
+            }
+            else {
+                const errorObject = JSON.parse(xhr.responseText);
+                let errorHtml = `<span>Status Code: ${errorObject.StatusCode}</span>`;
+                errorHtml = errorHtml + `<br><span>Message: ${errorObject.Message}</span>`;
+                $.toast({
+                    heading: 'Error',
+                    text: errorHtml,
+                    position: 'top-right',
+                    icon: 'error',
+                    loader: true,        // Change it to false to disable loader
+                    loaderBg: '#9EC600',  // To change the background,
+                    hideAfter: 5000,
+                })
+            }
+        });
+
         $(document).ajaxSuccess(function (event, xhr, settings) {
             let message = 'Thêm mới dữ liệu thành công';
             if (xhr.message !== undefined) {
@@ -177,7 +200,6 @@
         });
     </script>
     @RenderSection("scripts", required: false)
-
 </body>
 </html>
 

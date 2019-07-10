@@ -2,6 +2,11 @@
 {
     public static class DocumentResourceNames
     {
+        public const string DocumentResourceName = "Document";
+        public const string ApplicationName = "ApplicationName";
+        public const string MenuReleaseDocument = "MenuReleaseDocument";
+        public const string MenuReleaseNewDocument = "MenuReleaseNewDocument";
+        public const string MenuReviewDocument = "MenuReviewDocument";
         public const string DocumentList = "DocumentList";
         public const string CreateDocument = "CreateDocument";
         public const string Code = "Code";
@@ -28,5 +33,6 @@
         public const string ReplaceEffectiveDate = "ReplaceEffectiveDate";
         public const string RelateToDocuments = "RelateToDocuments";
         public const string DCCAudited = "DdcAudited";
+        public const string SelectFiles = "SelectFiles";
     }
 }

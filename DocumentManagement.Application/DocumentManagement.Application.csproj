@@ -43,10 +43,16 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="FluentValidation, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.8.4.0\lib\net45\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="MediatR, Version=7.0.0.0, Culture=neutral, PublicKeyToken=bb9a41a5e8aaa7e2, processorArchitecture=MSIL">
       <HintPath>..\packages\MediatR.7.0.0\lib\net461\MediatR.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.4.1\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -61,6 +67,7 @@
     <Compile Include="DocumentManagementApplicationModule.cs" />
     <Compile Include="Documents\Commands\CreateDocumentCommand.cs" />
     <Compile Include="Documents\Commands\CreateDocumentCommandHandler.cs" />
+    <Compile Include="Documents\Commands\CreateDocumentCommandValidator.cs" />
     <Compile Include="Documents\Queries\SearchDocumentsByTokenPagedDto.cs" />
     <Compile Include="Documents\Queries\SearchDocumentsByTokenPagedQuery.cs" />
     <Compile Include="Documents\Queries\SearchDocumentsByTokenPagedQueryHandler.cs" />
