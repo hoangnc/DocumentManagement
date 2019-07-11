@@ -7,8 +7,7 @@ namespace DocumentManagement.Application.Documents.Commands
         public CreateDocumentCommandValidator()
         {
             RuleFor(x => x.Code)
-                .MinimumLength(4)
-                .MaximumLength(128)
+                .Length(4, 128)
                 .NotEmpty();
             RuleFor(x => x.CompanyCode).MaximumLength(64);
             RuleFor(x => x.CompanyName).MaximumLength(200);

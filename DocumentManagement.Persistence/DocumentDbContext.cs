@@ -1,11 +1,6 @@
 ﻿using DocumentManagement.Domain.Entities;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DocumentManagement.Persistence
 {
@@ -33,5 +28,6 @@ namespace DocumentManagement.Persistence
         public DbSet<Status> Statuses { get; set; }
         public DbSet<FormType> FormTypes { get; set; }
         public DbSet<PromulgateStatus> PromulgateStatuses { get; set; }
+        public DbSet<Module> Modules { get; set; }
     }
 }

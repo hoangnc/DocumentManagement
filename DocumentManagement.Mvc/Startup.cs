@@ -5,6 +5,8 @@ using Autofac;
 using DT.Core.Localization;
 using DT.Core.Web.Common;
 using DT.Core.Web.Common.Identity.Configurations;
+using DT.Core.Web.Common.Validation;
+using FluentValidation;
 using IdentityModel.Client;
 using IdentityServer3.Core;
 using Microsoft.IdentityModel.Protocols;
@@ -16,6 +18,7 @@ using Owin;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -47,6 +50,9 @@ namespace DocumentManagement.Mvc
 
             LocalizationManager localizationManager = container.Resolve<ILocalizationManager>() as LocalizationManager;
             localizationManager.Initialize();
+
+            var customLanguageManager = new CustomLanguageManager(container.Resolve<ILanguageManager>());
+            ValidatorOptions.LanguageManager = customLanguageManager;
 
             app.UseResourceAuthorization(new AuthorizationManager());
             app.UseKentorOwinCookieSaver();

@@ -36,7 +36,6 @@ namespace DocumentManagement.Mvc.Services
             moduleMenuItem.Order = 0;
 
             #region Release Document
-
             MenuItem menuReleaseDocument = new MenuItem();
             menuReleaseDocument.Name = MenuNameConstants.ReleaseDocument;
             menuReleaseDocument.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReleaseDocument);

@@ -56,6 +56,7 @@
     <Compile Include="Configurations\DocumentConfiguration.cs" />
     <Compile Include="Configurations\DocumentTypeConfiguration.cs" />
     <Compile Include="Configurations\FormTypeConfiguration.cs" />
+    <Compile Include="Configurations\ModuleConfiguration.cs" />
     <Compile Include="Configurations\PromulgateStatusConfiguration.cs" />
     <Compile Include="Configurations\StatusConfiguration.cs" />
     <Compile Include="DocumentDbContext.cs" />
@@ -64,6 +65,10 @@
     <Compile Include="Migrations\201907050300551_Initial.cs" />
     <Compile Include="Migrations\201907050300551_Initial.Designer.cs">
       <DependentUpon>201907050300551_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907110220183_AddModule.cs" />
+    <Compile Include="Migrations\201907110220183_AddModule.Designer.cs">
+      <DependentUpon>201907110220183_AddModule.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,6 +90,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201907050300551_Initial.resx">
       <DependentUpon>201907050300551_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907110220183_AddModule.resx">
+      <DependentUpon>201907110220183_AddModule.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

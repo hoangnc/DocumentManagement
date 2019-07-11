@@ -11,7 +11,7 @@
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
             ContextKey = "DocumentManagement.Persistence.DocumentDbContext";
         }
 
@@ -23,6 +23,7 @@
             //  to avoid creating duplicate seed data.
 
             SeedDocumentType(context);
+            context.SaveChanges();
         }
 
         private void SeedDocumentType(DocumentDbContext context)

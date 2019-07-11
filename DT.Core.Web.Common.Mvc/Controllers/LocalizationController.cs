@@ -1,5 +1,6 @@
 ﻿using Abp.Localization;
 using Abp.Web.Configuration;
+using FluentValidation;
 using System;
 using System.Web;
 using System.Web.Mvc;
@@ -29,6 +30,8 @@ namespace DT.Core.Web.Common.Mvc.Controllers
                     Path = Request.ApplicationPath
                 }
             );
+            ValidatorOptions.LanguageManager.Enabled = true;
+            ValidatorOptions.LanguageManager.Culture = new System.Globalization.CultureInfo(cultureName);
 
             if (!string.IsNullOrWhiteSpace(returnUrl) && Request.Url != null)// && AbpUrlHelper.IsLocalUrl(Request.Url, returnUrl))
             {

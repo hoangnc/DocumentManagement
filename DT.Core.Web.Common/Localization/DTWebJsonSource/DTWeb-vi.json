@@ -1,11 +1,33 @@
 ﻿{
   "culture": "vi-VN",
   "texts": {
-    "Search":  "Tìm kiếm",
+    "Search": "Tìm kiếm",
     "List": "Danh sách",
     "Save": "Lưu",
     "AddNew": "Thêm mới",
     "ExportToExcel": "Đổ giữ liệu ra file excel",
-    "ImportFromExcel": "Đẩy giữ liệu từ file excel"
+    "ImportFromExcel": "Đẩy giữ liệu từ file excel",
+    "NotNullValidator": "'{PropertyName}' không được để trống.",
+    "NotEmptyValidator": "'{PropertyName}' không nên để trống",
+    "NotEqualValidator": "'{PropertyName}' không nên bằng '{ComparisonValue}'",
+    "EqualValidator": "'{PropertyName}' nên bằng '{ComparisonValue}'",
+    "LengthValidator": "'{PropertyName}' phải có từ {MinLength} đến {MaxLength} ký tự. Bạn đã nhập {TotalLength} ký tự.",
+    "MaxLengthValidator": "Độ dài của '{PropertyName}' phải từ {MaxLength} ký tự trở xuống. Bạn đã nhập {TotalLength} ký tự.",
+    "MinLengthValidator": "Độ dài của '{PropertyName}' phải có ít nhât {MinLength} ký tự. Bạn đã nhập {TotalLength} ký tự.",
+    "LessThanValidator": "'{PropertyName}' phải dưới(nhỏ hơn) {ComparisonValue}.",
+    "LessThanOrEqualValidator": "'{PropertyName}'phải nhỏ hơn hoặc bằng {ComparisonValue}.",
+    "GreaterThanValidator": "'{PropertyName}' phải lớn hơn {ComparisonValue}.",
+    "GreaterThanOrEqualValidator": "'{PropertyName}' phải lớn hơn hoặc bằng {ComparisonValue}.",
+    "PredicateValidator": "Điều kiện quy định không được đáp ứng cho '{PropertyName}'.",
+    "RegularExpressionValidator": "'{PropertyName}' không đúng định dạng.",
+    "EmailValidator": "'{PropertyName}' không phải là một địa chỉ email hợp lệ.",
+    "CreditCardValidator": "'{PropertyName}' không phải là số thẻ tín dụng hợp lệ.",
+    "EnumValidator": "'{PropertyName}' có một loạt các giá trị không bao gồm {PropertyValue}.",
+    "EnumNameValidator": "'{PropertyName}' có một loạt các giá trị không bao gồm {PropertyValue}.",
+    "EmptyValidator": "'{PropertyName}' phải trống.",
+    "NullValidator": "'{PropertyName}' phải trống.",
+    "ExclusiveBetweenValidator": "'{PropertyName}' phải từ {From} đến {To} (exclusive). Bạn đã nhập {PropertyValue}.",
+    "InclusiveBetweenValidator": "'{PropertyName}' phải từ {From} đến {To}. Bạn đã nhập {PropertyValue}.",
+    "ScalePrecisionValidator": "'{PropertyName}' không được nhiều hơn {ExpectedPrecision} tổng số chữ số, với allowance cho {ExpectedScale} số thập phân. Đã tìm thấy {Digits} chữ số và {ActualScale} số thập phân."
   }
 }

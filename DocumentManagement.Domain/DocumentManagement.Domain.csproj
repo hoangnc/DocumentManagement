@@ -45,6 +45,7 @@
     <Compile Include="Entities\Document.cs" />
     <Compile Include="Entities\DocumentType.cs" />
     <Compile Include="Entities\FormType.cs" />
+    <Compile Include="Entities\Module.cs" />
     <Compile Include="Entities\PromulgateStatus.cs" />
     <Compile Include="Entities\Status.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

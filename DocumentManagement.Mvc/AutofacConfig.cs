@@ -1,15 +1,18 @@
-﻿using Autofac;
+﻿using Abp.Localization;
+using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using DocumentManagement.Application;
 using DocumentManagement.Application.Documents.Commands;
 using DocumentManagement.Persistence;
 using DT.Core.Application.Validation;
+using DT.Core.Web.Common.Validation;
 using FluentValidation;
 using FluentValidation.Mvc;
 using MediatR;
 using Newtonsoft.Json.Serialization;
 using System.Configuration;
+using System.Globalization;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -62,12 +65,16 @@ namespace DocumentManagement.Mvc
             builder.RegisterAssemblyTypes(typeof(CreateDocumentCommandValidator).Assembly)
                 .AsImplementedInterfaces() ;
 
-            builder.RegisterType<FluentValidationModelValidatorProvider>().As<ModelValidatorProvider>();
-            builder.RegisterType<FluentValidation.WebApi.FluentValidationModelValidatorProvider>().As<System.Web.Http.Validation.ModelValidatorProvider>();
+            builder.RegisterType<FluentValidationModelValidatorProvider>()
+                .As<ModelValidatorProvider>();
+
+            builder.RegisterType<FluentValidation.WebApi.FluentValidationModelValidatorProvider>()
+                .As<System.Web.Http.Validation.ModelValidatorProvider>();
+
             builder.RegisterType<AutofacValidatorFactory>()
                 .As<IValidatorFactory>()
                 .SingleInstance();
-
+ 
             IContainer container = builder.Build();
             // Set MVC DI resolver to use our Autofac container
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
@@ -80,7 +87,7 @@ namespace DocumentManagement.Mvc
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-           
+
             return container;
         }
     }
