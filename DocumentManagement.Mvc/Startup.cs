@@ -1,15 +1,9 @@
 ﻿using Abp.Localization;
-using Abp.Localization.Dictionaries;
-using Abp.Localization.Dictionaries.Json;
 using Autofac;
-using DT.Core.Localization;
-using DT.Core.Web.Common;
 using DT.Core.Web.Common.Identity.Configurations;
 using DT.Core.Web.Common.Validation;
 using FluentValidation;
 using IdentityModel.Client;
-using IdentityServer3.Core;
-using Microsoft.IdentityModel.Protocols;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
@@ -18,8 +12,6 @@ using Owin;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Globalization;
-using System.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
@@ -27,7 +19,6 @@ using System.Net.Security;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Helpers;
 
 [assembly: OwinStartup(typeof(DocumentManagement.Mvc.Startup))]
@@ -48,10 +39,7 @@ namespace DocumentManagement.Mvc
 
             app.UseAutofacMiddleware(container);
 
-            LocalizationManager localizationManager = container.Resolve<ILocalizationManager>() as LocalizationManager;
-            localizationManager.Initialize();
-
-            var customLanguageManager = new CustomLanguageManager(container.Resolve<ILanguageManager>());
+            CustomLanguageManager customLanguageManager = new CustomLanguageManager(container.Resolve<ILanguageManager>());
             ValidatorOptions.LanguageManager = customLanguageManager;
 
             app.UseResourceAuthorization(new AuthorizationManager());
@@ -112,6 +100,10 @@ namespace DocumentManagement.Mvc
                         {
                             if (n.ProtocolMessage.RequestType == Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectRequestType.Logout)
                             {
+                                string uri = ConfigurationManager.AppSettings["Host"].ToString();
+                                n.ProtocolMessage.RedirectUri = uri;
+                                n.ProtocolMessage.PostLogoutRedirectUri = uri;
+
                                 Claim idTokenHint = n.OwinContext.Authentication.User.FindFirst("id_token");
 
                                 if (idTokenHint != null)
@@ -124,7 +116,6 @@ namespace DocumentManagement.Mvc
                         }
                     }
                 });
-
             }
         }
     }

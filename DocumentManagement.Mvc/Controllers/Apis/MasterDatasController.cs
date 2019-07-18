@@ -41,6 +41,16 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             return await CallApi(new Uri($"{MasterDataEndpoint}/api/v1/masterdatas/getallcompanies"), token);
         }
 
+
+        [Route("api/masterdatas/getallgroupsfromactivedirectory")]
+        [HttpGet]
+        public async Task<dynamic> GetAllGroupsFromActiveDirectory()
+        {
+            ClaimsPrincipal user = User as ClaimsPrincipal;
+            string token = user.FindFirst("access_token").Value;
+            return await CallApi(new Uri($"{MasterDataEndpoint}/api/v1/masterdatas/getallgroupsfromactivedirectory"), token);
+        }
+
         private async Task<TokenResponse> GetTokenAsync()
         {
             TokenClient client = new TokenClient(

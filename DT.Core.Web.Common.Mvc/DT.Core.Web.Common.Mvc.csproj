@@ -86,9 +86,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutofacFilterAttributeFilterProvider.cs" />
     <Compile Include="Controllers\LocalizationController.cs" />
-    <Compile Include="Extensions\ContainerBuilderExtension.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

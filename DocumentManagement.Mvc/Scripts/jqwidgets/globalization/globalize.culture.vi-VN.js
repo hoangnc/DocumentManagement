@@ -1,7 +1,7 @@
 ﻿/* tslint:disable */
 /* eslint-disable */
 /*
- * Globalize Culture en-US
+ * Globalize Culture de-DE
  *
  * http://github.com/jquery/globalize
  *
@@ -29,7 +29,60 @@
 
     Globalize.addCultureInfo("vi-VN", "default", {
         name: "vi-VN",
-        englishName: "Vietnamese"
+        englishName: "Vietnamese",
+        nativeName: "Tiếng Việt",
+        language: "vi",
+        numberFormat: {
+            ",": ".",
+            ".": ",",
+            "NaN": "n. def.",
+            negativeInfinity: "-unendlich",
+            positiveInfinity: "+unendlich",
+            percent: {
+                pattern: ["-n%", "n%"],
+                ",": ".",
+                ".": ","
+            },
+            currency: {
+                pattern: ["-n ₫", "n đ"],
+                ",": ".",
+                ".": ",",
+                symbol: "₫"
+            }
+        },
+        calendars: {
+            standard: {
+                "/": ".",
+                firstDay: 1,
+                days: {
+                    // full day names
+                    names: ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"],
+                    // abbreviated day names
+                    namesAbbr: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+                    // shortest day names
+                    namesShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"]
+                },
+                months: {
+                    // full month names (13 months for lunar calendards -- 13th month should be "" if not lunar)
+                    names: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", ""],
+                    // abbreviated month names
+                    namesAbbr: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""]
+                },
+                AM: null,
+                PM: null,
+                eras: [{ "name": "n. Chr.", "start": null, "offset": 0 }],
+                patterns: {
+                    d: "dd/MM/yyyy",
+                    D: "dddd, d. MMMM yyyy",
+                    t: "HH:mm",
+                    T: "HH:mm:ss",
+                    f: "dddd, d. MMMM yyyy HH:mm",
+                    F: "dddd, d. MMMM yyyy HH:mm:ss",
+                    M: "dd MMMM",
+                    Y: "MMMM yyyy"
+                }
+            }
+        }
     });
 
 }(this));

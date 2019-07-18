@@ -91,7 +91,7 @@
                  todaystring: "Heute"
              }
             break;
-        case "vi":
+        case "vi-VN":
             localization =
                 {
                     // separator of parts of a date (e.g. '/' in 11/05/1955)

@@ -34,5 +34,13 @@ namespace DocumentManagement.Mvc.Controllers
         {
             return View();
         }
+
+        [ResourceAuthorize(DtPermissionBaseTypes.Update, DocumentResources.Documents)]
+        [HandleForbidden]
+        [Menu(SelectedMenu = MenuNameConstants.ReleaseNewDocument)]
+        public ActionResult Update()
+        {
+            return View();
+        }
     }
 }

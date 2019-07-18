@@ -37,6 +37,8 @@ namespace DocumentManagement.Mvc
                     return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Read));
                 case DtPermissionBaseTypes.Write:
                     return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Write));
+                case DtPermissionBaseTypes.Update:
+                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Update));
                 default:
                     return Nok();
             }

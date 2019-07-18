@@ -1,10 +1,14 @@
-{
+﻿{
   "culture": "en",
   "texts": {
     "Search": "Search",
     "List": "List",
     "Save": "Save",
     "AddNew": "Add new",
+    "AddNewDataSuccessed": "Add new data successed",
+    "Online": "Online",
+    "Profile": "Profile",
+    "SignOut": "Sign out",
     "ExportToExcel": "Export to excel",
     "ImportFromExcel": "Import from excel",
     "NotNullValidator": "'{PropertyName}' must not be empty.",

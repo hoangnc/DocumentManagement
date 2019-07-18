@@ -3,6 +3,8 @@ using DocumentManagement.Domain.Entities;
 using DocumentManagement.Application.Documents.Queries;
 using DocumentManagement.Application.Documents.Commands;
 using DocumentManagement.Application.DocumentTypes.Queries;
+using DocumentManagement.Application.Modules.Queries;
+using DocumentManagement.Application.Modules.Commands;
 
 namespace DocumentManagement.Application.Mapper
 {
@@ -17,6 +19,10 @@ namespace DocumentManagement.Application.Mapper
                 cfg.CreateMap<CreateDocumentCommand, Document>();
 
                 cfg.CreateMap<DocumentType, GetAllDocumentTypesDto>();
+
+                cfg.CreateMap<Module, SearchModulesByTokenPagedDto>();
+
+                cfg.CreateMap<CreateModuleCommand, Module>();
             });
 
             Mapper = MapperConfiguration.CreateMapper();

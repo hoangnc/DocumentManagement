@@ -39,6 +39,8 @@ namespace DT.Core.Web.Common.Mvc.Views
         }
         private ILocalizationSource _localizationSource;
 
+        protected LanguageInfo CurrentLanguage => DependencyResolver.Current.GetService<ILanguageManager>().CurrentLanguage;
+
         /// <summary>
         /// Constructor.
         /// </summary>

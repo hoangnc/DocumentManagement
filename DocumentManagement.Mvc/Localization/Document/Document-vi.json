@@ -5,6 +5,8 @@
     "MenuReleaseDocument": "Ban hành tài liệu",
     "MenuReleaseNewDocument": "Ban hành tài liệu mới",
     "MenuReviewDocument": "Soán xét tài liệu",
+    "MenuCategory": "Danh mục",
+    "MenuModule": "Phân hệ",
     "DocumentList": "Danh sách tài liệu",
     "CreateDocument": "Thêm tài liệu",
     "Code": "Mã tài liệu",
@@ -33,6 +35,7 @@
     "DdcAudited": "Đã được DDC kiểm tra",
     "FolderName": "Tên folder",
     "LinkFile": "Đường dẫn file",
-    "SelectFiles": "Chọn files"
+    "SelectFiles": "Chọn files",
+    "ModuleList": "Danh sách phân hệ"
   }
 }

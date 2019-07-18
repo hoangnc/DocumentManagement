@@ -12,6 +12,5 @@ namespace DocumentManagement.Mvc.Controllers
             Request.GetOwinContext().Authentication.SignOut();
             return Redirect("/");
         }
-
     }
 }

@@ -5,6 +5,8 @@
     "MenuReleaseDocument": "Release document",
     "MenuReleaseNewDocument": "Release new document",
     "MenuReviewDocument": "Review document",
+    "MenuCategory": "Category",
+    "MenuModule": "Module",
     "DocumentList": "Document list",
     "CreateDocument": "Add new document",
     "Code": "Code",
@@ -33,6 +35,7 @@
     "DdcAudited": "DDC audited?",
     "FolderName": "Folder name",
     "LinkFile": "Link file",
-    "SelectFiles": "Select files"
+    "SelectFiles": "Select files",
+    "ModuleList": "Module list"
   }
 }

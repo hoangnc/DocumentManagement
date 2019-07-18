@@ -10,10 +10,8 @@
     <link rel="stylesheet" href="~/Scripts/admin_lte/bower_components/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="~/Content/jquery.fileupload-ui.css" type="text/css" />
     <link rel="stylesheet" href="~/Content/jquery.fileupload.css" type="text/css" />
-
 }
 <div class="box box-info">
-
     <form role="form" action="/" id="formDocument">
         @Html.AntiForgeryToken()
         <div class="box-header with-border">
@@ -46,8 +44,7 @@
                                id="Code"
                                data-validation="length"
                                data-validation-length="3-128"
-                               data-validation-allowing=" "
-                               data-validation-error-msg="Số ký tự trong khoảng 4 đến 128" />
+                               data-validation-allowing=" " />
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -64,8 +61,7 @@
                                id="Name"
                                data-validation="length"
                                data-validation-length="4-512"
-                               data-validation-allowing=" "
-                               data-validation-error-msg="Số ký tự trong khoảng 4 đến 512" />
+                               data-validation-allowing=" " />
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -80,8 +76,7 @@
                                class="form-control"
                                id="DocumentType"
                                name="DocumentType"
-                               data-validation="required"
-                               data-validation-error-msg="Loại tài liệu là bắt buộc không được bỏ trống" />
+                               data-validation="required" />
                     </div>
                 </div>
             </div>
@@ -98,8 +93,7 @@
                                class="form-control"
                                id="CompanyCode"
                                name="CompanyCode"
-                               data-validation="required"
-                               data-validation-error-msg="Công ty là bắt buộc không được bỏ trống" />
+                               data-validation="required" />
                         <input type="hidden"
                                id="CompanyName"
                                name="CompanyName" />
@@ -117,8 +111,7 @@
                                class="form-control"
                                id="DepartmentCode"
                                name="DepartmentCode"
-                               data-validation="required"
-                               data-validation-error-msg="Phòng ban là bắt buộc không được bỏ trống" />
+                               data-validation="required" />
                         <input type="hidden"
                                id="DepartmentName"
                                name="DepartmentName" />
@@ -136,8 +129,7 @@
                                class="form-control"
                                id="Module"
                                name="Module"
-                               data-validation="required"
-                               data-validation-error-msg="Phân hệ là bắt buộc không được bỏ trống" />
+                               data-validation="required" />
                     </div>
                 </div>
             </div>
@@ -154,8 +146,7 @@
                                 id="Drafter"
                                 name="Drafter"
                                 multiple
-                                data-validation="required"
-                                data-validation-error-msg="Người soạn thảo là bắt buộc không được bỏ trống"></select>
+                                data-validation="required"></select>
                     </div>
                 </div>
             </div>
@@ -172,8 +163,7 @@
                                 id="Auditor"
                                 name="Auditor"
                                 multiple
-                                data-validation="required"
-                                data-validation-error-msg="Người kiểm tra là bắt buộc không được bỏ trống"></select>
+                                data-validation="required"></select>
                     </div>
                 </div>
             </div>
@@ -191,8 +181,7 @@
                                 id="Approver"
                                 name="Approver"
                                 multiple
-                                data-validation="required"
-                                data-validation-error-msg="Người phê duyệt là bắt buộc không được bỏ trống"></select>
+                                data-validation="required"></select>
                     </div>
                 </div>
             </div>
@@ -249,23 +238,25 @@
                     </div>
                 </div>
             </div>
-
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-12">
                     <div class="form-group">
                         <label>@L(DocumentResourceNames.ScopeOfApplication) <span style="color: red">(*)</span></label>
                         <i id="companycode-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
                            data-placement="top"
-                           title="Người soạn thảo là bắt buộc không được bỏ trống"></i>
-                        <input type="text"
-                               class="form-control"
-                               id="ScopeOfApplication"
-                               name="ScopeOfApplication" />
+                           title="Phạm vi áp dụng"></i>
+                        <select type="text"
+                                class="form-control"
+                                id="ScopeOfApplication"
+                                name="ScopeOfApplication"
+                                multiple></select>
                     </div>
                 </div>
-                <div class="col-md-4">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     <div class="form-group">
                         <label>@L(DocumentResourceNames.ScopeOfDeloyment) <span style="color: red">(*)</span></label>
                         <i id="clientid-help"
@@ -273,10 +264,11 @@
                            data-toggle="tooltip"
                            data-placement="top"
                            title="Phòng ban là bắt buộc không được bỏ trống"></i>
-                        <input type="text"
+                        <select type="text"
                                class="form-control"
                                id="ScopeOfDeloyment"
-                               name="ScopeOfDeloyment" />
+                               name="ScopeOfDeloyment"
+                                multiple></select>
                     </div>
                 </div>
             </div>
@@ -326,6 +318,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -382,11 +375,14 @@
 {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
+        const cultureSelector = '@CurrentLanguage.Name';
         const hostUrl = '@Url.GetHost()';
+
         let departments = [];
         let documentTypes = [];
         let users = [];
         let companies = [];
+        let groups = [];
 
         let $Approver = $('#Approver');
         let $Drafter = $('#Drafter');
@@ -396,6 +392,8 @@
         let $CompanyName = $('#CompanyName');
         let $DepartmentName = $('#DepartmentName');
         let $DocumentType = $('#DocumentType');
+        let $ScopeOfApplication = $('#ScopeOfApplication');
+        let $ScopeOfDeloyment = $('#ScopeOfDeloyment');
 
         let $btnSubmit = $('#btnSubmit');
         let storedFiles = [];
@@ -481,6 +479,7 @@
         const getAllUsersUrl = `${hostUrl}/api/masterdatas/getallusers`;
         const getAllCompaniesUrl = `${hostUrl}/api/masterdatas/getallcompanies`;
         const getAllDocumentTypesUrl = `${hostUrl}/api/documenttypes/getalldocumenttypes`;
+        const getAllGroupsFromActiveDirectoryUrl = `${hostUrl}/api/masterdatas/getallgroupsfromactivedirectory`;
         const createDocumentUrl = `${hostUrl}/api/documents/create`;
 
         // Get departments
@@ -523,13 +522,23 @@
                 });
         }
 
+        // Get groups
+        function getAllGroupsFromActiveDirectory() {
+            return $.getJSON(getAllGroupsFromActiveDirectoryUrl,
+                function (data) {
+                    groups = data.map((group) => {
+                        return { id: group, text: group };
+                    });
+                });
+        }
+
         function formatUserResult(user) {
             if (!user.id)
                 return user.text;
             const text = user.text;
             const fullName = text;
             const department = user.departmentName;
-            return $(`<span>${fullName}</span><div><small style="color: #a5a0a0">Phòng ban: ${department}</small></div>`);
+            return $(`<span>${fullName}</span><div><small style="color: #a5a0a0">@L(DocumentResourceNames.DepartmentName): ${department}</small></div>`);
         }
 
         function formatUserSelection(user) {
@@ -542,7 +551,8 @@
         Promise.all([getAllUsers(),
         getAllDepartments(),
         getAllCompanies(),
-        getAllDocumentTypes()
+        getAllDocumentTypes(),
+        getAllGroupsFromActiveDirectory()
         ]).then(() => {
             $Approver.select2({
                 data: users,
@@ -572,6 +582,14 @@
 
             $DocumentType.select2({
                 data: documentTypes
+            });
+
+            $ScopeOfApplication.select2({
+                data: groups
+            });
+
+            $ScopeOfDeloyment.select2({
+                data: groups
             });
             // all requests finished successfully
         }).catch(() => {
@@ -612,11 +630,63 @@
     </script>
     <!--Events-->
     <script>
+        const vietNamese = {
+            errorTitle: 'Form submission failed!',
+            requiredField: 'Đầy là trường bắt buộc',
+            requiredFields: 'You have not answered all required fields',
+            badTime: 'Thời gian bạn cung cấp không đúng',
+            badEmail: 'Bạn chưa cung cấp đúng địa chỉ email',
+            badTelephone: 'Bạn chưa cung cấp đúng số điện thoại',
+            badSecurityAnswer: 'You have not given a correct answer to the security question',
+            badDate: 'Ngày bạn nhập là không đúng',
+            lengthBadStart: 'Giá trị nhập phải nằm trong khoảng ',
+            lengthBadEnd: ' ký tự',
+            lengthTooLongStart: 'The input value is longer than ',
+            lengthTooShortStart: 'The input value is shorter than ',
+            notConfirmed: 'Input values could not be confirmed',
+            badDomain: 'Incorrect domain value',
+            badUrl: 'Giá trị nhập không phải là URL chính xác',
+            badCustomVal: 'Giá trị nhập không chính xác',
+            andSpaces: ' and spaces ',
+            badInt: 'The input value was not a correct number',
+            badSecurityNumber: 'Your social security number was incorrect',
+            badUKVatAnswer: 'Incorrect UK VAT Number',
+            badStrength: 'The password isn\'t strong enough',
+            badNumberOfSelectedOptionsStart: 'You have to choose at least ',
+            badNumberOfSelectedOptionsEnd: ' answers',
+            badAlphaNumeric: 'The input value can only contain alphanumeric characters ',
+            badAlphaNumericExtra: ' and ',
+            wrongFileSize: 'The file you are trying to upload is too large (max %s)',
+            wrongFileType: 'Only files of type %s is allowed',
+            groupCheckedRangeStart: 'Please choose between ',
+            groupCheckedTooFewStart: 'Please choose at least ',
+            groupCheckedTooManyStart: 'Please choose a maximum of ',
+            groupCheckedEnd: ' item(s)',
+            badCreditCard: 'The credit card number is not correct',
+            badCVV: 'The CVV number was not correct',
+            wrongFileDim: 'Incorrect image dimensions,',
+            imageTooTall: 'the image can not be taller than',
+            imageTooWide: 'the image can not be wider than',
+            imageTooSmall: 'the image was too small',
+            min: 'min',
+            max: 'max',
+            imageRatioNotAccepted: 'Image ratio is not accepted'
+        };
+
         $(document).ready(function () {
-            $.validate({
-                form: '#formDocument',
-                addValidClassOnAll: true
-            });
+            if (cultureSelector === 'vi-VN') {
+                $.validate({
+                    language: vietNamese,
+                    form: '#formDocument',
+                    addValidClassOnAll: true
+                });
+            } else {
+                $.validate({
+                    language: cultureSelector,
+                    form: '#formDocument',
+                    addValidClassOnAll: true
+                });
+            }
 
             $("#formDocument").submit(function (e) {
                 e.preventDefault();

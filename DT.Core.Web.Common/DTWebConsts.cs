@@ -13,6 +13,10 @@
         public const string Save = "Save";
         public const string ExportToExcel = "ExportToExcel";
         public const string ImportToExcel = "ImportToExcel";
+        public const string AddNewDataSuccessed = "AddNewDataSuccessed";
+        public const string Online = "Online";
+        public const string Profile = "Profile";
+        public const string SignOut = "SignOut";
     }
 
     public static class ValidatorNames

@@ -97,7 +97,8 @@ namespace DT.Core.Web.Localization
 
         protected virtual string GetBrowserCulture(HttpContext httpContext)
         {
-            if (httpContext.Request.UserLanguages.Any())
+            if (httpContext.Request.UserLanguages != null 
+                && httpContext.Request.UserLanguages.Any())
             {
                 return null;
             }

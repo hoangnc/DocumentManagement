@@ -70,9 +70,10 @@
     <script type="text/javascript" src="~/Scripts/jqwidgets/localization.js"></script>
     <script type="text/javascript" src="~/Scripts/demos.js"></script>
     <script type="text/javascript">
-        Globalize.cultureSelector = "en-US";
+        Globalize.cultureSelector = '@CurrentLanguage.Name';
     </script>
     <script>
+        const updateDocumentUrl = '#';
         const documentCodeText = '@L(DocumentResourceNames.Code)';
         const documentNameText = '@L(DocumentResourceNames.Name)';
         const companyText = '@L(DocumentResourceNames.CompanyCode)';
@@ -150,7 +151,7 @@
                 editable: true,
                 sortable: true,
                 pagesizeoptions: ["20", "40", "60"],
-                localization: getLocalization('vi'),
+                localization: getLocalization('@CurrentLanguage.Name'),
                 selectionmode: 'singlerow',
                 editmode: 'singlecell',
                 showstatusbar: false,
@@ -180,7 +181,12 @@
                         datafield: 'code',
                         pinned: true,
                         editable: false,
-                        width: 150
+                        width: 150,
+                        cellsrenderer: function (row, column, value, defaultHtml) {
+                            var element = $(defaultHtml);
+                            element.html(`<a href="${updateDocumentUrl}?documentId=${dataAdapter.records[row].id}"> <i class="fa fa-pencil"></i> ${value} </a>`);
+                            return element[0].outerHTML;
+                        }
                     },
                     {
                         text: documentNameText,
@@ -236,9 +242,5 @@
                 ]
             });
 
-    </script>
-
-    <script>
-
-    </script>
+    </script>  
 }

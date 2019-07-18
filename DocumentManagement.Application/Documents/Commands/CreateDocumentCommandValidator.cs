@@ -9,6 +9,7 @@ namespace DocumentManagement.Application.Documents.Commands
             RuleFor(x => x.Code)
                 .Length(4, 128)
                 .NotEmpty();
+
             RuleFor(x => x.CompanyCode).MaximumLength(64);
             RuleFor(x => x.CompanyName).MaximumLength(200);
             RuleFor(x => x.DepartmentCode).MaximumLength(64);

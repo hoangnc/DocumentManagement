@@ -1,0 +1,172 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles{
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.light.css" type="text/css" />
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Scripts/admin_lte/bower_components/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="~/Content/jquery.fileupload-ui.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/jquery.fileupload.css" type="text/css" />
+}
+<div class="box box-info">
+    <form role="form" action="/" id="formModule">
+        @Html.AntiForgeryToken()
+        <div class="box-header with-border">
+            <h3 class="box-title">@L(DocumentResourceNames.CreateDocument)</h3>
+            <div class="mailbox-controls">
+                <div class="btn-group">
+                    <a href="@Url.Action("List")" class="btn btn-success btn-sm">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.List)
+                    </a>
+                    <button id="btnSubmit" type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Save)
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="box-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Code) <span style="color: red">(*)</span></label>
+                        <i id="code-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Mã phân hệ là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               name="Code"
+                               id="Code"
+                               data-validation="length"
+                               data-validation-length="3-128"
+                               data-validation-allowing=" " />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Name) <span style="color: red">(*)</span></label>
+                        <i id="code-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Tên phân hệ là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               name="Name"
+                               id="Name"
+                               data-validation="length"
+                               data-validation-length="4-512"
+                               data-validation-allowing=" " />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        const cultureSelector = '@CurrentLanguage.Name';
+        const hostUrl = '@Url.GetHost()';
+        const createModuleUrl = `${hostUrl}/api/modules/create`;
+
+        const vietNamese = {
+            errorTitle: 'Form submission failed!',
+            requiredField: 'Đầy là trường bắt buộc',
+            requiredFields: 'You have not answered all required fields',
+            badTime: 'Thời gian bạn cung cấp không đúng',
+            badEmail: 'Bạn chưa cung cấp đúng địa chỉ email',
+            badTelephone: 'Bạn chưa cung cấp đúng số điện thoại',
+            badSecurityAnswer: 'You have not given a correct answer to the security question',
+            badDate: 'Ngày bạn nhập là không đúng',
+            lengthBadStart: 'Giá trị nhập phải nằm trong khoảng ',
+            lengthBadEnd: ' ký tự',
+            lengthTooLongStart: 'The input value is longer than ',
+            lengthTooShortStart: 'The input value is shorter than ',
+            notConfirmed: 'Input values could not be confirmed',
+            badDomain: 'Incorrect domain value',
+            badUrl: 'Giá trị nhập không phải là URL chính xác',
+            badCustomVal: 'Giá trị nhập không chính xác',
+            andSpaces: ' and spaces ',
+            badInt: 'The input value was not a correct number',
+            badSecurityNumber: 'Your social security number was incorrect',
+            badUKVatAnswer: 'Incorrect UK VAT Number',
+            badStrength: 'The password isn\'t strong enough',
+            badNumberOfSelectedOptionsStart: 'You have to choose at least ',
+            badNumberOfSelectedOptionsEnd: ' answers',
+            badAlphaNumeric: 'The input value can only contain alphanumeric characters ',
+            badAlphaNumericExtra: ' and ',
+            wrongFileSize: 'The file you are trying to upload is too large (max %s)',
+            wrongFileType: 'Only files of type %s is allowed',
+            groupCheckedRangeStart: 'Please choose between ',
+            groupCheckedTooFewStart: 'Please choose at least ',
+            groupCheckedTooManyStart: 'Please choose a maximum of ',
+            groupCheckedEnd: ' item(s)',
+            badCreditCard: 'The credit card number is not correct',
+            badCVV: 'The CVV number was not correct',
+            wrongFileDim: 'Incorrect image dimensions,',
+            imageTooTall: 'the image can not be taller than',
+            imageTooWide: 'the image can not be wider than',
+            imageTooSmall: 'the image was too small',
+            min: 'min',
+            max: 'max',
+            imageRatioNotAccepted: 'Image ratio is not accepted'
+        };
+
+        $(document).ready(function () {
+            if (cultureSelector === 'vi-VN') {
+                $.validate({
+                    language: vietNamese,
+                    form: '#formModule',
+                    addValidClassOnAll: true
+                });
+            } else {
+                $.validate({
+                    language: cultureSelector,
+                    form: '#formModule',
+                    addValidClassOnAll: true
+                });
+            }
+
+            $("#formModule").submit(function (e) {
+                e.preventDefault();
+                create();
+            });
+        });
+    </script>
+
+    <!--Actions-->
+    <script>
+        function create() {
+            // Create an FormData object
+            let formData = $("#formModule").submit(function (e) {
+                e.preventDefault();
+                return;
+            });
+            //formData[0] contain form data only
+            // You can directly make object via using form id but it require all ajax operation inside $("form").submit(<!-- Ajax Here   -->)
+            formData = new FormData(formData[0]);
+
+            $.ajax({
+                url: createModuleUrl,
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (event, settings, xhr) {
+                    xhr.message = {
+                        infor: 'Thêm phân hệ thành công',
+                        returnUrl: `${hostUrl}/module/list`
+                    };
+                }
+            });
+        }
+    </script>
+}

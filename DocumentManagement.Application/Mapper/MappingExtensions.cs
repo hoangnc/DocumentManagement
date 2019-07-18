@@ -1,6 +1,8 @@
 ﻿using DocumentManagement.Application.Documents.Commands;
 using DocumentManagement.Application.Documents.Queries;
 using DocumentManagement.Application.DocumentTypes.Queries;
+using DocumentManagement.Application.Modules.Commands;
+using DocumentManagement.Application.Modules.Queries;
 using DocumentManagement.Domain.Entities;
 
 namespace DocumentManagement.Application.Mapper
@@ -33,6 +35,16 @@ namespace DocumentManagement.Application.Mapper
         public static GetAllDocumentTypesDto ToGetAllDocumentTypesDto(this DocumentType documentType)
         {
             return documentType.MapTo<DocumentType, GetAllDocumentTypesDto>();
+        }
+        #endregion
+
+        #region Module
+        public static SearchModulesByTokenPagedDto ToSearchModulesByTokenPagedDto(this Module entity)
+        {
+            return entity.MapTo<Module, SearchModulesByTokenPagedDto>();
+        }
+        public static Module ToModule(this CreateModuleCommand command) {
+            return command.MapTo<CreateModuleCommand, Module>();
         }
         #endregion
     }

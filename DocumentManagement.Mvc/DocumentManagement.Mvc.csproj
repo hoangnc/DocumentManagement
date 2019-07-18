@@ -261,9 +261,11 @@
     <Compile Include="Controllers\Apis\DocumentsApiController.cs" />
     <Compile Include="Controllers\Apis\DocumentTypesApiController.cs" />
     <Compile Include="Controllers\Apis\MasterDatasController.cs" />
+    <Compile Include="Controllers\Apis\ModulesApiController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\DocumentManagementControllerBase.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ModuleController.cs" />
     <Compile Include="DocumentManagementMvcModule.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Global.asax.cs">
@@ -7218,6 +7220,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.form-validator.culture.vi-VN.js" />
     <Content Include="Scripts\jquery.form-validator.min.js" />
     <Content Include="Scripts\jquery.toast.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -7729,10 +7732,12 @@
     <Content Include="Views\Shared\_LeftSideColumnPartial.cshtml" />
     <Content Include="Views\Document\List.cshtml" />
     <Content Include="Views\Shared\_LanguagesPartial.cshtml" />
+    <Content Include="Views\Module\List.cshtml" />
+    <Content Include="Views\Module\Create.cshtml" />
+    <Content Include="Views\Module\Update.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Services\Authorization\" />
     <Folder Include="Uploads\CK\" />
     <Folder Include="Uploads\CN\" />
     <Folder Include="Uploads\CS\" />

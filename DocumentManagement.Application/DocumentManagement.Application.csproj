@@ -76,6 +76,15 @@
     <Compile Include="DocumentTypes\Queries\GetAllDocumentTypesQueryHandler.cs" />
     <Compile Include="Mapper\AutoMapperConfiguration.cs" />
     <Compile Include="Mapper\MappingExtensions.cs" />
+    <Compile Include="Modules\Commands\CreateModuleCommand.cs" />
+    <Compile Include="Modules\Commands\CreateModuleCommandHandler.cs" />
+    <Compile Include="Modules\Commands\CreateModuleCommandValidator.cs" />
+    <Compile Include="Modules\Queries\GetModuleByIdDto.cs" />
+    <Compile Include="Modules\Queries\GetModuleByIdQuery.cs" />
+    <Compile Include="Modules\Queries\GetModuleByIdQueryHandler.cs" />
+    <Compile Include="Modules\Queries\SearchModulesByTokenPagedDto.cs" />
+    <Compile Include="Modules\Queries\SearchModulesByTokenPagedQuery.cs" />
+    <Compile Include="Modules\Queries\SearchModulesByTokenPagedQueryHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -81,6 +81,7 @@ namespace DocumentManagement.Mvc
             builder.Register(c => new LocalizationManager(c.Resolve<ILanguageManager>(),
                                          c.Resolve<ILocalizationConfiguration>(), null))
                 .As<ILocalizationManager>()
+                .OnActivated(e => e.Instance.Initialize())
                 .SingleInstance();
 
             builder.RegisterType<MenuConfigurationContext>()

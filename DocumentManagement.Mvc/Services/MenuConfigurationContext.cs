@@ -15,6 +15,9 @@ namespace DocumentManagement.Mvc.Services
         public const string ReleaseNewDocument = "ReleaseNewDocument";
 
         public const string ReviewDocument = "ReviewDocument";
+
+        public const string Category = "Category";
+        public const string Module = "Module";
     }
 
     public class MenuConfigurationContext : IMenuConfigurationContext
@@ -61,7 +64,28 @@ namespace DocumentManagement.Mvc.Services
             });
             #endregion
             moduleMenuItem.Items.Add(menuReleaseDocument);
+
+            #region Category
+            MenuItem menuCategory = new MenuItem();
+            menuCategory.Name = MenuNameConstants.Category;
+            menuCategory.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuCategory);
+            menuCategory.Order = 0;
+            menuCategory.Url = "#";
+            menuCategory.Icon = "fa  fa-list";
+            menuCategory.CssClass = "treeview";
+
+            menuCategory.Items.Add(new MenuItem
+            {
+                Name = MenuNameConstants.Module,
+                DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuModule),
+                Url = "/module/index",
+                Order = 0
+            });
+            #endregion
+            moduleMenuItem.Items.Add(menuCategory);
+
             moduleMenuItems.Add(moduleMenuItem);
+
             return moduleMenuItems;
         }
     }
