@@ -1,9 +1,8 @@
-﻿using DocumentManagement.Persistence;
+﻿using DocumentManagement.Application.Mapper;
+using DocumentManagement.Domain.Entities;
+using DocumentManagement.Persistence;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Data.Entity;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,9 +16,16 @@ namespace DocumentManagement.Application.Modules.Queries
             _context = context;
         }
 
-        public Task<GetModuleByIdDto> Handle(GetModuleByIdQuery request, CancellationToken cancellationToken)
+        public async Task<GetModuleByIdDto> Handle(GetModuleByIdQuery request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            GetModuleByIdDto getModuleByIdDto = new GetModuleByIdDto();
+            Module module = await _context.Modules.FirstOrDefaultAsync(m => !m.Deleted
+            && m.Id == request.Id);
+            if (module != null)
+            {
+                getModuleByIdDto = module.ToGetModuleByIdDto();
+            }
+            return getModuleByIdDto;
         }
     }
 }

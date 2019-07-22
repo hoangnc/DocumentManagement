@@ -9,6 +9,8 @@
     "Online": "Trực tuyến",
     "Profile": "Hồ sơ",
     "SignOut": "Đăng xuất",
+    "ModifiedBy": "Cập nhật bởi",
+    "ModifiedOn": "Thời gian cập nhật",
     "ExportToExcel": "Đổ giữ liệu ra file excel",
     "ImportFromExcel": "Đẩy giữ liệu từ file excel",
     "NotNullValidator": "'{PropertyName}' không được để trống.",

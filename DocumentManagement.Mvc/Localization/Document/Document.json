@@ -6,6 +6,7 @@
     "MenuReleaseNewDocument": "Release new document",
     "MenuReviewDocument": "Review document",
     "MenuCategory": "Category",
+    "MenuDocumentType": "Document type",
     "MenuModule": "Module",
     "DocumentList": "Document list",
     "CreateDocument": "Add new document",
@@ -36,6 +37,14 @@
     "FolderName": "Folder name",
     "LinkFile": "Link file",
     "SelectFiles": "Select files",
-    "ModuleList": "Module list"
+    "CreateModule": "Add new module",
+    "UpdateModule": "Update module",
+    "ModuleList": "Module list",
+    "ModuleCode": "Module code",
+    "ModuleName": "Module name",
+    // DocumentType
+    "CreateDocumentType": "Add new document type",
+    "DocumentTypeCode": "Document type code",
+    "DocumentTypeName": "Document type name"
   }
 }

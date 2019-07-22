@@ -17,6 +17,8 @@
         public const string Online = "Online";
         public const string Profile = "Profile";
         public const string SignOut = "SignOut";
+        public const string ModifiedBy = "ModifiedBy";
+        public const string ModifiedOn = "ModifiedOn";
     }
 
     public static class ValidatorNames

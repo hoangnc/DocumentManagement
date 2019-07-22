@@ -71,6 +71,10 @@
     <script type="text/javascript">
         Globalize.cultureSelector = '@CurrentLanguage.Name';
         const updateModuleUrl = `${hostUrl}/module/update`;
+        const codeText = '@L(DocumentResourceNames.ModuleCode)';
+        const nameText = '@L(DocumentResourceNames.ModuleName)';
+        const modifiedByText = '@Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.ModifiedBy)';
+        const modifiedOnText = '@Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.ModifiedOn)';
     </script>
     <script>
         const txtSearch = $('#txtSearch');
@@ -100,14 +104,16 @@
             pagesize: 20,
             sort: function () {
                 // update the grid and send a request to the server.
-                grdDocument.jqxGrid('updatebounddata', 'sort');
+                grdModule.jqxGrid('updatebounddata', 'sort');
             },
             pagesizeoptions: ["20", "40", "60"],
             datafields:
                 [
                     { name: 'id', type: 'int' },
                     { name: 'code', type: 'string' },
-                    { name: 'name', type: 'string' }
+                    { name: 'name', type: 'string' },
+                    { name: 'modifiedBy', type: 'string' },
+                    { name: 'modifiedOn', type: 'date' }
                 ],
             root: 'data',
             beforeprocessing: function (data) { source.totalrecords = data.total; }
@@ -157,7 +163,7 @@
                         }
                     },
                     {
-                        text: 'Mã',
+                        text: codeText,
                         columntype: 'textbox',
                         datafield: 'code',
                         pinned: true,
@@ -165,14 +171,31 @@
                         width: 150,
                         cellsrenderer: function (row, column, value, defaultHtml) {
                             var element = $(defaultHtml);
-                            element.html(`<a href="${updateModuleUrl}?documentId=${dataAdapter.records[row].id}"> <i class="fa fa-pencil"></i> ${value} </a>`);
+                            element.html(`<a href="${updateModuleUrl}?id=${dataAdapter.records[row].id}"> <i class="fa fa-pencil"></i> ${value} </a>`);
                             return element[0].outerHTML;
                         }
                     },
                     {
-                        text: 'Tên',
+                        text: nameText,
                         columntype: 'textbox',
                         datafield: 'name',
+                        pinned: true,
+                        editable: false,
+                        width: 150
+                    },
+                    {
+                        text: modifiedByText,
+                        columntype: 'textbox',
+                        datafield: 'modifiedBy',
+                        pinned: true,
+                        editable: false,
+                        width: 150
+                    },
+                    {
+                        text: modifiedOnText,
+                        columntype: 'datetimeinput',
+                        datafield: 'modifiedOn',
+                        cellsformat: 'f',
                         pinned: true,
                         editable: false,
                         width: 150

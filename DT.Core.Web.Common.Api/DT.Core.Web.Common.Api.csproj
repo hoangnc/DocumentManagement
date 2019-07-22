@@ -58,10 +58,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebApi\BinderProvider\DateTimeBinderProvider.cs" />
     <Compile Include="WebApi\Controllers\BaseApiController.cs" />
     <Compile Include="WebApi\Filters\DtExceptionFilterAttribute.cs" />
     <Compile Include="WebApi\Formatter\FormMultipartEncodedMediaTypeFormatter.cs" />
     <Compile Include="WebApi\Formatter\HttpPostedFileMultipart.cs" />
+    <Compile Include="WebApi\ModelBinder\DateTimeModelBinder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

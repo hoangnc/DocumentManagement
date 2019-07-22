@@ -6,6 +6,7 @@ using Abp.Web.Configuration;
 using Abp.Web.Localization;
 using Autofac;
 using Autofac.Integration.Mvc;
+using DocumentManagement.Mvc.Mapper;
 using DocumentManagement.Mvc.Services;
 using DT.Core.Application.Validation;
 using DT.Core.Authorization;
@@ -29,6 +30,8 @@ namespace DocumentManagement.Mvc
 
         protected override void Load(ContainerBuilder builder)
         {
+            AutoMapperConfiguration.Initialize();
+
             builder.RegisterGeneric(typeof(RequestPreProcessorBehavior<,>))
                 .As(typeof(IPipelineBehavior<,>));
 

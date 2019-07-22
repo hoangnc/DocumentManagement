@@ -18,6 +18,7 @@ namespace DocumentManagement.Mvc.Services
 
         public const string Category = "Category";
         public const string Module = "Module";
+        public const string DocumentType = "DocumentType";
     }
 
     public class MenuConfigurationContext : IMenuConfigurationContext
@@ -51,7 +52,7 @@ namespace DocumentManagement.Mvc.Services
             {
                 Name = MenuNameConstants.ReleaseNewDocument,
                 DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReleaseNewDocument),
-                Url = "#",
+                Url = "/document/index",
                 Order = 0
             });
 
@@ -79,6 +80,14 @@ namespace DocumentManagement.Mvc.Services
                 Name = MenuNameConstants.Module,
                 DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuModule),
                 Url = "/module/index",
+                Order = 0
+            });
+
+            menuCategory.Items.Add(new MenuItem
+            {
+                Name = MenuNameConstants.DocumentType,
+                DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuDocumentType),
+                Url = "/documenttype/index",
                 Order = 0
             });
             #endregion

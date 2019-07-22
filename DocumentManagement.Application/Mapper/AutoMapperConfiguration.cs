@@ -5,6 +5,8 @@ using DocumentManagement.Application.Documents.Commands;
 using DocumentManagement.Application.DocumentTypes.Queries;
 using DocumentManagement.Application.Modules.Queries;
 using DocumentManagement.Application.Modules.Commands;
+using DocumentManagement.Application.DocumentTypes.Commands;
+using DocumentManagement.Application.PromulgateStatuses.Queries;
 
 namespace DocumentManagement.Application.Mapper
 {
@@ -23,6 +25,20 @@ namespace DocumentManagement.Application.Mapper
                 cfg.CreateMap<Module, SearchModulesByTokenPagedDto>();
 
                 cfg.CreateMap<CreateModuleCommand, Module>();
+
+                cfg.CreateMap<Module, GetModuleByIdDto>();
+
+                cfg.CreateMap<Module, GetAllModulesDto>();
+
+                cfg.CreateMap<DocumentType, SearchDocumentTypesByTokenPagedDto>();
+
+                cfg.CreateMap<CreateDocumentTypeCommand, DocumentType>();
+
+                cfg.CreateMap<UpdateDocumentTypeCommand, DocumentType>();
+
+                cfg.CreateMap<DocumentType, GetDocumentTypeByIdDto>();
+
+                cfg.CreateMap<PromulgateStatus, SearchPromulgateStatusByTokenPagedDto>();
             });
 
             Mapper = MapperConfiguration.CreateMapper();

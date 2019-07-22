@@ -1,4 +1,6 @@
-﻿using DocumentManagement.Application.DocumentTypes.Queries;
+﻿using DocumentManagement.Application.DocumentTypes.Commands;
+using DocumentManagement.Application.DocumentTypes.Queries;
+using DT.Core.Data.Models;
 using DT.Core.Web.Common.Api.WebApi.Controllers;
 using System;
 using System.Collections.Generic;
@@ -15,12 +17,47 @@ namespace DocumentManagement.Mvc.Controllers.Apis
     [Authorize]
     public class DocumentTypesApiController : BaseApiController
     {
+        [Route("api/documenttypes/create")]
+        [HttpPost]
+        [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.ApiDocumentTypes)]
+        public async Task<int> Create([FromBody]CreateDocumentTypeCommand createDocumentTypeCommand)
+        {
+            createDocumentTypeCommand.CreatedBy = User.Identity.Name;
+            createDocumentTypeCommand.CreatedOn = DateTime.Now;
+            createDocumentTypeCommand.Deleted = false;
+
+            return await Mediator.Send(createDocumentTypeCommand);
+        }
+
+        [Route("api/documenttypes/update")]
+        [HttpPost]
+        [ResourceAuthorize(DtPermissionBaseTypes.Update, DocumentResources.ApiDocumentTypes)]
+        public async Task<int> Update([FromBody]UpdateDocumentTypeCommand updateDocumentTypeCommand)
+        {
+            updateDocumentTypeCommand.ModifiedBy = User.Identity.Name;
+            updateDocumentTypeCommand.ModifiedOn = DateTime.Now;
+
+            return await Mediator.Send(updateDocumentTypeCommand);
+        }
+
         [Route("api/documenttypes/getalldocumenttypes")]
         [HttpGet]
-        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocuments)]
+        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocumentTypes)]
         public async Task<List<GetAllDocumentTypesDto>> List()
         {
             return await Mediator.Send(new GetAllDocumentTypesQuery());
+        }
+
+        [Route("api/modules/searchdocumenttypesbytokenpaged")]
+        [HttpGet]
+        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocumentTypes)]
+        public async Task<DataSourceResult> List([FromUri]DataSourceRequest dataSourceRequest, string token)
+        {
+            return await Mediator.Send(new SearchDocumentTypesByTokenPagedQuery
+            {
+                DataSourceRequest = dataSourceRequest,
+                Token = token
+            });
         }
     }
 }

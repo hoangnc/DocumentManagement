@@ -1,9 +1,9 @@
-﻿using DocumentManagement.Mvc.Services;
+﻿using DocumentManagement.Application.Modules.Queries;
+using DocumentManagement.Mvc.Mapper;
+using DocumentManagement.Mvc.Models.Modules;
+using DocumentManagement.Mvc.Services;
 using DT.Core.Web.Ui.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Thinktecture.IdentityModel.Mvc;
 using static DT.Core.Web.Common.Identity.Constants;
@@ -11,7 +11,7 @@ using static DT.Core.Web.Common.Identity.Constants;
 namespace DocumentManagement.Mvc.Controllers
 {
     [Authorize]
-    public class ModuleController : Controller
+    public class ModuleController : DocumentManagementControllerBase
     {
         // GET: Module
         public ActionResult Index()
@@ -19,7 +19,7 @@ namespace DocumentManagement.Mvc.Controllers
             return RedirectToAction("List");
         }
 
-        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.Documents)]
+        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.Modules)]
         [HandleForbidden]
         [Menu(SelectedMenu = MenuNameConstants.Module)]
         public ActionResult List()
@@ -27,7 +27,7 @@ namespace DocumentManagement.Mvc.Controllers
             return View();
         }
 
-        [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.Documents)]
+        [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.Modules)]
         [HandleForbidden]
         [Menu(SelectedMenu = MenuNameConstants.Module)]
         public ActionResult Create()
@@ -35,12 +35,18 @@ namespace DocumentManagement.Mvc.Controllers
             return View();
         }
 
-        [ResourceAuthorize(DtPermissionBaseTypes.Update, DocumentResources.Documents)]
+        [ResourceAuthorize(DtPermissionBaseTypes.Update, DocumentResources.Modules)]
         [HandleForbidden]
         [Menu(SelectedMenu = MenuNameConstants.Module)]
-        public ActionResult Update()
+        public async Task<ActionResult> Update(int id)
         {
-            return View();
+            GetModuleByIdDto getModuleByIdDto = await Mediator.Send(new GetModuleByIdQuery
+            {
+                Id = id
+            });
+            if (getModuleByIdDto != null)
+                return View(getModuleByIdDto.ToModuleUpdateModel());
+            return View(new ModuleUpdateModel());
         }
     }
 }

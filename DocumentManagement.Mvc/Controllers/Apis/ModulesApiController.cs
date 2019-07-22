@@ -20,7 +20,7 @@ namespace DocumentManagement.Mvc.Controllers.Apis
 
         [Route("api/modules/create")]
         [HttpPost]
-        [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.ApiDocuments)]
+        [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.ApiModules)]
         public async Task<int> Create([FromBody]CreateModuleCommand createModuleCommand)
         {
             createModuleCommand.CreatedBy = User.Identity.Name;
@@ -30,9 +30,30 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             return await Mediator.Send(createModuleCommand);
         }
 
+        [Route("api/modules/update")]
+        [HttpPost]
+        [ResourceAuthorize(DtPermissionBaseTypes.Update, DocumentResources.ApiModules)]
+        public async Task<int> Update([FromBody]UpdateModuleCommand updateModuleCommand)
+        {
+            updateModuleCommand.ModifiedBy = User.Identity.Name;
+            updateModuleCommand.ModifiedOn = DateTime.Now;
+
+            return await Mediator.Send(updateModuleCommand);
+        }
+
+
+        [Route("api/modules/getallmodules")]
+        [HttpGet]
+        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiModules)]
+        public async Task<List<GetAllModulesDto>> GetAllModules()
+        {
+            return await Mediator.Send(new GetAllModulesQuery());
+        }
+
+
         [Route("api/modules/searchmodulesbytokenpaged")]
         [HttpGet]
-        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocuments)]
+        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiModules)]
         public async Task<DataSourceResult> List([FromUri]DataSourceRequest dataSourceRequest, string token)
         {
             return await Mediator.Send(new SearchModulesByTokenPagedQuery

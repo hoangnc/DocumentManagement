@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using System.Web.Http.Metadata;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ModelBinding.Binders;
 using System.Web.Http.Validation;
@@ -52,9 +53,9 @@ namespace DT.Core.Web.Common.Api.WebApi.Formatter
             try
             {
                 // load multipart data into memory 
-                var multipartProvider = await content.ReadAsMultipartAsync();
+                MultipartMemoryStreamProvider multipartProvider = await content.ReadAsMultipartAsync();
                 // fill parts into a ditionary for later binding to model
-                var modelDictionary = await ToModelDictionaryAsync(multipartProvider);
+                IDictionary<string, object> modelDictionary = await ToModelDictionaryAsync(multipartProvider);
                 // bind data to model 
                 return BindToModel(modelDictionary, type, formatterLogger);
             }
@@ -71,13 +72,13 @@ namespace DT.Core.Web.Common.Api.WebApi.Formatter
 
         private async Task<IDictionary<string, object>> ToModelDictionaryAsync(MultipartMemoryStreamProvider multipartProvider)
         {
-            var dictionary = new Dictionary<string, object>();
+            Dictionary<string, object> dictionary = new Dictionary<string, object>();
 
             // iterate all parts 
-            foreach (var part in multipartProvider.Contents)
+            foreach (HttpContent part in multipartProvider.Contents)
             {
                 // unescape the name 
-                var name = part.Headers.ContentDisposition.Name.Trim('"');
+                string name = part.Headers.ContentDisposition.Name.Trim('"');
 
                 // if we have a filename, we treat the part as file upload,
                 // otherwise as simple string, model binder will convert strings to other types. 
@@ -128,67 +129,66 @@ namespace DT.Core.Web.Common.Api.WebApi.Formatter
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (type == null) throw new ArgumentNullException(nameof(type));
 
-            using (var config = new HttpConfiguration())
+            HttpConfiguration config = GlobalConfiguration.Configuration;
+
+            // if there is a requiredMemberSelector set, use this one by replacing the validator provider
+            bool validateRequiredMembers = RequiredMemberSelector != null && formatterLogger != null;
+            if (validateRequiredMembers)
             {
-                // if there is a requiredMemberSelector set, use this one by replacing the validator provider
-                var validateRequiredMembers = RequiredMemberSelector != null && formatterLogger != null;
-                if (validateRequiredMembers)
-                {
-                    config.Services.Replace(typeof(ModelValidatorProvider), new RequiredMemberModelValidatorProvider(RequiredMemberSelector));
-                }
-
-                // create a action context for model binding
-                var actionContext = new HttpActionContext
-                {
-                    ControllerContext = new HttpControllerContext
-                    {
-                        Configuration = config,
-                        ControllerDescriptor = new HttpControllerDescriptor
-                        {
-                            Configuration = config
-                        }
-                    }
-                };
-
-                // create model binder context 
-                var valueProvider = new NameValuePairsValueProvider(data, CultureInfo.InvariantCulture);
-                var metadataProvider = actionContext.ControllerContext.Configuration.Services.GetModelMetadataProvider();
-                var metadata = metadataProvider.GetMetadataForType(null, type);
-                var modelBindingContext = new ModelBindingContext
-                {
-                    ModelName = string.Empty,
-                    FallbackToEmptyPrefix = false,
-                    ModelMetadata = metadata,
-                    ModelState = actionContext.ModelState,
-                    ValueProvider = valueProvider
-                };
-
-                // bind model 
-                var modelBinderProvider = new CompositeModelBinderProvider(config.Services.GetModelBinderProviders());
-                var binder = modelBinderProvider.GetBinder(config, type);
-                var haveResult = binder.BindModel(actionContext, modelBindingContext);
-
-                // log validation errors 
-                if (formatterLogger != null)
-                {
-                    foreach (var modelStatePair in actionContext.ModelState)
-                    {
-                        foreach (var modelError in modelStatePair.Value.Errors)
-                        {
-                            if (modelError.Exception != null)
-                            {
-                                formatterLogger.LogError(modelStatePair.Key, modelError.Exception);
-                            }
-                            else
-                            {
-                                formatterLogger.LogError(modelStatePair.Key, modelError.ErrorMessage);
-                            }
-                        }
-                    }
-                }
-
-                return haveResult ? modelBindingContext.Model : GetDefaultValueForType(type);
+                config.Services.Replace(typeof(ModelValidatorProvider), new RequiredMemberModelValidatorProvider(RequiredMemberSelector));
             }
+
+            // create a action context for model binding
+            HttpActionContext actionContext = new HttpActionContext
+            {
+                ControllerContext = new HttpControllerContext
+                {
+                    Configuration = config,
+                    ControllerDescriptor = new HttpControllerDescriptor
+                    {
+                        Configuration = config
+                    }
+                }
+            };
+
+            // create model binder context 
+            NameValuePairsValueProvider valueProvider = new NameValuePairsValueProvider(data, CultureInfo.InvariantCulture);
+            ModelMetadataProvider metadataProvider = actionContext.ControllerContext.Configuration.Services.GetModelMetadataProvider();
+            ModelMetadata metadata = metadataProvider.GetMetadataForType(null, type);
+            ModelBindingContext modelBindingContext = new ModelBindingContext
+            {
+                ModelName = string.Empty,
+                FallbackToEmptyPrefix = false,
+                ModelMetadata = metadata,
+                ModelState = actionContext.ModelState,
+                ValueProvider = valueProvider
+            };
+
+            // bind model 
+            CompositeModelBinderProvider modelBinderProvider = new CompositeModelBinderProvider(config.Services.GetModelBinderProviders());
+            IModelBinder binder = modelBinderProvider.GetBinder(config, type);
+            bool haveResult = binder.BindModel(actionContext, modelBindingContext);
+
+            // log validation errors 
+            if (formatterLogger != null)
+            {
+                foreach (KeyValuePair<string, ModelState> modelStatePair in actionContext.ModelState)
+                {
+                    foreach (ModelError modelError in modelStatePair.Value.Errors)
+                    {
+                        if (modelError.Exception != null)
+                        {
+                            formatterLogger.LogError(modelStatePair.Key, modelError.Exception);
+                        }
+                        else
+                        {
+                            formatterLogger.LogError(modelStatePair.Key, modelError.ErrorMessage);
+                        }
+                    }
+                }
+            }
+
+            return haveResult ? modelBindingContext.Model : GetDefaultValueForType(type);
         }
     }
 }

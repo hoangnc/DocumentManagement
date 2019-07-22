@@ -1,0 +1,133 @@
+﻿@model DocumentManagement.Mvc.Models.DocumentTypes.DocumentTypeUpdateModel
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles{
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.light.css" type="text/css" />
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Scripts/admin_lte/bower_components/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="~/Content/jquery.fileupload-ui.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/jquery.fileupload.css" type="text/css" />
+}
+<div class="box box-info">
+    <form role="form" action="/" id="formDocumentType">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+        <div class="box-header with-border">
+            <h3 class="box-title">@L(DocumentResourceNames.UpdateModule)</h3>
+            <div class="mailbox-controls">
+                <div class="btn-group">
+                    <a href="@Url.Action("List")" class="btn btn-success btn-sm">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.List)
+                    </a>
+                    <button id="btnSubmit" type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Save)
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="box-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ModuleCode) <span style="color: red">(*)</span></label>
+                        <i id="code-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Mã loại tài là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               name="Code"
+                               id="Code"
+                               readonly
+                               value="@Model.Code"
+                               data-validation="length"
+                               data-validation-length="2-128"
+                               data-validation-allowing=" " />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ModuleName) <span style="color: red">(*)</span></label>
+                        <i id="code-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Tên loại tài liệu là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               name="Name"
+                               id="Name"
+                               value="@Model.Name"
+                               data-validation="length"
+                               data-validation-length="4-512"
+                               data-validation-allowing=" " />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        const cultureSelector = '@CurrentLanguage.Name';
+        const hostUrl = '@Url.GetHost()';
+        const updateDocumentTypeUrl = `${hostUrl}/api/documenttypes/update`;
+
+        $(document).ready(function () {
+            if (cultureSelector === 'vi-VN') {
+                $.validate({
+                    language: vietNamese,
+                    form: '#formDocumentType',
+                    addValidClassOnAll: true
+                });
+            } else {
+                $.validate({
+                    language: cultureSelector,
+                    form: '#formDocumentType',
+                    addValidClassOnAll: true
+                });
+            }
+
+            $("#formDocumentType").submit(function (e) {
+                e.preventDefault();
+                create();
+            });
+        });
+    </script>
+
+    <!--Actions-->
+    <script>
+        function create() {
+            // Create an FormData object
+            let formData = $("#formDocumentType").submit(function (e) {
+                e.preventDefault();
+                return;
+            });
+            //formData[0] contain form data only
+            // You can directly make object via using form id but it require all ajax operation inside $("form").submit(<!-- Ajax Here   -->)
+            formData = new FormData(formData[0]);
+
+            $.ajax({
+                url: updateDocumentTypeUrl,
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (event, settings, xhr) {
+                    xhr.message = {
+                        infor: 'Cập nhật loại tài liệu thành công',
+                        returnUrl: `${hostUrl}/documenttype/list`
+                    };
+                }
+            });
+        }
+    </script>
+}

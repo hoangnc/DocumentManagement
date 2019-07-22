@@ -73,6 +73,7 @@
         Globalize.cultureSelector = '@CurrentLanguage.Name';
     </script>
     <script>
+        const uploadFileRootPath = '/Uploads';@*'@HttpContext.Current.Server.MapPath("~/Uploads")';*@
         const updateDocumentUrl = '#';
         const documentCodeText = '@L(DocumentResourceNames.Code)';
         const documentNameText = '@L(DocumentResourceNames.Name)';
@@ -126,6 +127,8 @@
                     { name: 'documentNumber', type: 'string' },
                     { name: 'reviewNumber', type: 'string' },
                     { name: 'description', type: 'string' },
+                    { name: 'fileName', type: 'string' },
+                    { name: 'folderName', type: 'string' },
                     { name: 'contentChange', type: 'string'}
                 ],
             root: 'data',
@@ -183,8 +186,53 @@
                         editable: false,
                         width: 150,
                         cellsrenderer: function (row, column, value, defaultHtml) {
-                            var element = $(defaultHtml);
+                            const element = $(defaultHtml);
                             element.html(`<a href="${updateDocumentUrl}?documentId=${dataAdapter.records[row].id}"> <i class="fa fa-pencil"></i> ${value} </a>`);
+                            return element[0].outerHTML;
+                        }
+                    },
+                    {
+                        text: 'Files',
+                        columntype: 'textbox',
+                        datafield: 'fileName',
+                        pinned: true,
+                        editable: false,
+                        width: 150,
+                        cellsrenderer: function (row, column, value, defaultHtml) {
+                            const element = $(defaultHtml);
+                            const fileNames = value.split(';');
+                            const folderName = dataAdapter.records[row].folderName;
+                            if (!isVariableHaveDefaltVal(fileNames)
+                                && !isVariableHaveDefaltVal(folderName)) {
+                                if (fileNames.length > 0) {
+                                    let html = '';
+                                    for (let index = 0; index < fileNames.length; index++) {
+                                        const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                        let fileIcon = 'fa fa-file-o';
+                                        switch (getFileExtension(fileNames[index])) {
+                                            case 'pdf':
+                                                fileIcon = 'fa fa-file-pdf-o';
+                                                break;
+                                            case 'xls':
+                                                fileIcon = 'fa fa-file-excel-o';
+                                                break;
+                                            case 'xlsx':
+                                                fileIcon = 'fa fa-file-excel-o';
+                                                break;
+                                            case 'doc':
+                                                fileIcon = 'fa fa-file-word-o';
+                                                break;
+                                            case 'docx':
+                                                fileIcon = 'fa fa-file-word-o';
+                                                break;
+                                        }
+                                        html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                    }
+                                    if (!isVariableHaveDefaltVal(html)) {
+                                        element.html(html);
+                                    }
+                                }
+                            }
                             return element[0].outerHTML;
                         }
                     },

@@ -9,6 +9,8 @@
     "Online": "Online",
     "Profile": "Profile",
     "SignOut": "Sign out",
+    "ModifiedBy": "Modified by",
+    "ModifiedOn": "Modified on",
     "ExportToExcel": "Export to excel",
     "ImportFromExcel": "Import from excel",
     "NotNullValidator": "'{PropertyName}' must not be empty.",

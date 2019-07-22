@@ -4,11 +4,14 @@
     {
         public const string DocumentResourceName = "Document";
         public const string ApplicationName = "ApplicationName";
+
         public const string MenuModule = "MenuModule";
+        public const string MenuDocumentType = "MenuDocumentType";
         public const string MenuCategory = "MenuCategory";
         public const string MenuReleaseDocument = "MenuReleaseDocument";
         public const string MenuReleaseNewDocument = "MenuReleaseNewDocument";
         public const string MenuReviewDocument = "MenuReviewDocument";
+
         public const string DocumentList = "DocumentList";
         public const string ModuleList = "ModuleList";
         public const string CreateDocument = "CreateDocument";
@@ -37,5 +40,15 @@
         public const string RelateToDocuments = "RelateToDocuments";
         public const string DCCAudited = "DdcAudited";
         public const string SelectFiles = "SelectFiles";
+
+        public const string CreateModule = "CreateModule";
+        public const string UpdateModule = "UpdateModule";
+        public const string ModuleCode = "ModuleCode";
+        public const string ModuleName = "ModuleName";
+
+        public const string CreateDocumentType = "CreateDocumentType";
+        public const string UpdateDocumentType = "UpdateDocumentType";
+        public const string DocumentTypeCode = "DocumentTypeCode";
+        public const string DocumentTypeName = "DocumentTypeName";
     }
 }

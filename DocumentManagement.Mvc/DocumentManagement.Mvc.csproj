@@ -264,6 +264,7 @@
     <Compile Include="Controllers\Apis\ModulesApiController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\DocumentManagementControllerBase.cs" />
+    <Compile Include="Controllers\DocumentTypeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ModuleController.cs" />
     <Compile Include="DocumentManagementMvcModule.cs" />
@@ -271,8 +272,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Mapper\AutoMapperConfiguration.cs" />
+    <Compile Include="Mapper\MappingExtensions.cs" />
     <Compile Include="Models\Documents\DocumentCreateModel.cs" />
+    <Compile Include="Models\DocumentTypes\DocumentTypeUpdateModel.cs" />
     <Compile Include="Models\Localizations\LanguageSelectionViewModel.cs" />
+    <Compile Include="Models\Modules\ModuleUpdateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MenuConfigurationContext.cs" />
     <Compile Include="Services\MenuManager.cs" />
@@ -7735,6 +7740,9 @@
     <Content Include="Views\Module\List.cshtml" />
     <Content Include="Views\Module\Create.cshtml" />
     <Content Include="Views\Module\Update.cshtml" />
+    <Content Include="Views\DocumentType\List.cshtml" />
+    <Content Include="Views\DocumentType\Create.cshtml" />
+    <Content Include="Views\DocumentType\Update.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

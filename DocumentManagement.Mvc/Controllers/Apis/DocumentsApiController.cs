@@ -41,6 +41,7 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             createDocumentCommand.CreatedOn = DateTime.Now;
             createDocumentCommand.Deleted = false;
             createDocumentCommand.FileName = await UploadDocuments(createDocumentCommand);
+
             return await Mediator.Send(createDocumentCommand);
         }
 
@@ -49,7 +50,7 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             List<string> files = new List<string>();
             if (command.Files.Any())
             {
-                foreach (var file in command.Files)
+                foreach (DT.Core.Web.Common.Api.WebApi.Formatter.HttpPostedFileMultipart file in command.Files)
                 {
                     string filePath = HttpContext.Current.Server.MapPath("~/" + $"Uploads/{command.DocumentType}/{file.FileName}");
                     files.Add(file.FileName);

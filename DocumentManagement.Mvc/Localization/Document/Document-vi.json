@@ -6,6 +6,7 @@
     "MenuReleaseNewDocument": "Ban hành tài liệu mới",
     "MenuReviewDocument": "Soán xét tài liệu",
     "MenuCategory": "Danh mục",
+    "MenuDocumentType": "Loại tài liệu",
     "MenuModule": "Phân hệ",
     "DocumentList": "Danh sách tài liệu",
     "CreateDocument": "Thêm tài liệu",
@@ -36,6 +37,14 @@
     "FolderName": "Tên folder",
     "LinkFile": "Đường dẫn file",
     "SelectFiles": "Chọn files",
-    "ModuleList": "Danh sách phân hệ"
+    "CreateModule": "Thêm mới phân hệ",
+    "UpdateModule": "Cập nhật phân hệ",
+    "ModuleList": "Danh sách phân hệ",
+    "ModuleCode": "Mã phân hệ",
+    "ModuleName": "Tên phân hệ",
+    // DocumentType
+    "CreateDocumentType": "Thêm mới loại tài liệu",
+    "DocumentTypeCode": "Mã loại tài liệu",
+    "DocumentTypeName": "Tên loại tài liệu"
   }
 }

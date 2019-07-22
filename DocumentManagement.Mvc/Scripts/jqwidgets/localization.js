@@ -110,9 +110,9 @@
                     },
                     months: {
                         // full month names (13 months for lunar calendards -- 13th month should be "" if not lunar)
-                        names: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", ""],
+                        names: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12", ""],
                         // abbreviated month names
-                        namesAbbr: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ""]
+                        namesAbbr: ["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12", ""]
                     },
                     // AM and PM designators in one of these forms:
                     // The usual view, and the upper and lower case versions
@@ -139,7 +139,7 @@
                         // long time pattern
                         T: "h:mm:ss tt",
                         // long date, short time pattern
-                        f: "dddd, MMMM dd, yyyy h:mm tt",
+                        f: "dddd, dd MMMM, yyyy h:mm tt",
                         // long date, long time pattern
                         F: "dddd, MMMM dd, yyyy h:mm:ss tt",
                         // month/day pattern
@@ -150,7 +150,7 @@
                         S: "yyyy\u0027-\u0027MM\u0027-\u0027dd\u0027T\u0027HH\u0027:\u0027mm\u0027:\u0027ss",
                         // formatting of dates in MySQL DataBases
                         ISO: "yyyy-MM-dd hh:mm:ss",
-                        ISO2: "dd-MM-yyyy HH:mm:ss",
+                        ISO2: "dd/MM/yyyy HH:mm:ss",
                         d1: "dd.MM.yyyy",
                         d2: "dd-MM-yyyy",
                         d3: "dd-MMMM-yyyy",
