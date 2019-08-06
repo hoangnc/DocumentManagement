@@ -37,6 +37,9 @@
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework.Functions, Version=1.3.1.0, Culture=neutral, PublicKeyToken=dbe58f97a0872a64, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.Functions.1.4.1\lib\net471\EntityFramework.Functions.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
@@ -52,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ComplexTypes\SplitInformation.cs" />
     <Compile Include="Configurations\AppendiceConfiguration.cs" />
     <Compile Include="Configurations\DocumentConfiguration.cs" />
     <Compile Include="Configurations\DocumentTypeConfiguration.cs" />
@@ -70,6 +74,14 @@
     <Compile Include="Migrations\201907110220183_AddModule.Designer.cs">
       <DependentUpon>201907110220183_AddModule.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908050104556_AddDocumentIdToDocument.cs" />
+    <Compile Include="Migrations\201908050104556_AddDocumentIdToDocument.Designer.cs">
+      <DependentUpon>201908050104556_AddDocumentIdToDocument.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908050444563_UpdateMaxLengthContentAndScopeOfApplication.cs" />
+    <Compile Include="Migrations\201908050444563_UpdateMaxLengthContentAndScopeOfApplication.Designer.cs">
+      <DependentUpon>201908050444563_UpdateMaxLengthContentAndScopeOfApplication.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -86,6 +98,10 @@
       <Project>{49eb794f-9a38-4b1b-8ca9-6732f991c11e}</Project>
       <Name>DT.Core.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DT.Core\DT.Core.csproj">
+      <Project>{b2422e85-7353-466d-80de-4a3d0d759a52}</Project>
+      <Name>DT.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201907050300551_Initial.resx">
@@ -93,6 +109,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907110220183_AddModule.resx">
       <DependentUpon>201907110220183_AddModule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908050104556_AddDocumentIdToDocument.resx">
+      <DependentUpon>201908050104556_AddDocumentIdToDocument.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908050444563_UpdateMaxLengthContentAndScopeOfApplication.resx">
+      <DependentUpon>201908050444563_UpdateMaxLengthContentAndScopeOfApplication.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

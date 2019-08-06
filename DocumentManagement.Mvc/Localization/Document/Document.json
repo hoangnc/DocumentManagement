@@ -8,8 +8,16 @@
     "MenuCategory": "Category",
     "MenuDocumentType": "Document type",
     "MenuModule": "Module",
+    "MenuPromulgateStatus": "Promulgate status",
+    "MenuReleaseAppendice": "Release appendice",
+    "MenuReleaseNewAppendice": "Release new appendice",
+    "MenuReviewAppendice": "Review appendice",
+
     "DocumentList": "Document list",
+    "DocumentInformation": "Document information",
     "CreateDocument": "Add new document",
+    "ReviewDocument": "Review document",
+    "UpdateDocument": "Update document",
     "Code": "Code",
     "CompanyCode": "Company code",
     "CompanyName": "Company name",
@@ -37,6 +45,15 @@
     "FolderName": "Folder name",
     "LinkFile": "Link file",
     "SelectFiles": "Select files",
+    "Status": "Status",
+    "Active": "Active",
+    "PromulgateStatus": "Promulgate status",
+
+    //Appendice
+    "AppendiceList": "Appendice list",
+    "CreateAppendice": "Add new appendice",
+    "UpdateAppendice": "Update appendice",
+
     "CreateModule": "Add new module",
     "UpdateModule": "Update module",
     "ModuleList": "Module list",
@@ -44,7 +61,14 @@
     "ModuleName": "Module name",
     // DocumentType
     "CreateDocumentType": "Add new document type",
+    "UpdateDocumentType": "Update document type",
     "DocumentTypeCode": "Document type code",
-    "DocumentTypeName": "Document type name"
+    "DocumentTypeName": "Document type name",
+    // PromulgateStatus
+    "PromulgateStatusList": "Promulgate status list",
+    "CreatePromulgateStatus": "Add new promulgate status",
+    "UpdatePromulgateStatus": "Update promulgate status",
+    "PromulgateStatusCode": "Promulgate status code",
+    "PromulgateStatusName": "Promulgate status name"
   }
 }

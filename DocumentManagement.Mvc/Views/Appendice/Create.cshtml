@@ -1,0 +1,1209 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles{
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.light.css" type="text/css" />
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Scripts/admin_lte/bower_components/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="~/Content/jquery.fileupload-ui.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/jquery.fileupload.css" type="text/css" />
+}
+<div class="box box-info">
+    <form role="form" action="/" id="formDocument">
+        @Html.AntiForgeryToken()
+        <div class="box-header with-border">
+            <h3 class="box-title">@L(DocumentResourceNames.CreateAppendice)</h3>
+            <div class="mailbox-controls">
+                <div class="btn-group">
+                    <a href="@Url.Action("List")" class="btn btn-success btn-sm">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.List)
+                    </a>
+                    <button id="btnSubmit" type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Save)
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="box-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Code) <span style="color: red">(*)</span></label>
+                        <i id="code-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Mã tài liệu là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               name="Code"
+                               id="Code"
+                               data-validation="length"
+                               data-validation-length="3-128"
+                               data-validation-allowing=" " />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Name) <span style="color: red">(*)</span></label>
+                        <i id="code-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Tên tài liệu là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               name="Name"
+                               id="Name"
+                               data-validation="length"
+                               data-validation-length="4-512"
+                               data-validation-allowing=" " />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.DocumentType) <span style="color: red">(*)</span></label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Loại tài liệu là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="DocumentType"
+                               name="DocumentType"
+                               data-validation="required" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.CompanyCode) <span style="color: red">(*)</span></label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Công ty là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="CompanyCode"
+                               name="CompanyCode"
+                               data-validation="required" />
+                        <input type="hidden"
+                               id="CompanyName"
+                               name="CompanyName" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.DepartmentCode) <span style="color: red">(*)</span></label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phòng ban là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="DepartmentCode"
+                               name="DepartmentCode"
+                               data-validation="required" />
+                        <input type="hidden"
+                               id="DepartmentName"
+                               name="DepartmentName" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Module)</label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phân hệ là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               id="Module"
+                               name="Module" />
+                    </div>
+                </div>
+            </div>
+            <!--<div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Drafter) <span style="color: red">(*)</span></label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Người soạn thảo là bắt buộc không được bỏ trống"></i>
+                        <select class="form-control"
+                                id="Drafter"
+                                name="Drafter"
+                                multiple
+                                data-validation="required"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Auditor) <span style="color: red">(*)</span></label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Người kiểm tra là bắt buộc không được bỏ trống"></i>
+                        <select class="form-control"
+                                id="Auditor"
+                                name="Auditor"
+                                multiple
+                                data-validation="required"></select>
+                    </div>
+                </div>
+            </div>-->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Approver)</label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Người phê duyệt là bắt buộc không được bỏ trống"></i>
+                        <select type="text"
+                                class="form-control"
+                                id="Approver"
+                                name="Approver"
+                                multiple></select>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="form-group">
+                 <label>@L(DocumentResourceNames.Description)</label>
+                 <i id="code-help"
+                    class="fa fa-info-circle red-text"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Diễn giải vắn tắt các thông tin về tài liệu"></i>
+                 <textarea class="form-control"
+                           name="Description"
+                           id="Description"></textarea>
+             </div>
+             <div class="form-group">
+                 <label>@L(DocumentResourceNames.ContentChange)</label>
+                 <i id="code-help"
+                    class="fa fa-info-circle red-text"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Nội dung thay đổi nếu có"></i>
+                 <textarea class="form-control"
+                           name="ContentChange"
+                           id="ContentChange"></textarea>
+             </div>-->
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.DocumentNumber)</label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Số hiệu là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               autocomplete="off"
+                               id="AppendiceNumber"
+                               name="AppendiceNumber"
+                               data-validation="required" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ReviewNumber)</label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Số soán xét là bắt buộc"></i>
+                        <input type="text"
+                               class="form-control"
+                               autocomplete="off"
+                               id="ReviewNumber"
+                               name="ReviewNumber" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.EffectiveDate)</label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Ngày hiệu lực là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               autocomplete="off"
+                               id="EffectiveDate"
+                               name="EffectiveDate" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ReviewDate)</label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phòng ban là bắt buộc không được bỏ trống"></i>
+                        <input type="text"
+                               class="form-control"
+                               autocomplete="off"
+                               id="ReviewDate"
+                               name="ReviewDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!--<div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Status) </label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Tình trạng tài liệu"></i>
+                        <select type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                id="StatusId"
+                                name="StatusId"></select>
+                    </div>
+                </div>-->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Active)</label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Hiệu lực"></i>
+                        <br>
+                        <input type="checkbox"
+                               id="Active"
+                               name="Active" />
+                        <input type="hidden"
+                               id="Active"
+                               name="Active" />
+                    </div>
+                </div>
+                <!--<div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.PromulgateStatus)<span style="color: red">(*)</span></label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Trạng thái ban hành tài liệu"></i>
+                        <select type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                id="PromulgateStatusId"
+                                name="PromulgateStatusId"></select>
+                    </div>
+                </div>-->
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ScopeOfApplication)</label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phạm vi áp dụng"></i>
+                        <textarea type="text"
+                                  class="form-control"
+                                  id="ScopeOfApplication"
+                                  name="ScopeOfApplication"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ScopeOfDeloyment) </label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phòng ban là bắt buộc không được bỏ trống"></i>
+                        <!--<select type="text"
+                        class="form-control"
+                        id="ScopeOfDeloyment"
+                        name="ScopeOfDeloyment"
+                        multiple></select>-->
+                        <textarea type="text"
+                                  class="form-control"
+                                  id="ScopeOfDeloyment"
+                                  name="ScopeOfDeloyment"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.DCCAudited)</label>
+                        <i id="replaceof-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Được thay thế cho tài liệu nào"></i>
+                        <br>
+                        <input type="checkbox"
+                               id="DCCAudited"
+                               name="DCCAudited" />
+                        <input type="hidden"
+                               id="DCCAudited"
+                               name="DCCAudited" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.RelateToDocuments)</label>
+                        <i id="RelateToDocuments-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Các tài liệu liên quan"></i>
+                        <div id="grdRelateToDocuments"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!--<div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Phụ lục</label>
+                        <i id="RelateToDocuments-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phụ lục tài liệu"></i>
+                        <div id="grdAppendieDocuments"></div>
+                    </div>
+                </div>
+            </div>-->
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Link files:</label>
+                        <i id="LinkFiles-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Các tài liệu liên quan"></i>
+                        <br>
+                        <span class="btn btn-success fileinput-button">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>@L(DocumentResourceNames.SelectFiles)</span>
+                            <!-- The file input field used as target for the file upload widget -->
+                            <input id="fileupload" type="file" name="files[]" multiple>
+                        </span>
+                        <table role="presentation" class="table table-striped">
+                            <tbody class="files"></tbody>
+                        </table>
+                        <!-- The template to display files available for upload -->
+                        <script id="template-upload" type="text/x-tmpl">
+                            {% for (var i=0, file; file=o.files[i]; i++) { %}
+                            <tr>
+                                <td>
+                                    <span class="preview"></span>
+                                </td>
+                                <td>
+                                    {% if (window.innerWidth > 480 || !o.options.loadImageFileTypes.test(file.type)) { %}
+                                    <p class="name" data-file="{%=file.name%}" name="fileName">{%=file.name%}</p>
+                                    {% } %}
+                                    <strong class="error text-danger">{%=file.error%}</strong>
+                                </td>
+                                <td>
+                                    <p class="size">{%=formatFileSize(file.size)%}</p>
+
+                                </td>
+                                <td>
+                                    <button type="button" name="deleteFile" class="btn btn-warning cancel">
+                                        <i class="glyphicon glyphicon-ban-circle"></i>
+                                        <span>Xóa</span>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% } %}
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        const cultureSelector = '@CurrentLanguage.Name';
+        const hostUrl = '@Url.GetHost()';
+
+        let departments = [];
+        let documentTypes = [];
+        let users = [];
+        let companies = [];
+        let groups = [];
+        let modules = [];
+        let documents = [];
+
+        let $Approver = $('#Approver');
+        let $Drafter = $('#Drafter');
+        let $Auditor = $('#Auditor');
+        let $CompanyCode = $('#CompanyCode');
+        let $DepartmentCode = $('#DepartmentCode');
+        let $CompanyName = $('#CompanyName');
+        let $DepartmentName = $('#DepartmentName');
+        let $DocumentType = $('#DocumentType');
+        let $ScopeOfApplication = $('#ScopeOfApplication');
+        let $ScopeOfDeloyment = $('#ScopeOfDeloyment');
+        let $Module = $('#Module');
+
+        let $btnSubmit = $('#btnSubmit');
+        let storedFiles = [];
+    </script>
+    <!-- Select 2-->
+    <script src="~/Scripts/admin_lte/bower_components/select2/dist/js/select2.full.min.js"></script>
+    <!-- InputMask -->
+    <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.js"></script>
+    <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+    <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+
+    <!--Auto numeric-->
+    <script src="~/Scripts/autoNumeric-1.9.41.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.edit.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.selection.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.columnsresize.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxtextarea.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxnumberinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.pager.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.sort.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="/Scripts/jqwidgets/jqxgrid.grouping.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/globalization/globalize.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/localization.js"></script>
+    <script type="text/javascript" src="~/Scripts/demos.js"></script>
+    <script type="text/javascript">
+        Globalize.cultureSelector = '@CurrentLanguage.Name';
+    </script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/tmpl.min.js"></script>
+    <script type="text/javascript">
+        $('#DCCAudited').jqxCheckBox();
+
+        $('#DCCAudited').on('change', function (event) {
+            const checked = event.args.checked;
+            $('input:hidden[name=DCCAudited]').val(`${checked}`);
+        });
+
+        $('#Active').jqxCheckBox();
+
+        $('#Active').on('change', function (event) {
+            const checked = event.args.checked;
+            $('input:hidden[name=Active]').val(`${checked}`);
+        });
+
+        const uploadTemplate = tmpl('template-upload');
+        $(document).ready(function () {
+            $('#fileupload').fileupload({
+                autoUpload: false,
+                disableImageResize: /Android(?!.*Chrome)|Opera/
+                    .test(window.navigator.userAgent),
+                maxFileSize: 9990000,
+                change: function (e, data) {
+                    renderUpload(data.files);
+                    $('button[name=deleteFile]').click(deleteHandler);
+                },
+                acceptFileTypes: /(\.|\/)(gif|jpe?g|png|xls|pdf|xslx)$/i
+            });
+        });
+
+        function renderTemplate(func, files) {
+            if (!func) {
+                return $();
+            }
+            var result = func({
+                files: files,
+                formatFileSize: this._formatFileSize,
+                options: this.options
+            });
+            if (result instanceof $) {
+                return result;
+            }
+            storedFiles = files;
+            return $('.files').html(result).children();
+        }
+
+        function renderUpload(files) {
+            return renderTemplate(
+                uploadTemplate,
+                files
+            );
+        }
+
+        function formatFileSize(bytes) {
+            if (typeof bytes !== 'number') {
+                return '';
+            }
+            if (bytes >= 1000000000) {
+                return (bytes / 1000000000).toFixed(2) + ' GB';
+            }
+            if (bytes >= 1000000) {
+                return (bytes / 1000000).toFixed(2) + ' MB';
+            }
+            return (bytes / 1000).toFixed(2) + ' KB';
+        }
+
+        function deleteHandler(e) {
+            e.preventDefault();
+            const tr = $(this).closest('tr');
+            let fileName = tr.find('p[name=fileName]').data("file");
+
+            for (let i = 0; i < storedFiles.length; i++) {
+                if (storedFiles[i].name === fileName) {
+                    storedFiles.splice(i, 1);
+                    tr.remove();
+                    break;
+                }
+            }
+        }
+    </script>
+    <script>
+        function genDocumentCode() {
+            return 'BM' + moment().format('Ymdhmmss');;
+        }
+    </script>
+    <!--Relate To Documents-->
+    <script>
+        let relateToDocuments = [{ id: 1, name: '', code: '', documentNumber: ''}];
+        let grdRelateToDocuments = $('#grdRelateToDocuments');
+        let observableSourceRelateToDocuments = new $.jqx.observableArray(relateToDocuments);
+        let sourceRelateToDocument =
+        {
+            localdata: observableSourceRelateToDocuments,
+            datatype: "obserableArray",
+            id: "id",
+            updaterow: function (rowid, rowdata, commit) {
+                // synchronize with the server - send update command
+                // call commit with parameter true if the synchronization with the server is successful
+                // and with parameter false if the synchronization failder.
+
+                commit(true);
+            },
+            pagesize: 5,
+            pagesizeoptions: ["5", "10", "20"],
+            datafields:
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'code', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'documentNumber', type: 'string' },
+                    { name: 'reviewNumber', type: 'string' }
+                ]
+        };
+
+        let getEditorDataAdapter = function (datafield) {
+            let source =
+            {
+                localdata: documents,
+                datatype: "array",
+                datafields:
+                    [
+                        { name: 'id', type: 'int' },
+                        { name: 'code', type: 'string' },
+                        { name: 'name', type: 'string' },
+                        { name: 'documentNumber', type: 'string' },
+                        { name: 'reviewNumber', type: 'string' }
+                    ]
+            };
+            let dataAdapter = new $.jqx.dataAdapter(source, { uniqueDataFields: [datafield] });
+            return dataAdapter;
+        }
+
+        let relateToDocumentsDataAdapter = new $.jqx.dataAdapter(sourceRelateToDocument);
+        const initGrdRelateToDocuments = function () {
+            grdRelateToDocuments.jqxGrid(
+                {
+                    width: '100%',
+                    height: 250,
+                    source: relateToDocumentsDataAdapter,
+                    pageable: true,
+                    autorowheight: false,
+                    columnsresize: true,
+                    altrows: false,
+                    editable: true,
+                    pagesizeoptions: ["5", "10", "20"],
+                    localization: getLocalization('@CurrentLanguage.Name'),
+                    selectionmode: 'singlerow',
+                    editmode: 'singlecell',
+                    showstatusbar: false,
+                    showtoolbar: true,
+                    rendertoolbar: function (toolbar) {
+                        const container = $(`<div class="btn-group" style='margin: 2px;'></div>`);
+                        toolbar.append(container);
+                        container.append(`<button id="btnAddRelateToDocuments"
+                                                         type="button"
+                                                         class="btn btn-primary btn-sm"
+                                                          >Thêm mới</button>`);
+                        let btnRemoverelateToDocuments = $(`<button id="btnRemoveRelateToDocuments"
+                                    type="button"
+                                    class="btn btn-primary btn-sm">
+                                    <i class="fa fa-trash-o"></i> Xóa
+                                    </button>`);
+                        container.append(btnRemoverelateToDocuments);
+                        // create new row.
+                        $('#btnAddRelateToDocuments').on('click', function () {
+                            const datarow = {
+                                id: 2,
+                                name: '',
+                                code: '',
+                                documentNumber: ''
+                            };
+                            observableSourceRelateToDocuments.push(datarow);
+                        });
+
+                        btnRemoverelateToDocuments.click(function () {
+                            const selectedrowindex = grdRelateToDocuments.jqxGrid('getselectedrowindex');
+                            const rowscount = grdRelateToDocuments.jqxGrid('getdatainformation').rowscount;
+                            if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+                                const id = grdRelateToDocuments.jqxGrid('getrowid', selectedrowindex);
+                                grdRelateToDocuments.jqxGrid('deleterow', id);
+                                grdRelateToDocuments.jqxGrid('updatebounddata');
+                            }
+                        });
+                    },
+                    columns: [
+                        {
+                            text: 'STT',
+                            sortable: false,
+                            filterable: false,
+                            editable: false,
+                            groupable: false,
+                            draggable: false,
+                            pinned: true,
+                            datafield: '',
+                            columntype: 'number',
+                            width: 40,
+                            cellsrenderer: function (row, column, value) {
+                                return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                            }
+                        },
+                        {
+                            text: 'Tên tài liệu',
+                            columntype: 'textbox',
+                            datafield: 'name',
+                            pinned: false,
+                            editable: true,
+                            width: 300,
+                            geteditorvalue: function (row, cellvalue, editor) {
+                                // return the editor's value.
+                                return editor.val();
+                            },
+                            initeditor: function (row, cellvalue, editor, celltext, pressedkey) {
+                                // set the editor's current value. The callback is called each time the editor is displayed.
+                                if (pressedkey) {
+                                    editor.val(pressedkey);
+                                    editor.jqxInput('selectLast');
+                                }
+                                else {
+                                    editor.val(cellvalue);
+                                    editor.jqxInput('selectAll');
+                                }
+                            },
+                            createeditor: function (row, cellvalue, editor, cellText, width, height) {
+                                editor.jqxInput({
+                                    placeHolder: "Nhập tên tài liệu",
+                                    height: height,
+                                    width: width,
+                                    minLength: 1,
+                                    displayMember: 'name',
+                                    source: getEditorDataAdapter('name')
+                                });
+
+                                editor.on('select', function (event) {
+                                    if (event.args) {
+                                        let item = event.args.item;
+                                        if (!isVariableHaveDefaltVal(item)) {
+                                            const document = documents.filter(document => document.name === item.value);
+                                            if (!isVariableHaveDefaltVal(document)) {
+                                                observableSourceRelateToDocuments.set(`${row}.documentNumber`, document[0].documentNumber);
+                                                observableSourceRelateToDocuments.set(`${row}.code`, document[0].code);
+                                                console.log(relateToDocumentsDataAdapter.records);
+                                            }
+                                        }
+                                    }
+                                });
+
+                            }
+                        },
+                        {
+                            text: 'Số hiệu',
+                            columntype: 'textbox',
+                            datafield: 'documentNumber',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        },
+                        {
+                            text: 'Mã tài liệu',
+                            columntype: 'textbox',
+                            hidden: true,
+                            datafield: 'code',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        }]
+                });
+        }
+
+        function getRelateToDocuments() {
+            let documents = relateToDocumentsDataAdapter.records.filter(function (d) {
+                if (!isVariableHaveDefaltVal(d.name)) {
+                    return true;
+                }
+                return false;
+            });
+            return documents;
+        }
+    </script>
+    <!-- Appendie Documents -->
+    <script>
+        let appendieDocuments = [{ id: 1, name: '', code: '', documentNumber: ''}];
+        let grdAppendieDocuments = $('#grdAppendieDocuments');
+        let observableSourceAppendieDocuments = new $.jqx.observableArray(appendieDocuments);
+        let sourceAppendieDocument =
+        {
+            localdata: observableSourceAppendieDocuments,
+            datatype: "obserableArray",
+            id: "id",
+            updaterow: function (rowid, rowdata, commit) {
+                // synchronize with the server - send update command
+                // call commit with parameter true if the synchronization with the server is successful
+                // and with parameter false if the synchronization failder.
+
+                commit(true);
+            },
+            pagesize: 5,
+            pagesizeoptions: ["5", "10", "20"],
+            datafields:
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'code', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'documentNumber', type: 'string' },
+                    { name: 'reviewNumber', type: 'string' }
+                ]
+        };
+
+        let appendieDocumentsDataAdapter = new $.jqx.dataAdapter(sourceAppendieDocument);
+        const initGrdAppendieDocuments = function () {
+            grdAppendieDocuments.jqxGrid(
+                {
+                    width: '100%',
+                    height: 250,
+                    source: appendieDocumentsDataAdapter,
+                    pageable: true,
+                    autorowheight: false,
+                    columnsresize: true,
+                    altrows: false,
+                    editable: true,
+                    pagesizeoptions: ["5", "10", "20"],
+                    localization: getLocalization('@CurrentLanguage.Name'),
+                    selectionmode: 'singlerow',
+                    editmode: 'singlecell',
+                    showstatusbar: false,
+                    showtoolbar: true,
+                    rendertoolbar: function (toolbar) {
+                        const container = $(`<div class="btn-group" style='margin: 2px;'></div>`);
+                        toolbar.append(container);
+                        container.append(`<button id="btnAddAppendieDocuments"
+                                                         type="button"
+                                                         class="btn btn-primary btn-sm"
+                                                          >Thêm mới</button>`);
+                        let btnRemoveAppendieDocuments = $(`<button id="btnRemoveAppendieDocuments"
+                                    type="button"
+                                    class="btn btn-primary btn-sm">
+                                    <i class="fa fa-trash-o"></i> Xóa
+                                    </button>`);
+                        container.append(btnRemoveAppendieDocuments);
+                        // create new row.
+                        $('#btnAddAppendieDocuments').on('click', function () {
+                            const datarow = {
+                                id: 2,
+                                name: '',
+                                code: '',
+                                documentNumber: ''
+                            };
+                            observableSourceRelateToDocuments.push(datarow);
+                        });
+
+                        btnRemoveAppendieDocuments.click(function () {
+                            const selectedrowindex = grdAppendieDocuments.jqxGrid('getselectedrowindex');
+                            const rowscount = grdAppendieDocuments.jqxGrid('getdatainformation').rowscount;
+                            if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+                                const id = grdAppendieDocuments.jqxGrid('getrowid', selectedrowindex);
+                                grdAppendieDocuments.jqxGrid('deleterow', id);
+                                grdAppendieDocuments.jqxGrid('updatebounddata');
+                            }
+                        });
+                    },
+                    columns: [
+                        {
+                            text: 'STT',
+                            sortable: false,
+                            filterable: false,
+                            editable: false,
+                            groupable: false,
+                            draggable: false,
+                            pinned: true,
+                            datafield: '',
+                            columntype: 'number',
+                            width: 40,
+                            cellsrenderer: function (row, column, value) {
+                                return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                            }
+                        },
+                        {
+                            text: 'Tên phụ lục',
+                            columntype: 'textbox',
+                            datafield: 'name',
+                            pinned: false,
+                            editable: true,
+                            width: 300,
+                            geteditorvalue: function (row, cellvalue, editor) {
+                                // return the editor's value.
+                                return editor.val();
+                            },
+                            initeditor: function (row, cellvalue, editor, celltext, pressedkey) {
+                                // set the editor's current value. The callback is called each time the editor is displayed.
+                                if (pressedkey) {
+                                    editor.val(pressedkey);
+                                    editor.jqxInput('selectLast');
+                                }
+                                else {
+                                    editor.val(cellvalue);
+                                    editor.jqxInput('selectAll');
+                                }
+                            },
+                            createeditor: function (row, cellvalue, editor, cellText, width, height) {
+                                editor.jqxInput({
+                                    placeHolder: "Nhập tên tài liệu",
+                                    height: height,
+                                    width: width,
+                                    minLength: 1,
+                                    displayMember: 'name',
+                                    source: getEditorDataAdapter('name')
+                                });
+
+                                editor.on('select', function (event) {
+                                    if (event.args) {
+                                        let item = event.args.item;
+                                        if (!isVariableHaveDefaltVal(item)) {
+                                            const document = documents.filter(document => document.name === item.value);
+                                            if (!isVariableHaveDefaltVal(document)) {
+                                                appendieDocumentsDataAdapter.set(`${row}.documentNumber`, document[0].documentNumber);
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            text: 'Số hiệu',
+                            columntype: 'textbox',
+                            datafield: 'documentNumber',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        }]
+                });
+        }
+    </script>
+    <!--Script get masterdata-->
+    <script>
+        const getAllDepartmentsUrl = `${hostUrl}/api/masterdatas/getalldepartments`;
+        const getAllUsersUrl = `${hostUrl}/api/masterdatas/getallusers`;
+        const getAllCompaniesUrl = `${hostUrl}/api/masterdatas/getallcompanies`;
+        const getAllDocumentTypesUrl = `${hostUrl}/api/documenttypes/getalldocumenttypes`;
+        const getAllGroupsFromActiveDirectoryUrl = `${hostUrl}/api/masterdatas/getallgroupsfromactivedirectory`;
+        const getAllModulesUrl = `${hostUrl}/api/modules/getallmodules`;
+        const getAllDocumentsUrl = `${hostUrl}/api/documents/getalldocuments`;
+        const createDocumentUrl = `${hostUrl}/api/appendices/create`;
+
+        // Get all documents
+        function getAllDocuments() {
+            return $.getJSON(getAllDocumentsUrl,
+                function (data) {
+                    documents = data;
+                });
+        }
+
+        // Get departments
+        function getAllDepartments() {
+            return $.getJSON(getAllDepartmentsUrl,
+                function (data) {
+                    departments = data.map((department) => {
+                        return { id: department.code, text: department.name };
+                    });
+                });
+        }
+
+        // Get Users
+        function getAllUsers() {
+            return $.getJSON(getAllUsersUrl,
+                function (data) {
+                    users = data/*.filter((user) => user.active === true)*/.map((user) => {
+                        return { id: user.userName, text: user.text, disabled: !user.active, departmentName: user.departmentName };
+                    });
+                });
+        }
+
+        // Get companies
+        function getAllCompanies() {
+            return $.getJSON(getAllCompaniesUrl,
+                function (data) {
+                    companies = data.map((company) => {
+                        return { id: company.code, text: company.name };
+                    });
+                });
+        }
+
+        // Get documenttypes
+        function getAllDocumentTypes() {
+            return $.getJSON(getAllDocumentTypesUrl,
+                function (data) {
+                    documentTypes = data.map((documentType) => {
+                        return { id: documentType.code, text: documentType.name };
+                    });
+                });
+        }
+
+        // Get groups
+        function getAllGroupsFromActiveDirectory() {
+            return $.getJSON(getAllGroupsFromActiveDirectoryUrl,
+                function (data) {
+                    groups = data.map((group) => {
+                        return { id: group, text: group };
+                    });
+                });
+        }
+
+        // Get modules
+        function getAllModules() {
+            return $.getJSON(getAllModulesUrl,
+                function (data) {
+                    modules = data.map((module) => {
+                        return { id: module.code, text: module.name };
+                    });
+                });
+        }
+
+        function formatUserResult(user) {
+            if (!user.id)
+                return user.text;
+            const text = user.text;
+            const fullName = text;
+            const department = user.departmentName;
+            return $(`<span>${fullName}</span><div><small style="color: #a5a0a0">@L(DocumentResourceNames.DepartmentName): ${department}</small></div>`);
+        }
+
+        function formatUserSelection(user) {
+            if (!user.id)
+                return user.text;
+            const text = user.text;
+            return $(`<span>${text}</span>`);
+        }
+
+        $('#Code').val(genDocumentCode());
+        $('#ReviewNumber').inputmask("99/99", {
+            placeholder: "00/00",
+        });
+
+        Promise.all([getAllUsers(),
+            getAllDepartments(),
+            getAllCompanies(),
+            getAllDocumentTypes(),
+            getAllGroupsFromActiveDirectory(),
+            getAllModules(),
+            getAllDocuments()
+        ]).then(() => {
+            $Approver.select2({
+                data: users,
+                templateResult: formatUserResult,
+                templateSelection: formatUserSelection
+            });
+
+            $Drafter.select2({
+                data: users,
+                templateResult: formatUserResult,
+                templateSelection: formatUserSelection
+            });
+
+            $Auditor.select2({
+                data: users,
+                templateResult: formatUserResult,
+                templateSelection: formatUserSelection
+            });
+
+            $CompanyCode.select2({
+                data: companies
+            });
+
+            $DepartmentCode.select2({
+                data: departments
+            });
+
+            $DocumentType.select2({
+                data: documentTypes
+            });
+
+            $Module.select2({
+                data: modules
+            });
+
+            initGrdRelateToDocuments();
+
+            initGrdAppendieDocuments();
+            // all requests finished successfully
+        }).catch(() => {
+            // all requests finished but one or more failed
+        })
+
+    </script>
+    <!--Actions-->
+    <script>
+        function create() {
+            // Create an FormData object
+            let formData = $("#formDocument").submit(function (e) {
+                e.preventDefault();
+                return;
+            });
+            //formData[0] contain form data only
+            // You can directly make object via using form id but it require all ajax operation inside $("form").submit(<!-- Ajax Here   -->)
+            formData = new FormData(formData[0]);
+            for (var i = 0, len = storedFiles.length; i < len; i++) {
+                formData.append('files', storedFiles[i]);
+            }
+
+            if (!isVariableHaveDefaltVal($Approver.val()))
+                formData.set('Approver', $Approver.val().join(';'));
+            if (!isVariableHaveDefaltVal($Auditor.val()))
+                formData.set('Auditor', $Auditor.val().join(';'));
+            if (!isVariableHaveDefaltVal($Drafter.val()))
+                formData.set('Drafter', $Drafter.val().join(';'));
+
+            const relateToDocuments = getRelateToDocuments().map((document) => document.code);
+            formData.set('RelateToDocuments', relateToDocuments.join(';'));
+
+            $.ajax({
+                url: createDocumentUrl,
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (event, settings, xhr) {
+                    xhr.message = {
+                        infor: 'Ban hành phụ lục mới thành công',
+                        returnUrl: `${hostUrl}/appendice/list`
+                    };
+                }
+            });
+        }
+    </script>
+    <!--Events-->
+    <script>
+        $(document).ready(function () {
+            const enterKeyUp = $.Event("keyup", { keyCode: 13 });
+
+            // Effective date
+            $('#EffectiveDate').datepicker({
+                language: cultureSelector,
+                showOn: 'focus',
+                autoclose: true
+            }).on("changeDate", function (e) {
+                $(this).trigger(enterKeyUp);
+                $(this).focus();
+            });
+
+            // Review date
+            $('#ReviewDate').datepicker({
+                language: cultureSelector,
+                showOn: 'focus',
+                autoclose: true
+            }).on("changeDate", function (e) {
+                $(this).trigger(enterKeyUp);
+                $(this).focus();
+            });
+
+            if (cultureSelector === 'vi-VN') {
+                $.validate({
+                    language: vietNamese,
+                    form: '#formDocument',
+                    addValidClassOnAll: true
+                });
+            } else {
+                $.validate({
+                    language: cultureSelector,
+                    form: '#formDocument',
+                    addValidClassOnAll: true
+                });
+            }
+
+            $("#formDocument").submit(function (e) {
+                e.preventDefault();
+                create();
+            });
+
+            $CompanyCode.on('change', function (e) {
+                const selectedCompany = $CompanyCode.select2('data');
+                if (!isVariableHaveDefaltVal(selectedCompany)) {
+                    $CompanyName.val(selectedCompany[0].text);
+                }
+            });
+
+            $DepartmentCode.on('change', function (e) {
+                const selectedDepartment = $DepartmentCode.select2('data');
+                if (!isVariableHaveDefaltVal(selectedDepartment)) {
+                    $DepartmentName.val(selectedDepartment[0].text);
+                }
+            });
+        });
+    </script>
+}

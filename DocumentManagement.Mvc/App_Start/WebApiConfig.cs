@@ -34,12 +34,6 @@ namespace DocumentManagement.Mvc
             config.BindParameter(typeof(DateTime), new DateTimeModelBinder());
             config.BindParameter(typeof(DateTime?), new DateTimeModelBinder());
 
-            /*var dateTimeProvider = new SimpleModelBinderProvider(typeof(DateTime), new DateTimeModelBinder());
-            var dateTimeNullableProvider = new SimpleModelBinderProvider(typeof(DateTime?), new DateTimeModelBinder());
-
-            config.Services.Insert(typeof(ModelBinderProvider), 0, dateTimeProvider);
-            config.Services.Insert(typeof(ModelBinderProvider), 0, dateTimeNullableProvider);*/
-
             config.Formatters.Add(new FormMultipartEncodedMediaTypeFormatter());
 
             config.Filters.Add(new DtExceptionFilterAttribute());

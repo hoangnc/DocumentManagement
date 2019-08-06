@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="~/Content/jquery.fileupload.css" type="text/css" />
 }
 <div class="box box-info">
-    <form role="form" action="/" id="formModule">
+    <form role="form" action="/" id="formDocumentType">
         @Html.AntiForgeryToken()
         <div class="box-header with-border">
             <h3 class="box-title">@L(DocumentResourceNames.CreateDocumentType)</h3>
@@ -80,18 +80,18 @@
             if (cultureSelector === 'vi-VN') {
                 $.validate({
                     language: vietNamese,
-                    form: '#formModule',
+                    form: '#formDocumentType',
                     addValidClassOnAll: true
                 });
             } else {
                 $.validate({
                     language: cultureSelector,
-                    form: '#formModule',
+                    form: '#formDocumentType',
                     addValidClassOnAll: true
                 });
             }
 
-            $("#formModule").submit(function (e) {
+            $("#formDocumentType").submit(function (e) {
                 e.preventDefault();
                 create();
             });
@@ -102,7 +102,7 @@
     <script>
         function create() {
             // Create an FormData object
-            let formData = $("#formModule").submit(function (e) {
+            let formData = $("#formDocumentType").submit(function (e) {
                 e.preventDefault();
                 return;
             });

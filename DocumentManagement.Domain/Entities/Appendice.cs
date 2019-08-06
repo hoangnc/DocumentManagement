@@ -6,7 +6,8 @@ namespace DocumentManagement.Domain.Entities
 {
     public class Appendice : BaseEntity<int>
     {
-        public string Code { get; set; }
+        public int DocumentId { get; set; }
+        public string Code { get; set; }  
         public string CompanyCode { get; set; }
         public string CompanyName { get; set; }
         public string DepartmentCode { get; set; }

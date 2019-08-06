@@ -16,5 +16,11 @@ namespace DT.Core.Web.Common.Identity.Extensions
             Claim claim = ((ClaimsIdentity)identity).FindFirst(IdConstants.ClaimTypes.Email);
             return (claim != null) ? claim.Value : string.Empty;
         }
+
+        public static string GetUserName(this IIdentity identity)
+        {
+            Claim claim = ((ClaimsIdentity)identity).FindFirst(IdConstants.ClaimTypes.Name);
+            return (claim != null) ? claim.Value : string.Empty;
+        }
     }
 }

@@ -258,15 +258,19 @@
     <Compile Include="AutofacConfig.cs" />
     <Compile Include="Constants\DocumentResourceNames.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\Apis\AppendicesApiController.cs" />
     <Compile Include="Controllers\Apis\DocumentsApiController.cs" />
     <Compile Include="Controllers\Apis\DocumentTypesApiController.cs" />
-    <Compile Include="Controllers\Apis\MasterDatasController.cs" />
+    <Compile Include="Controllers\Apis\MasterDatasApiController.cs" />
     <Compile Include="Controllers\Apis\ModulesApiController.cs" />
+    <Compile Include="Controllers\Apis\PromulgateStatusesApiController.cs" />
+    <Compile Include="Controllers\AppendiceController.cs" />
     <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\DocumentManagementControllerBase.cs" />
     <Compile Include="Controllers\DocumentTypeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ModuleController.cs" />
+    <Compile Include="Controllers\PromulgateStatusController.cs" />
     <Compile Include="DocumentManagementMvcModule.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Global.asax.cs">
@@ -275,9 +279,11 @@
     <Compile Include="Mapper\AutoMapperConfiguration.cs" />
     <Compile Include="Mapper\MappingExtensions.cs" />
     <Compile Include="Models\Documents\DocumentCreateModel.cs" />
+    <Compile Include="Models\Documents\DocumentUpdateModel.cs" />
     <Compile Include="Models\DocumentTypes\DocumentTypeUpdateModel.cs" />
     <Compile Include="Models\Localizations\LanguageSelectionViewModel.cs" />
     <Compile Include="Models\Modules\ModuleUpdateModel.cs" />
+    <Compile Include="Models\PromulgateStatuses\PromulgateStatusUpdateModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MenuConfigurationContext.cs" />
     <Compile Include="Services\MenuManager.cs" />
@@ -7743,6 +7749,16 @@
     <Content Include="Views\DocumentType\List.cshtml" />
     <Content Include="Views\DocumentType\Create.cshtml" />
     <Content Include="Views\DocumentType\Update.cshtml" />
+    <Content Include="Views\PromulgateStatus\List.cshtml" />
+    <Content Include="Views\PromulgateStatus\Create.cshtml" />
+    <Content Include="Views\PromulgateStatus\Update.cshtml" />
+    <Content Include="Views\Document\Update.cshtml" />
+    <Content Include="Views\Document\CreateBackup.cshtml" />
+    <Content Include="Views\Document\ReviewDocument.cshtml" />
+    <Content Include="Views\Appendice\List.cshtml" />
+    <Content Include="Views\Appendice\Create.cshtml" />
+    <Content Include="Views\Document\ListBackup.cshtml" />
+    <Content Include="Views\Document\Detail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -7755,6 +7771,7 @@
     <Folder Include="Uploads\MSDS\" />
     <Folder Include="Uploads\NQ\" />
     <Folder Include="Uploads\OR\" />
+    <Folder Include="Uploads\PL\" />
     <Folder Include="Uploads\QCA\" />
     <Folder Include="Uploads\QC\" />
     <Folder Include="Uploads\QD\" />

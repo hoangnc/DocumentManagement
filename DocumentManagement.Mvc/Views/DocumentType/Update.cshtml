@@ -16,7 +16,7 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.Id)
         <div class="box-header with-border">
-            <h3 class="box-title">@L(DocumentResourceNames.UpdateModule)</h3>
+            <h3 class="box-title">@L(DocumentResourceNames.UpdateDocumentType)</h3>
             <div class="mailbox-controls">
                 <div class="btn-group">
                     <a href="@Url.Action("List")" class="btn btn-success btn-sm">
@@ -33,7 +33,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.ModuleCode) <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.DocumentTypeCode) <span style="color: red">(*)</span></label>
                         <i id="code-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
@@ -52,7 +52,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.ModuleName) <span style="color: red">(*)</span></label>
+                        <label>@L(DocumentResourceNames.DocumentTypeName) <span style="color: red">(*)</span></label>
                         <i id="code-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"

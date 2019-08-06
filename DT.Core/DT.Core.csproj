@@ -48,6 +48,7 @@
       <HintPath>..\packages\System.ComponentModel.Annotations.4.4.1\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -67,6 +68,7 @@
     <Compile Include="Application\Command\BaseCommand.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
+    <Compile Include="Helper\MailHelper.cs" />
     <Compile Include="Helper\PdfHelper.cs" />
     <Compile Include="IO\Extensions\StreamExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

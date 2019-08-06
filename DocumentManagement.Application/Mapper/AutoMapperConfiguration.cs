@@ -7,6 +7,9 @@ using DocumentManagement.Application.Modules.Queries;
 using DocumentManagement.Application.Modules.Commands;
 using DocumentManagement.Application.DocumentTypes.Commands;
 using DocumentManagement.Application.PromulgateStatuses.Queries;
+using DocumentManagement.Application.PromulgateStatuses.Commands;
+using DocumentManagement.Application.Appendices.Queries;
+using DocumentManagement.Application.Appendices.Commands;
 
 namespace DocumentManagement.Application.Mapper
 {
@@ -18,7 +21,15 @@ namespace DocumentManagement.Application.Mapper
             {
                 cfg.CreateMap<Document, SearchDocumentsByTokenPagedDto>();
 
+                cfg.CreateMap<Document, GetDocumentByIdDto>();
+
+                cfg.CreateMap<Document, GetDocumentByCodeDto>();
+
+                cfg.CreateMap<Document, GetAllDocumentDto>();
+
                 cfg.CreateMap<CreateDocumentCommand, Document>();
+
+                cfg.CreateMap<ReviewDocumentCommand, Document>();
 
                 cfg.CreateMap<DocumentType, GetAllDocumentTypesDto>();
 
@@ -39,6 +50,14 @@ namespace DocumentManagement.Application.Mapper
                 cfg.CreateMap<DocumentType, GetDocumentTypeByIdDto>();
 
                 cfg.CreateMap<PromulgateStatus, SearchPromulgateStatusByTokenPagedDto>();
+
+                cfg.CreateMap<CreatePromulgateStatusCommand, PromulgateStatus>();
+
+                cfg.CreateMap<PromulgateStatus, GetPromulgateStatusByIdDto>();
+
+                cfg.CreateMap<Appendice, SearchAppendicesByTokenPagedDto>();
+
+                cfg.CreateMap<CreateAppendiceCommand, Appendice>();
             });
 
             Mapper = MapperConfiguration.CreateMapper();

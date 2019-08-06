@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityModel.WebApi;
+using DT.Core.Web.Common.Identity.Extensions;
 using static DT.Core.Web.Common.Identity.Constants;
 
 namespace DocumentManagement.Mvc.Controllers.Apis
@@ -17,13 +18,12 @@ namespace DocumentManagement.Mvc.Controllers.Apis
     [Authorize]
     public class ModulesApiController : BaseApiController
     {
-
         [Route("api/modules/create")]
         [HttpPost]
         [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.ApiModules)]
         public async Task<int> Create([FromBody]CreateModuleCommand createModuleCommand)
         {
-            createModuleCommand.CreatedBy = User.Identity.Name;
+            createModuleCommand.CreatedBy = User.Identity.GetUserName();
             createModuleCommand.CreatedOn = DateTime.Now;
             createModuleCommand.Deleted = false;
             
@@ -35,12 +35,11 @@ namespace DocumentManagement.Mvc.Controllers.Apis
         [ResourceAuthorize(DtPermissionBaseTypes.Update, DocumentResources.ApiModules)]
         public async Task<int> Update([FromBody]UpdateModuleCommand updateModuleCommand)
         {
-            updateModuleCommand.ModifiedBy = User.Identity.Name;
+            updateModuleCommand.ModifiedBy = User.Identity.GetUserName();
             updateModuleCommand.ModifiedOn = DateTime.Now;
 
             return await Mediator.Send(updateModuleCommand);
         }
-
 
         [Route("api/modules/getallmodules")]
         [HttpGet]
@@ -49,7 +48,6 @@ namespace DocumentManagement.Mvc.Controllers.Apis
         {
             return await Mediator.Send(new GetAllModulesQuery());
         }
-
 
         [Route("api/modules/searchmodulesbytokenpaged")]
         [HttpGet]

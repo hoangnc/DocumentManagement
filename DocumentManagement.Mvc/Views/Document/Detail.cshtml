@@ -1,0 +1,878 @@
+﻿@model DocumentManagement.Application.Documents.Queries.GetDocumentByCodeDto
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles{
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.light.css" type="text/css" />
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Scripts/admin_lte/bower_components/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="~/Content/jquery.fileupload-ui.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/jquery.fileupload.css" type="text/css" />
+}
+<div class="box box-info">
+    <form role="form" action="/" id="formDocument">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+        <div class="box-header with-border">
+            <h3 class="box-title">@L(DocumentResourceNames.DocumentInformation)</h3>
+            <div class="mailbox-controls">
+                <div class="btn-group">
+                    <a href="@Url.Action("List")" class="btn btn-success btn-sm">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.List)
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="box-body">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Code)</label>
+                        <input type="text"
+                               class="form-control"
+                               name="Code"
+                               id="Code"
+                               value="@Model.Code"
+                               readonly />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Name)</label>
+                        <input type="text"
+                               class="form-control"
+                               name="Name"
+                               id="Name"
+                               readonly
+                               value="@Model.Name" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.DocumentType)</label>
+                        <select type="text"
+                                class="form-control"
+                                id="DocumentType"
+                                disabled
+                                name="DocumentType"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.CompanyCode)</label>
+                        <select type="text"
+                                class="form-control"
+                                id="CompanyCode"
+                                name="CompanyCode"
+                                disabled></select>
+                      </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.DepartmentCode)</label>
+                        <select type="text"
+                                class="form-control"
+                                id="DepartmentCode"
+                                name="DepartmentCode"
+                                disabled></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Module)</label>
+                        <select type="text"
+                                class="form-control"
+                                id="Module"
+                                name="Module"
+                                disabled></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Drafter)</label>
+                        <select class="form-control"
+                                id="Drafter"
+                                name="Drafter"
+                                multiple
+                                disabled></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Auditor)</label>
+                        <select class="form-control"
+                                id="Auditor"
+                                name="Auditor"
+                                multiple
+                                disabled></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Approver)</label>
+                        <select type="text"
+                                class="form-control"
+                                id="Approver"
+                                name="Approver"
+                                multiple
+                                disabled></select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>@L(DocumentResourceNames.Description)</label>
+                <textarea class="form-control"
+                          name="Description"
+                          readonly
+                          id="Description">@Model.Description
+                </textarea>
+            </div>
+            <div class="form-group">
+                <label>@L(DocumentResourceNames.ContentChange)</label>
+                <textarea class="form-control"
+                          name="ContentChange"
+                          id="ContentChange"
+                          readonly>@Model.ContentChange
+                </textarea>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.DocumentNumber)</label>
+                        <input type="text"
+                               class="form-control"
+                               autocomplete="off"
+                               id="DocumentNumber"
+                               name="DocumentNumber"
+                               value="@Model.DocumentNumber"
+                               readonly />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ReviewNumber)</label>
+                        <input type="text"
+                               class="form-control"
+                               autocomplete="off"
+                               id="ReviewNumber"
+                               name="ReviewNumber"
+                               value="@Model.ReviewNumber"
+                               readonly />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.EffectiveDate)</label>
+                        <input type="text"
+                               class="form-control"
+                               autocomplete="off"
+                               id="EffectiveDate"
+                               name="EffectiveDate"
+                               disabled />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ReviewDate)</label>
+                        <input type="text"
+                               class="form-control"
+                               autocomplete="off"
+                               id="ReviewDate"
+                               name="ReviewDate"
+                               disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ScopeOfApplication)</label>
+                        <textarea type="text"
+                                class="form-control"
+                                id="ScopeOfApplication"
+                                name="ScopeOfApplication"
+                                disabled>
+@Model.ScopeOfApplication
+</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ScopeOfDeloyment)</label>
+                        <select type="text"
+                                class="form-control"
+                                id="ScopeOfDeloyment"
+                                name="ScopeOfDeloyment"
+                                multiple
+                                disabled></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.DCCAudited)</label>
+                        <br>
+                        <input type="checkbox"
+                               id="DCCAudited"
+                               name="DCCAudited"
+                               disabled />
+                        <input type="hidden"
+                               id="DCCAudited"
+                               name="DCCAudited" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ReplaceOf)</label>
+                        <i id="replaceof-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Được thay thế cho tài liệu nào"></i>
+                        <div id="grdReplaceOf"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.RelateToDocuments)</label>
+                        <i id="RelateToDocuments-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Các tài liệu liên quan"></i>
+                        <div id="grdRelateToDocuments"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Phụ lục</label>
+                        <i id="RelateToDocuments-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phụ lục tài liệu"></i>
+                        <div id="grdAppendieDocuments"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Link files:</label>
+                        @if (!string.IsNullOrEmpty(Model.FileName))
+                        {
+                            <table role="presentation" class="table table-striped">
+                                @foreach (var file in Model.FileName.Split(';'))
+                                {
+                                    <tr>
+                                        <td class="name">
+                                            <a target="_blank" href="/Uploads/@Model.FolderName/@file"><i class="fa fa-paperclip"></i>@file</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts
+{
+    <script>
+        const uploadFileRootPath = '/Uploads';
+        const cultureSelector = '@CurrentLanguage.Name';
+        const hostUrl = '@Url.GetHost()';
+
+        let departments = [];
+        let documentTypes = [];
+        let users = [];
+        let companies = [];
+        let groups = [];
+        let modules = [];
+
+        let $Approver = $('#Approver');
+        let $Drafter = $('#Drafter');
+        let $Auditor = $('#Auditor');
+        let $CompanyCode = $('#CompanyCode');
+        let $DepartmentCode = $('#DepartmentCode');
+        let $CompanyName = $('#CompanyName');
+        let $DepartmentName = $('#DepartmentName');
+        let $DocumentType = $('#DocumentType');
+        let $ScopeOfApplication = $('#ScopeOfApplication');
+        let $ScopeOfDeloyment = $('#ScopeOfDeloyment');
+        let $Module = $('#Module');
+
+        let relateToDocuments = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(
+    Newtonsoft.Json.JsonConvert.SerializeObject(Model.RelateToDocuments, new Newtonsoft.Json.JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() })))");
+        let replaceToDocuments = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(
+    Newtonsoft.Json.JsonConvert.SerializeObject(Model.ReplaceToDocuments, new Newtonsoft.Json.JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() })))");
+        let appendices = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(
+    Newtonsoft.Json.JsonConvert.SerializeObject(Model.Appendices, new Newtonsoft.Json.JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() })))");
+    </script>
+    <!-- Select 2-->
+    <script src="~/Scripts/admin_lte/bower_components/select2/dist/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.edit.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.selection.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.columnsresize.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxtextarea.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxnumberinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.pager.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.sort.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="/Scripts/jqwidgets/jqxgrid.grouping.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/globalization/globalize.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/localization.js"></script>
+    <script type="text/javascript" src="~/Scripts/demos.js"></script>
+    <script type="text/javascript">
+        Globalize.cultureSelector = '@CurrentLanguage.Name';
+    </script>
+    <script type="text/javascript">
+        $('#DCCAudited').jqxCheckBox();
+    </script>
+    <!--Script get masterdata-->
+    <script>
+        const getAllDepartmentsUrl = `${hostUrl}/api/masterdatas/getalldepartments`;
+        const getAllUsersUrl = `${hostUrl}/api/masterdatas/getallusers`;
+        const getAllCompaniesUrl = `${hostUrl}/api/masterdatas/getallcompanies`;
+        const getAllDocumentTypesUrl = `${hostUrl}/api/documenttypes/getalldocumenttypes`;
+        const getAllGroupsFromActiveDirectoryUrl = `${hostUrl}/api/masterdatas/getallgroupsfromactivedirectory`;
+        const getAllModulesUrl = `${hostUrl}/api/modules/getallmodules`;
+        const updateDocumentUrl = `${hostUrl}/api/documents/update`;
+
+        // Get departments
+        function getAllDepartments() {
+            return $.getJSON(getAllDepartmentsUrl,
+                function (data) {
+                    departments = data.map((department) => {
+                        return { id: department.code, text: department.name };
+                    });
+                });
+        }
+
+        // Get Users
+        function getAllUsers() {
+            return $.getJSON(getAllUsersUrl,
+                function (data) {
+                    users = data.map((user) => {
+                        return { id: user.userName, text: user.text, departmentName: user.departmentName };
+                    });
+                });
+        }
+
+        // Get companies
+        function getAllCompanies() {
+            return $.getJSON(getAllCompaniesUrl,
+                function (data) {
+                    companies = data.map((company) => {
+                        return { id: company.code, text: company.name };
+                    });
+                });
+        }
+
+        // Get documenttypes
+        function getAllDocumentTypes() {
+            return $.getJSON(getAllDocumentTypesUrl,
+                function (data) {
+                    documentTypes = data.map((documentType) => {
+                        return { id: documentType.code, text: documentType.name };
+                    });
+                });
+        }
+
+        // Get groups
+        function getAllGroupsFromActiveDirectory() {
+            return $.getJSON(getAllGroupsFromActiveDirectoryUrl,
+                function (data) {
+                    groups = data.map((group) => {
+                        return { id: group, text: group };
+                    });
+                });
+        }
+
+        // Get modules
+        function getAllModules() {
+            return $.getJSON(getAllModulesUrl,
+                function (data) {
+                    modules = data.map((module) => {
+                        return { id: module.code, text: module.name };
+                    });
+                });
+        }
+
+        function formatUserResult(user) {
+            if (!user.id)
+                return user.text;
+            const text = user.text;
+            const fullName = text;
+            const department = user.departmentName;
+            return $(`<span>${fullName}</span><div><small style="color: #a5a0a0">@L(DocumentResourceNames.DepartmentName): ${department}</small></div>`);
+        }
+
+        function formatUserSelection(user) {
+            if (!user.id)
+                return user.text;
+            const text = user.text;
+            return $(`<span>${text}</span>`);
+        }
+
+        Promise.all([getAllUsers(),
+            getAllDepartments(),
+            getAllCompanies(),
+            getAllDocumentTypes(),
+            getAllGroupsFromActiveDirectory(),
+            getAllModules()
+        ]).then(() => {
+            $Approver.select2({
+                data: users,
+                templateResult: formatUserResult,
+                templateSelection: formatUserSelection
+            });
+
+            let approver = '@Model.Approver';
+            $Approver.val(approver.split(';')).trigger('change');
+
+            $Drafter.select2({
+                data: users,
+                templateResult: formatUserResult,
+                templateSelection: formatUserSelection
+            });
+
+            let drafter = '@Model.Drafter';
+            $Drafter.val(drafter.split(';')).trigger('change');
+
+            $Auditor.select2({
+                data: users,
+                templateResult: formatUserResult,
+                templateSelection: formatUserSelection
+            });
+
+            let auditor = '@Model.Auditor';
+            $Auditor.val(auditor.split(';')).trigger('change');
+
+            $CompanyCode.select2({
+                data: companies
+            });
+
+            $CompanyCode.val(['@Model.CompanyCode']).trigger('change');
+
+            $DepartmentCode.select2({
+                data: departments
+            });
+
+            $DepartmentCode.val(['@Model.DepartmentCode']).trigger('change');
+
+            $DocumentType.select2({
+                data: documentTypes
+            });
+
+            $DocumentType.val(['@Model.DocumentType']).trigger('change');
+
+            $ScopeOfDeloyment.select2({
+                data: groups
+            });
+
+            let scopeOfDeloyment = '@Model.ScopeOfDeloyment';
+            $ScopeOfDeloyment.val(scopeOfDeloyment.split(';')).trigger('change');
+
+            $Module.select2({
+                data: modules
+            });
+
+            $Module.val(['@Model.Module']).trigger('change');
+
+            initGrdRelateToDocuments();
+            initGrdAppendieDocuments();
+            initGrdReplaceOf();
+
+            // all requests finished successfully
+        }).catch(() => {
+            // all requests finished but one or more failed
+        })
+
+    </script>
+    <!--Events-->
+    <script>
+        $(document).ready(function () {
+            const enterKeyUp = $.Event("keyup", { keyCode: 13 });
+
+            // Effective date
+            $('#EffectiveDate').datepicker({
+                language: cultureSelector,
+                showOn: 'focus',
+                autoclose: true
+            });
+
+            $('#EffectiveDate').datepicker('setDate', new Date('@Model.EffectiveDate').toLocaleString(cultureSelector));
+
+            // Review date
+            $('#ReviewDate').datepicker({
+                language: cultureSelector,
+                showOn: 'focus',
+                autoclose: true
+            });
+
+            //$('#ReviewDate').datepicker('setDate', new Date('@Model.ReviewDate').toLocaleString(cultureSelector));
+            $('#ReviewDate').datepicker('setDate', '@Model.ReviewDate');
+
+            //$('#ReviewDate').val(new Date('@Model.ReviewDate').toLocaleString(cultureSelector));
+
+            $CompanyCode.on('change', function (e) {
+                const selectedCompany = $CompanyCode.select2('data');
+                if (!isVariableHaveDefaltVal(selectedCompany)) {
+                    $CompanyName.val(selectedCompany[0].text);
+                }
+            });
+
+            $DepartmentCode.on('change', function (e) {
+                const selectedDepartment = $DepartmentCode.select2('data');
+                if (!isVariableHaveDefaltVal(selectedDepartment)) {
+                    $DepartmentName.val(selectedDepartment[0].text);
+                }
+            });
+        });
+    </script>
+
+    <!--Replace to documents-->
+    <script>
+        
+        let grdReplaceOf = $('#grdReplaceOf');
+        let observableSourceReplaceOf = new $.jqx.observableArray(replaceToDocuments);
+        let sourceReplaceOf =
+        {
+            localdata: observableSourceReplaceOf,
+            datatype: "obserableArray",
+            id: "id",
+            updaterow: function (rowid, rowdata, commit) {
+                // synchronize with the server - send update command
+                // call commit with parameter true if the synchronization with the server is successful
+                // and with parameter false if the synchronization failder.
+
+                commit(true);
+            },
+            pagesize: 5,
+            pagesizeoptions: ["5", "10", "20"],
+            datafields:
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'code', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'documentNumber', type: 'string' },
+                    { name: 'reviewNumber', type: 'string' },
+                    { name: 'effectiveDate', type: 'date' },
+                    { name: 'reviewDate', type: 'date'}
+                ]
+        };
+
+        let replaceOfDataAdapter = new $.jqx.dataAdapter(sourceReplaceOf);
+        const initGrdReplaceOf = function () {
+            grdReplaceOf.jqxGrid(
+                {
+                    width: '100%',
+                    height: 250,
+                    source: replaceOfDataAdapter,
+                    pageable: true,
+                    autorowheight: false,
+                    columnsresize: true,
+                    altrows: false,
+                    editable: false,
+                    pagesizeoptions: ["5", "10", "20"],
+                    localization: getLocalization('@CurrentLanguage.Name'),
+                    selectionmode: 'singlerow',
+                    editmode: 'singlecell',
+                    showstatusbar: false,
+                    columns: [
+                        {
+                            text: 'STT',
+                            sortable: false,
+                            filterable: false,
+                            editable: false,
+                            groupable: false,
+                            draggable: false,
+                            pinned: true,
+                            datafield: '',
+                            columntype: 'number',
+                            width: 40,
+                            cellsrenderer: function (row, column, value) {
+                                return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                            }
+                        },
+                        {
+                            text: 'Tên tài liệu',
+                            columntype: 'textbox',
+                            datafield: 'name',
+                            pinned: false,
+                            editable: true,
+                            width: 300
+                        },
+                        {
+                            text: 'Số hiệu',
+                            columntype: 'textbox',
+                            datafield: 'documentNumber',
+                            pinned: false,
+                            editable: false,
+                            width: 100
+                        },
+                        {
+                            text: 'Ban hành ngày',
+                            datafield: 'effectiveDate',
+                            columntype: 'datetimeinput',
+                            width: 110,
+                            align: 'right',
+                            cellsalign: 'right',
+                            filtertype: 'range',
+                            cellsformat: 'd',
+                            editable: false
+                        },
+                        {
+                            text: 'Soán xét',
+                            datafield: 'reviewDate',
+                            columntype: 'datetimeinput',
+                            width: 110,
+                            align: 'right',
+                            cellsalign: 'right',
+                            filtertype: 'range',
+                            cellsformat: 'd',
+                            editable: false
+                        }]
+                });
+        }
+
+        function getReplaceToDocuments() {
+            let documents = replaceOfDataAdapter.records.filter(function (d) {
+                if (!isVariableHaveDefaltVal(d.name)) {
+                    return true;
+                }
+                return false;
+            });
+            return documents;
+        }
+    </script>
+    <!--Relate To Documents-->
+    <script>
+        let grdRelateToDocuments = $('#grdRelateToDocuments');
+        let observableSourceRelateToDocuments = new $.jqx.observableArray(relateToDocuments);
+        let sourceRelateToDocument =
+        {
+            localdata: observableSourceRelateToDocuments,
+            datatype: "obserableArray",
+            id: "id",
+            updaterow: function (rowid, rowdata, commit) {
+                // synchronize with the server - send update command
+                // call commit with parameter true if the synchronization with the server is successful
+                // and with parameter false if the synchronization failder.
+
+                commit(true);
+            },
+            pagesize: 5,
+            pagesizeoptions: ["5", "10", "20"],
+            datafields:
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'code', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'documentNumber', type: 'string' },
+                    { name: 'reviewNumber', type: 'string' },
+                    { name: 'effectiveDate', type: 'date' },
+                    { name: 'reviewDate', type: 'date' }
+                ]
+        };
+
+        let relateToDocumentsDataAdapter = new $.jqx.dataAdapter(sourceRelateToDocument);
+        const initGrdRelateToDocuments = function () {
+            grdRelateToDocuments.jqxGrid(
+                {
+                    width: '100%',
+                    height: 250,
+                    source: relateToDocumentsDataAdapter,
+                    pageable: true,
+                    autorowheight: false,
+                    columnsresize: true,
+                    altrows: false,
+                    editable: false,
+                    pagesizeoptions: ["5", "10", "20"],
+                    localization: getLocalization('@CurrentLanguage.Name'),
+                    selectionmode: 'singlerow',
+                    editmode: 'singlecell',
+                    showstatusbar: false,
+                    columns: [
+                        {
+                            text: 'STT',
+                            sortable: false,
+                            filterable: false,
+                            editable: false,
+                            groupable: false,
+                            draggable: false,
+                            pinned: true,
+                            datafield: '',
+                            columntype: 'number',
+                            width: 40,
+                            cellsrenderer: function (row, column, value) {
+                                return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                            }
+                        },
+                        {
+                            text: 'Tên tài liệu',
+                            columntype: 'textbox',
+                            datafield: 'name',
+                            pinned: false,
+                            editable: true,
+                            width: 300
+                        },
+                        {
+                            text: 'Số hiệu',
+                            columntype: 'textbox',
+                            datafield: 'documentNumber',
+                            pinned: false,
+                            editable: false,
+                            width: 100
+                        },
+                        {
+                            text: 'Ban hành ngày',
+                            datafield: 'effectiveDate',
+                            columntype: 'datetimeinput',
+                            width: 110,
+                            align: 'right',
+                            cellsalign: 'right',
+                            filtertype: 'range',
+                            cellsformat: 'd',
+                            editable: false
+                        },
+                        {
+                            text: 'Soán xét',
+                            datafield: 'reviewDate',
+                            columntype: 'datetimeinput',
+                            width: 110,
+                            align: 'right',
+                            cellsalign: 'right',
+                            filtertype: 'range',
+                            cellsformat: 'd',
+                            editable: false
+                        }]
+                });
+        }
+    </script>
+    <!-- Appendie Documents -->
+    <script>
+        let appendieDocuments = appendices;
+        let grdAppendieDocuments = $('#grdAppendieDocuments');
+        let observableSourceAppendieDocuments = new $.jqx.observableArray(appendieDocuments);
+        let sourceAppendieDocument =
+        {
+            localdata: observableSourceAppendieDocuments,
+            datatype: "obserableArray",
+            id: "id",
+            updaterow: function (rowid, rowdata, commit) {
+                // synchronize with the server - send update command
+                // call commit with parameter true if the synchronization with the server is successful
+                // and with parameter false if the synchronization failder.
+
+                commit(true);
+            },
+            pagesize: 5,
+            pagesizeoptions: ["5", "10", "20"],
+            datafields:
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'code', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'documentNumber', type: 'string' },
+                    { name: 'reviewNumber', type: 'string' }
+                ]
+        };
+
+        let appendieDocumentsDataAdapter = new $.jqx.dataAdapter(sourceAppendieDocument);
+        const initGrdAppendieDocuments = function () {
+            grdAppendieDocuments.jqxGrid(
+                {
+                    width: '100%',
+                    height: 250,
+                    source: appendieDocumentsDataAdapter,
+                    pageable: true,
+                    autorowheight: false,
+                    columnsresize: true,
+                    altrows: false,
+                    editable: true,
+                    pagesizeoptions: ["5", "10", "20"],
+                    localization: getLocalization('@CurrentLanguage.Name'),
+                    selectionmode: 'singlerow',
+                    editmode: 'singlecell',
+                    showstatusbar: false,
+                    showtoolbar: false,
+                    columns: [
+                        {
+                            text: 'STT',
+                            sortable: false,
+                            filterable: false,
+                            editable: false,
+                            groupable: false,
+                            draggable: false,
+                            pinned: true,
+                            datafield: '',
+                            columntype: 'number',
+                            width: 40,
+                            cellsrenderer: function (row, column, value) {
+                                return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                            }
+                        },
+                        {
+                            text: 'Tên phụ lục',
+                            columntype: 'textbox',
+                            datafield: 'name',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        },
+                        {
+                            text: 'Số hiệu',
+                            columntype: 'textbox',
+                            datafield: 'documentNumber',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        }]
+                });
+        }
+    </script>
+}

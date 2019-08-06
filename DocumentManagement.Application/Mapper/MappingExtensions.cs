@@ -1,9 +1,12 @@
-﻿using DocumentManagement.Application.Documents.Commands;
+﻿using DocumentManagement.Application.Appendices.Commands;
+using DocumentManagement.Application.Appendices.Queries;
+using DocumentManagement.Application.Documents.Commands;
 using DocumentManagement.Application.Documents.Queries;
 using DocumentManagement.Application.DocumentTypes.Commands;
 using DocumentManagement.Application.DocumentTypes.Queries;
 using DocumentManagement.Application.Modules.Commands;
 using DocumentManagement.Application.Modules.Queries;
+using DocumentManagement.Application.PromulgateStatuses.Commands;
 using DocumentManagement.Application.PromulgateStatuses.Queries;
 using DocumentManagement.Domain.Entities;
 
@@ -27,9 +30,41 @@ namespace DocumentManagement.Application.Mapper
             return entity.MapTo<Document, SearchDocumentsByTokenPagedDto>();
         }
 
+        public static GetDocumentByIdDto ToGetDocumentByIdDto(this Document entity)
+        {
+            return entity.MapTo<Document, GetDocumentByIdDto>();
+        }
+
+        public static GetDocumentByCodeDto ToGetDocumentByCodeDto(this Document entity)
+        {
+            return entity.MapTo<Document, GetDocumentByCodeDto>();
+        }
+
+        public static GetAllDocumentDto ToGetAllDocumentDto(this Document entity)
+        {
+            return entity.MapTo<Document, GetAllDocumentDto>();
+        }
+
         public static Document ToDocument(this CreateDocumentCommand command)
         {
             return command.MapTo<CreateDocumentCommand, Document>();
+        }
+
+        public static Document ToDocument(this ReviewDocumentCommand command)
+        {
+            return command.MapTo<ReviewDocumentCommand, Document>();
+        }
+        #endregion
+
+        #region Appendices
+        public static SearchAppendicesByTokenPagedDto ToSearchAppendicesByTokenPagedDto(this Appendice entity)
+        {
+            return entity.MapTo<Appendice, SearchAppendicesByTokenPagedDto>();
+        }
+
+        public static Appendice ToAppendice(this CreateAppendiceCommand command)
+        {
+            return command.MapTo<CreateAppendiceCommand, Appendice>();
         }
         #endregion
 
@@ -85,6 +120,16 @@ namespace DocumentManagement.Application.Mapper
         public static SearchPromulgateStatusByTokenPagedDto ToSearchPromulgateStatusByTokenPagedDto(this PromulgateStatus promulgateStatus)
         {
             return promulgateStatus.MapTo<PromulgateStatus, SearchPromulgateStatusByTokenPagedDto>();
+        }
+
+        public static PromulgateStatus ToPromulgateStatus(this CreatePromulgateStatusCommand command)
+        {
+            return command.MapTo<CreatePromulgateStatusCommand, PromulgateStatus>();
+        }
+
+        public static GetPromulgateStatusByIdDto ToGetPromulgateStatusByIdDto(this PromulgateStatus promulgateStatus)
+        {
+            return promulgateStatus.MapTo<PromulgateStatus, GetPromulgateStatusByIdDto>();
         }
         #endregion
     }

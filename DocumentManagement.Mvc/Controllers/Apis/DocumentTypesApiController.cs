@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Thinktecture.IdentityModel.WebApi;
+using DT.Core.Web.Common.Identity.Extensions;
 using static DT.Core.Web.Common.Identity.Constants;
 
 namespace DocumentManagement.Mvc.Controllers.Apis
@@ -22,7 +23,7 @@ namespace DocumentManagement.Mvc.Controllers.Apis
         [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.ApiDocumentTypes)]
         public async Task<int> Create([FromBody]CreateDocumentTypeCommand createDocumentTypeCommand)
         {
-            createDocumentTypeCommand.CreatedBy = User.Identity.Name;
+            createDocumentTypeCommand.CreatedBy = User.Identity.GetUserName();
             createDocumentTypeCommand.CreatedOn = DateTime.Now;
             createDocumentTypeCommand.Deleted = false;
 
@@ -34,7 +35,7 @@ namespace DocumentManagement.Mvc.Controllers.Apis
         [ResourceAuthorize(DtPermissionBaseTypes.Update, DocumentResources.ApiDocumentTypes)]
         public async Task<int> Update([FromBody]UpdateDocumentTypeCommand updateDocumentTypeCommand)
         {
-            updateDocumentTypeCommand.ModifiedBy = User.Identity.Name;
+            updateDocumentTypeCommand.ModifiedBy = User.Identity.GetUserName();
             updateDocumentTypeCommand.ModifiedOn = DateTime.Now;
 
             return await Mediator.Send(updateDocumentTypeCommand);
@@ -48,7 +49,7 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             return await Mediator.Send(new GetAllDocumentTypesQuery());
         }
 
-        [Route("api/modules/searchdocumenttypesbytokenpaged")]
+        [Route("api/documenttypes/searchdocumenttypesbytokenpaged")]
         [HttpGet]
         [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocumentTypes)]
         public async Task<DataSourceResult> List([FromUri]DataSourceRequest dataSourceRequest, string token)

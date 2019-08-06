@@ -18,7 +18,7 @@ namespace DT.Core.Helper
                     string text = PdfTextExtractor.GetTextFromPage(reader, i);
                     if (!text.IsNullOrEmpty())
                     {
-                        stringBuilder.Append(Encoding.UTF8.GetString(ASCIIEncoding.Convert(Encoding.Default, Encoding.UTF8, Encoding.Default.GetBytes(text))));
+                        stringBuilder.AppendLine(text);
                     }
                 }
 

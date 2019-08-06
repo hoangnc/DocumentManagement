@@ -11,7 +11,8 @@
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationDataLossAllowed = true;
             ContextKey = "DocumentManagement.Persistence.DocumentDbContext";
         }
 
@@ -21,7 +22,6 @@
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
-
             SeedDocumentType(context);
             context.SaveChanges();
         }

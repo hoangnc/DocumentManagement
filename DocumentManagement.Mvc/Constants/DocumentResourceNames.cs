@@ -11,10 +11,17 @@
         public const string MenuReleaseDocument = "MenuReleaseDocument";
         public const string MenuReleaseNewDocument = "MenuReleaseNewDocument";
         public const string MenuReviewDocument = "MenuReviewDocument";
+        public const string MenuPromulgateStatus = "MenuPromulgateStatus";
+        public const string MenuReleaseAppendice = "MenuReleaseAppendice";
+        public const string MenuReleaseNewAppendice = "MenuReleaseNewAppendice";
+        public const string MenuReviewAppendice = "MenuReviewAppendice";
 
         public const string DocumentList = "DocumentList";
+        public const string DocumentInformation = "DocumentInformation";
         public const string ModuleList = "ModuleList";
         public const string CreateDocument = "CreateDocument";
+        public const string ReviewDocument = "ReviewDocument";
+        public const string UpdateDocument = "UpdateDocument";
         public const string Code = "Code";
         public const string CompanyCode = "CompanyCode";
         public const string CompanyName = "CompanyName";
@@ -40,6 +47,13 @@
         public const string RelateToDocuments = "RelateToDocuments";
         public const string DCCAudited = "DdcAudited";
         public const string SelectFiles = "SelectFiles";
+        public const string Status = "Status";
+        public const string Active = "Active";
+        public const string PromulgateStatus = "PromulgateStatus";
+
+        public const string AppendiceList = "AppendiceList";
+        public const string CreateAppendice = "CreateAppendice";
+        public const string UpdateAppendice = "UpdateAppendice";
 
         public const string CreateModule = "CreateModule";
         public const string UpdateModule = "UpdateModule";
@@ -50,5 +64,11 @@
         public const string UpdateDocumentType = "UpdateDocumentType";
         public const string DocumentTypeCode = "DocumentTypeCode";
         public const string DocumentTypeName = "DocumentTypeName";
+
+        public const string PromulgateStatusList = "PromulgateStatusList";
+        public const string CreatePromulgateStatus = "CreatePromulgateStatus";
+        public const string UpdatePromulgateStatus = "UpdatePromulgateStatus";
+        public const string PromulgateStatusCode = "PromulgateStatusCode";
+        public const string PromulgateStatusName = "PromulgateStatusName";
     }
 }

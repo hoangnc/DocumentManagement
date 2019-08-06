@@ -14,6 +14,8 @@ namespace DocumentManagement.Persistence.Configurations
             Property(e => e.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
+            Property(e => e.DocumentId);
+
             Property(e => e.Code)
                 .IsRequired()
                 .HasMaxLength(128);

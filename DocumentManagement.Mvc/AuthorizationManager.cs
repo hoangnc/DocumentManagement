@@ -10,11 +10,17 @@ namespace DocumentManagement.Mvc
         public const string Documents = "Documents";
         public const string ApiDocuments = "ApiDocuments";
 
+        public const string Appendices = "Appendices";
+        public const string ApiAppendices = "ApiAppendices";
+
         public const string Modules = "Modules";
         public const string ApiModules = "ApiModules";
 
         public const string DocumentTypes = "DocumentTypes";
         public const string ApiDocumentTypes = "ApiDocumentTypes";
+
+        public const string PromulgateStatuses = "PromulgateStatuses";
+        public const string ApiPromulgateStatuses = "ApiPromulgateStatuses";
     }
 
     public class AuthorizationManager : ResourceAuthorizationManager
@@ -30,6 +36,10 @@ namespace DocumentManagement.Mvc
                     return AuthorizeDocuments(context);
                 case DocumentResources.ApiDocuments:
                     return AuthorizeApiDocuments(context);
+                case DocumentResources.Appendices:
+                    return AuthorizeDocuments(context);
+                case DocumentResources.ApiAppendices:
+                    return AuthorizeApiDocuments(context);
                 case DocumentResources.Modules:
                     return AuthorizeModules(context);
                 case DocumentResources.ApiModules:
@@ -38,10 +48,79 @@ namespace DocumentManagement.Mvc
                     return AuthorizeDocumentTypes(context);
                 case DocumentResources.ApiDocumentTypes:
                     return AuthorizeApiDocumentTypes(context);
+                case DocumentResources.PromulgateStatuses:
+                    return AuthorizePromulgateStatuses(context);
+                case DocumentResources.ApiPromulgateStatuses:
+                    return AuthorizeApiPromulgateStatuses(context);
                 default:
                     return Nok();
             }           
         }
+
+        #region Appendices
+        public Task<bool> AuthorizeAppendices(ResourceAuthorizationContext context)
+        {
+            switch (context.Action.First().Value)
+            {
+                case DtPermissionBaseTypes.Read:
+                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Read));
+                case DtPermissionBaseTypes.Write:
+                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Write));
+                case DtPermissionBaseTypes.Update:
+                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Update));
+                default:
+                    return Nok();
+            }
+        }
+
+        public Task<bool> AuthorizeApiAppendices(ResourceAuthorizationContext context)
+        {
+            switch (context.Action.First().Value)
+            {
+                case DtPermissionBaseTypes.Read:
+                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Read));
+                case DtPermissionBaseTypes.Write:
+                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Write));
+                case DtPermissionBaseTypes.Update:
+                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Update));
+                default:
+                    return Nok();
+            }
+        }
+
+        #endregion
+
+        #region PromulgateStatuses
+        public Task<bool> AuthorizePromulgateStatuses(ResourceAuthorizationContext context)
+        {
+            switch (context.Action.First().Value)
+            {
+                case DtPermissionBaseTypes.Read:
+                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Read));
+                case DtPermissionBaseTypes.Write:
+                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Write));
+                case DtPermissionBaseTypes.Update:
+                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Update));
+                default:
+                    return Nok();
+            }
+        }
+
+        public Task<bool> AuthorizeApiPromulgateStatuses(ResourceAuthorizationContext context)
+        {
+            switch (context.Action.First().Value)
+            {
+                case DtPermissionBaseTypes.Read:
+                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Read));
+                case DtPermissionBaseTypes.Write:
+                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Write));
+                case DtPermissionBaseTypes.Update:
+                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Update));
+                default:
+                    return Nok();
+            }
+        }
+        #endregion
 
         #region Documents
         public Task<bool> AuthorizeDocuments(ResourceAuthorizationContext context)

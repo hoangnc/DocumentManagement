@@ -58,8 +58,7 @@ namespace DocumentManagement.Persistence.Configurations
 
             Property(e => e.Description);
 
-            Property(e => e.ContentChange)
-                .HasMaxLength(4000);
+            Property(e => e.ContentChange);
 
             Property(e => e.Drafter)
                 .HasMaxLength(128);
@@ -72,8 +71,8 @@ namespace DocumentManagement.Persistence.Configurations
                 .HasColumnType("datetime2");
             Property(e => e.ReviewDate)
                 .HasColumnType("datetime2");
-            Property(e => e.ScopeOfApplication)
-                .HasMaxLength(512);
+            Property(e => e.ScopeOfApplication);
+
             Property(e => e.ScopeOfDeloyment)
                 .HasMaxLength(512);
 

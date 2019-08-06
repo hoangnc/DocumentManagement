@@ -91,7 +91,7 @@
 
         let source =
         {
-            url: '@Url.ActionApiWithHost("modules", "searchdocumenttypesbytokenpaged")',
+            url: '@Url.ActionApiWithHost("documenttypes", "searchdocumenttypesbytokenpaged")',
             datatype: "json",
             id: "id",
             updaterow: function (rowid, rowdata, commit) {
@@ -183,7 +183,6 @@
                         editable: false,
                         width: 150
                     },
-                    ,
                     {
                         text: modifiedByText,
                         columntype: 'textbox',

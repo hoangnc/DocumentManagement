@@ -1,0 +1,208 @@
+﻿@{ 
+    ViewBag.Title = "Danh sách trạng thái ban hành";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.light.css" type="text/css" />
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-info">
+            <div class="box-header">
+                <h3 class="box-title">@L(DocumentResourceNames.PromulgateStatusList)</h3>
+                <div class="box-tools pull-right">
+                </div>
+                <div class="mailbox-controls">
+                    <div class="btn-group">
+                        <!-- Check all button -->
+                        <a href="@Url.ActionWithHost("DataExport", "ExportAllAirTicketToExcel")" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.ExportToExcel)</a>
+                        <a href="@Url.Action("Create")" class="btn btn-success btn-sm">
+                            <i class="fa fa-plus" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.AddNew)
+                        </a>
+                    </div>
+                    <div class="box-tools pull-right">
+                        <input id="txtSearch"
+                               class="form-control"
+                               placeholder="@Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Search)" />
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div id='jqxWidget'>
+                        <div id="grdModule"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        const hostUrl = '@Url.GetHost()';
+    </script>
+    <!--Auto numeric-->
+    <script src="~/Scripts/autoNumeric-1.9.41.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.edit.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.selection.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.columnsresize.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxtextarea.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxnumberinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.pager.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.sort.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/globalization/globalize.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/localization.js"></script>
+    <script type="text/javascript" src="~/Scripts/demos.js"></script>
+    <script type="text/javascript">
+        Globalize.cultureSelector = '@CurrentLanguage.Name';
+        const updatePromulgateStatusUrl = `${hostUrl}/promulgatestatus/update`;
+        const codeText = '@L(DocumentResourceNames.PromulgateStatusCode)';
+        const nameText = '@L(DocumentResourceNames.PromulgateStatusName)';
+        const modifiedByText = '@Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.ModifiedBy)';
+        const modifiedOnText = '@Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.ModifiedOn)';
+    </script>
+    <script>
+        const txtSearch = $('#txtSearch');
+        const grdModule = $("#grdModule");
+        txtSearch.on("keyup", function (e) {
+            const key = event.charCode ? event.charCode : event.keyCode ? event.keyCode : 0;
+            if (key === 13) {
+                grdModule.jqxGrid('updatebounddata');
+                grdModule.jqxGrid('gotopage', 0);
+            }
+        });
+
+        let documents = [];
+
+        let source =
+        {
+            url: '@Url.ActionApiWithHost("promulgatestatuses", "searchpromulgatestatusesbytokenpaged")',
+            datatype: "json",
+            id: "id",
+            updaterow: function (rowid, rowdata, commit) {
+                // synchronize with the server - send update command
+                // call commit with parameter true if the synchronization with the server is successful
+                // and with parameter false if the synchronization failder.
+                commit(true);
+            },
+            cache: false,
+            pagesize: 20,
+            sort: function () {
+                // update the grid and send a request to the server.
+                grdModule.jqxGrid('updatebounddata', 'sort');
+            },
+            pagesizeoptions: ["20", "40", "60"],
+            datafields:
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'code', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'modifiedBy', type: 'string' },
+                    { name: 'modifiedOn', type: 'date' }
+                ],
+            root: 'data',
+            beforeprocessing: function (data) { source.totalrecords = data.total; }
+        };
+        let dataAdapter = new $.jqx.dataAdapter(source,
+            {
+                beforeSend: function (jqXHR, settings) {
+                    settings.url = `${settings.url}&token=${txtSearch.val()}`;
+                    jqXHR.setRequestHeader('token', txtSearch.val());
+                }
+            });
+
+        grdModule.jqxGrid(
+            {
+                width: '100%',
+                height: 600,
+                source: dataAdapter,
+                pageable: true,
+                autorowheight: true,
+                columnsresize: true,
+                altrows: true,
+                editable: true,
+                sortable: true,
+                pagesizeoptions: ["20", "40", "60"],
+                localization: getLocalization('@CurrentLanguage.Name'),
+                selectionmode: 'singlerow',
+                editmode: 'singlecell',
+                showstatusbar: false,
+                virtualMode: true,
+                renderGridRows: function (obj) {
+                    return obj.data;
+                },
+                columns: [
+                    {
+                        text: 'STT',
+                        sortable: false,
+                        filterable: false,
+                        editable: false,
+                        groupable: false,
+                        draggable: false,
+                        pinned: true,
+                        datafield: '',
+                        columntype: 'number',
+                        width: 30,
+                        cellsrenderer: function (row, column, value) {
+                            return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                        }
+                    },
+                    {
+                        text: codeText,
+                        columntype: 'textbox',
+                        datafield: 'code',
+                        pinned: true,
+                        editable: false,
+                        width: 150,
+                        cellsrenderer: function (row, column, value, defaultHtml) {
+                            var element = $(defaultHtml);
+                            element.html(`<a href="${updatePromulgateStatusUrl}?id=${dataAdapter.records[row].id}"> <i class="fa fa-pencil"></i> ${value} </a>`);
+                            return element[0].outerHTML;
+                        }
+                    },
+                    {
+                        text: nameText,
+                        columntype: 'textbox',
+                        datafield: 'name',
+                        pinned: true,
+                        editable: false,
+                        width: 150
+                    },
+                    {
+                        text: modifiedByText,
+                        columntype: 'textbox',
+                        datafield: 'modifiedBy',
+                        pinned: true,
+                        editable: false,
+                        width: 150
+                    },
+                    {
+                        text: modifiedOnText,
+                        columntype: 'datetimeinput',
+                        datafield: 'modifiedOn',
+                        cellsformat: 'f',
+                        pinned: true,
+                        editable: false,
+                        width: 150
+                    }
+                ]
+            });
+
+    </script>
+}
+

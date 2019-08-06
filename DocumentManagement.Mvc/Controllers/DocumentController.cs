@@ -1,8 +1,12 @@
-﻿using DocumentManagement.Mvc.Services;
+﻿using DocumentManagement.Application.Documents.Queries;
+using DocumentManagement.Mvc.Models.Documents;
+using DocumentManagement.Mvc.Services;
+using DocumentManagement.Mvc.Mapper;
 using DT.Core.Web.Ui.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Thinktecture.IdentityModel.Mvc;
@@ -27,6 +31,19 @@ namespace DocumentManagement.Mvc.Controllers
             return View();
         }
 
+        [Menu(SelectedMenu = MenuNameConstants.ReleaseNewDocument)]
+        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.Documents)]
+        [HandleForbidden]
+        public async Task<ActionResult> Detail(string code)
+        {
+            var getDocumentByCodeDto = await Mediator.Send(new GetDocumentByCodeQuery
+            {
+                Code = code
+            });
+
+            return View(getDocumentByCodeDto);
+        }
+
         [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.Documents)]
         [HandleForbidden]
         [Menu(SelectedMenu = MenuNameConstants.ReleaseNewDocument)]
@@ -35,12 +52,30 @@ namespace DocumentManagement.Mvc.Controllers
             return View();
         }
 
+        [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.Documents)]
+        [HandleForbidden]
+        [Menu(SelectedMenu = MenuNameConstants.ReviewDocument)]
+        public ActionResult ReviewDocument()
+        {
+            return View();
+        }
+
         [ResourceAuthorize(DtPermissionBaseTypes.Update, DocumentResources.Documents)]
         [HandleForbidden]
         [Menu(SelectedMenu = MenuNameConstants.ReleaseNewDocument)]
-        public ActionResult Update()
+        public async Task<ActionResult> Update(int id)
         {
-            return View();
+            DocumentUpdateModel documentUpdateModel = new DocumentUpdateModel();
+
+            var getDocumentByIdDto = await Mediator.Send(new GetDocumentByIdQuery {
+                Id = id
+            });
+
+            if(getDocumentByIdDto != null)
+            {
+                documentUpdateModel = getDocumentByIdDto.ToDocumentUpdateModel();
+            }
+            return View(documentUpdateModel);
         }
     }
 }
