@@ -31,11 +31,35 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             });
         }
 
+        [Route("api/documents/searchdocumentsbydtandtokenpaged")]
+        [HttpGet]
+        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocuments)]
+        public async Task<DataSourceResult> SearchDocumentsByTypeAndToken([FromUri]DataSourceRequest dataSourceRequest, string token, bool advancedSearch, string documentType)
+        {
+            return await Mediator.Send(new SearchDocumentsByDocumentTypeAndTokenPagedQuery
+            {
+                DataSourceRequest = dataSourceRequest,
+                Token = token,
+                AdvancedSearch = advancedSearch,
+                DocumentType = documentType
+            });
+        }
+
+
         [Route("api/documents/getalldocuments")]
         [HttpGet]
         [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocumentTypes)]
         public async Task<List<GetAllDocumentDto>> GetAlls()
         {
+            /*List<GetAllDocumentDto> documents = await Mediator.Send(new GetAllDocumentQuery());
+            return documents.Select(document => new GetAllDocumentDto
+            {
+                Id= document.Id,
+                Code = document.Code,
+                Name = $"{document.Name} {document.DocumentNumber} {document.ReviewNumber}",
+                DocumentNumber = document.DocumentNumber,
+                ReviewNumber = document.ReviewNumber,
+            }).ToList();*/
             return await Mediator.Send(new GetAllDocumentQuery());
         }
 

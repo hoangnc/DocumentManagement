@@ -99,6 +99,7 @@ END
         protected override void Seed(DocumentDbContext context)
         {
             SeedDocumentType(context);
+            SeedStatus(context);
             context.SaveChanges();
         }
 
@@ -288,13 +289,48 @@ END
 
             documentTypes.Add(new DocumentType
             {
+                Code = "PL",
+                Name = "Phụ lục",
+                CreatedBy = "nguyenconghoang",
+                CreatedOn = DateTime.Now,
+                Deleted = false
+            });
+
+            documentTypes.Add(new DocumentType
+            {
                 Code = "OR",
                 Name = "Khác",
                 CreatedBy = "nguyenconghoang",
                 CreatedOn = DateTime.Now,
                 Deleted = false
             });
+
+            
             context.DocumentTypes.AddOrUpdate(document => new { document.Code }, documentTypes.ToArray());
+        }
+
+        private void SeedStatus(DocumentDbContext context)
+        {
+            List<Status> statuses = new List<Status>();
+
+            statuses.Add(new Status {
+                Code = "Approved",
+                Name = "Đã duyệt",
+                CreatedBy = "NguyenCongHoang",
+                CreatedOn = DateTime.Now,
+                Deleted = false
+            });
+
+            statuses.Add(new Status
+            {
+                Code = "UnApproved",
+                Name = "Chưa duyệt",
+                CreatedBy = "NguyenCongHoang",
+                CreatedOn = DateTime.Now,
+                Deleted = false
+            });
+
+            context.Statuses.AddOrUpdate(status => new { status.Code }, statuses.ToArray());
         }
     }
 }

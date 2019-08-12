@@ -19,7 +19,7 @@ namespace DocumentManagement.Application.DocumentTypes.Queries
         }
         public async Task<List<GetAllDocumentTypesDto>> Handle(GetAllDocumentTypesQuery request, CancellationToken cancellationToken)
         {
-            List<DocumentType> documentTypes = await _context.DocumentTypes.ToListAsync();
+            List<DocumentType> documentTypes = await _context.DocumentTypes.ToListAsync(cancellationToken);
             var result = documentTypes.Select(documentType => documentType.ToGetAllDocumentTypesDto()).ToList();
             return result;
         }

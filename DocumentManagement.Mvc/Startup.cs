@@ -4,6 +4,7 @@ using DT.Core.Web.Common.Identity.Configurations;
 using DT.Core.Web.Common.Validation;
 using FluentValidation;
 using IdentityModel.Client;
+using Microsoft.IdentityModel.Protocols;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
@@ -54,9 +55,11 @@ namespace DocumentManagement.Mvc
 
             if (section != null)
             {
+                
                 OpenIdConnectionOption openIdConnectionOption = (section as OpenIdConnectionOptionSection).OpenIdConnectionOption;
                 app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
                 {
+                    
                     Authority = openIdConnectionOption.Authority,
                     ClientId = openIdConnectionOption.ClientId,
                     Scope = openIdConnectionOption.Scopes,
@@ -67,20 +70,22 @@ namespace DocumentManagement.Mvc
 
                     Notifications = new OpenIdConnectAuthenticationNotifications
                     {
+                        
                         SecurityTokenValidated = async n =>
                         {
                             ClaimsIdentity nid = new ClaimsIdentity(
-                                n.AuthenticationTicket.Identity.AuthenticationType,
-                                IdentityServer3.Core.Constants.ClaimTypes.GivenName,
-                                IdentityServer3.Core.Constants.ClaimTypes.Role);
+                               n.AuthenticationTicket.Identity.AuthenticationType,
+                               IdentityServer3.Core.Constants.ClaimTypes.GivenName,
+                               IdentityServer3.Core.Constants.ClaimTypes.Role);
 
                             // get userinfo data
+#pragma warning disable CS0618 // Type or member is obsolete
                             UserInfoClient userInfoClient = new UserInfoClient(
-                                new Uri(n.Options.Authority + "/connect/userinfo"),
-                                n.ProtocolMessage.AccessToken);
+#pragma warning restore CS0618 // Type or member is obsolete
+                                n.Options.Authority + "/connect/userinfo");
 
-                            UserInfoResponse userInfo = await userInfoClient.GetAsync();
-                            userInfo.Claims.ToList().ForEach(ui => nid.AddClaim(new Claim(ui.Item1, ui.Item2)));
+                            UserInfoResponse userInfo = await userInfoClient.GetAsync(n.ProtocolMessage.AccessToken);
+                            userInfo.Claims.ToList().ForEach(ui => nid.AddClaim(new Claim(ui.Type, ui.Value)));
 
                             // keep the id_token for logout
                             nid.AddClaim(new Claim("id_token", n.ProtocolMessage.IdToken));
@@ -95,7 +100,16 @@ namespace DocumentManagement.Mvc
                                 nid,
                                 n.AuthenticationTicket.Properties);
                         },
+                        /*AuthenticationFailed = authFailed =>
+                        {
+                            if (authFailed.Exception.Message.Contains("IDX21323"))
+                            {
+                                authFailed.HandleResponse();
+                                authFailed.OwinContext.Authentication.Challenge();
+                            }
 
+                            return Task.FromResult(true);
+                        },*/
                         RedirectToIdentityProvider = n =>
                         {
                             if (n.ProtocolMessage.RequestType == Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectRequestType.Logout)

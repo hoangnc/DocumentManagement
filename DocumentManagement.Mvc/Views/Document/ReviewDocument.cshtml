@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = L(DocumentResourceNames.ReviewDocument);
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @section styles{
@@ -134,81 +134,6 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>@L(DocumentResourceNames.Drafter) <span style="color: red">(*)</span></label>
-                        <i id="companycode-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Người soạn thảo là bắt buộc không được bỏ trống"></i>
-                        <select class="form-control"
-                                id="Drafter"
-                                name="Drafter"
-                                multiple
-                                data-validation="required"></select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>@L(DocumentResourceNames.Auditor) <span style="color: red">(*)</span></label>
-                        <i id="clientid-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Người kiểm tra là bắt buộc không được bỏ trống"></i>
-                        <select class="form-control"
-                                id="Auditor"
-                                name="Auditor"
-                                multiple
-                                data-validation="required"></select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>@L(DocumentResourceNames.Approver) <span style="color: red">(*)</span></label>
-                        <i id="clientid-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Người phê duyệt là bắt buộc không được bỏ trống"></i>
-                        <select type="text"
-                                class="form-control"
-                                id="Approver"
-                                name="Approver"
-                                multiple
-                                data-validation="required"></select>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>@L(DocumentResourceNames.Description)</label>
-                <i id="code-help"
-                   class="fa fa-info-circle red-text"
-                   data-toggle="tooltip"
-                   data-placement="top"
-                   title="Diễn giải vắn tắt các thông tin về tài liệu"></i>
-                <textarea class="form-control"
-                          name="Description"
-                          id="Description"></textarea>
-            </div>
-            <div class="form-group">
-                <label>@L(DocumentResourceNames.ContentChange)</label>
-                <i id="code-help"
-                   class="fa fa-info-circle red-text"
-                   data-toggle="tooltip"
-                   data-placement="top"
-                   title="Nội dung thay đổi nếu có"></i>
-                <textarea class="form-control"
-                          name="ContentChange"
-                          id="ContentChange"></textarea>
-            </div>
-
-            <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label>@L(DocumentResourceNames.DocumentNumber) <span style="color: red">(*)</span></label>
@@ -242,7 +167,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -261,17 +185,37 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.ReviewDate)<span style="color: red">(*)</span></label>
+                        <label>
+                            @L(DocumentResourceNames.ReviewDate)
+                            <span style="color: red">(*)</span>
+
+                        </label>
+
                         <i id="clientid-help"
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
                            data-placement="top"
                            title="Phòng ban là bắt buộc không được bỏ trống"></i>
-                        <input type="text"
-                               class="form-control"
-                               autocomplete="off"
-                               id="ReviewDate"
-                               name="ReviewDate" />
+                        &nbsp;
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   autocomplete="off"
+                                   id="ReviewDate"
+                                   name="ReviewDate" />
+                            <div class="input-group-btn">
+                                <div class="btn-group-sm" data-toggle="buttons">
+                                    <button class="btn btn-sm btn-success"
+                                            id="OneYear">
+                                        1 năm
+                                    </button>
+                                    <button class="btn btn-sm btn-success"
+                                            id="TwoYear">
+                                        2 năm
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -293,23 +237,6 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.Active)<span style="color: red">(*)</span></label>
-                        <i id="clientid-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Hiệu lực"></i>
-                        <br>
-                        <input type="checkbox"
-                               id="Active"
-                               name="Active" />
-                        <input type="hidden"
-                               id="Active"
-                               name="Active" />
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
                         <label>@L(DocumentResourceNames.PromulgateStatus)<span style="color: red">(*)</span></label>
                         <i id="clientid-help"
                            class="fa fa-info-circle red-text"
@@ -324,6 +251,110 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Drafter) <span style="color: red">(*)</span></label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Người soạn thảo là bắt buộc không được bỏ trống"></i>
+                        <select class="form-control"
+                                id="Drafter"
+                                name="Drafter"
+                                multiple
+                                data-validation="required"></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label>@L(DocumentResourceNames.Auditor) <span style="color: red">(*)</span></label>
+                    <i id="clientid-help"
+                       class="fa fa-info-circle red-text"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       title="Người kiểm tra là bắt buộc không được bỏ trống"></i>
+                    <select class="form-control"
+                            id="Auditor"
+                            name="Auditor"
+                            multiple
+                            data-validation="required"></select>
+                </div>
+                <div class="col-md-4">
+                    <label>@L(DocumentResourceNames.Approver) <span style="color: red">(*)</span></label>
+                    <i id="clientid-help"
+                       class="fa fa-info-circle red-text"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       title="Người phê duyệt là bắt buộc không được bỏ trống"></i>
+                    <select type="text"
+                            class="form-control"
+                            id="Approver"
+                            name="Approver"
+                            multiple
+                            data-validation="required"></select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.DCCAudited)</label>
+                        <i id="replaceof-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Được thay thế cho tài liệu nào"></i>
+                        <br>
+                        <input type="checkbox"
+                               id="DCCAudited"
+                               name="DCCAudited" />
+                        <input type="hidden"
+                               name="DCCAudited" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Active)<span style="color: red">(*)</span></label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Hiệu lực"></i>
+                        <br>
+                        <input type="checkbox"
+                               id="Active"
+                               name="Active" />
+                        <input type="hidden"
+                               name="Active" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>@L(DocumentResourceNames.Description)</label>
+                <i id="code-help"
+                   class="fa fa-info-circle red-text"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   title="Diễn giải vắn tắt các thông tin về tài liệu"></i>
+                <textarea class="form-control"
+                          name="Description"
+                          id="Description"
+                          rows="7"></textarea>
+            </div>
+            <div class="form-group">
+                <label>@L(DocumentResourceNames.ContentChange)</label>
+                <i id="code-help"
+                   class="fa fa-info-circle red-text"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   title="Nội dung thay đổi nếu có"></i>
+                <textarea class="form-control"
+                          rows="7"
+                          name="ContentChange"
+                          id="ContentChange"></textarea>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -336,9 +367,8 @@
                         <textarea type="text"
                                   class="form-control"
                                   id="ScopeOfApplication"
-                                  name="ScopeOfApplication">
-
-                        </textarea>
+                                  rows="7"
+                                  name="ScopeOfApplication"></textarea>
                     </div>
                 </div>
             </div>
@@ -351,11 +381,10 @@
                            data-toggle="tooltip"
                            data-placement="top"
                            title="Phòng ban là bắt buộc không được bỏ trống"></i>
-                        <select type="text"
-                                class="form-control"
+                        <select class="form-control"
+                                multiple
                                 id="ScopeOfDeloyment"
-                                name="ScopeOfDeloyment"
-                                multiple></select>
+                                name="ScopeOfDeloyment"></select>
                     </div>
                 </div>
             </div>
@@ -382,26 +411,6 @@
                            data-placement="top"
                            title="Các tài liệu liên quan"></i>
                         <div id="grdRelateToDocuments"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>@L(DocumentResourceNames.DCCAudited)</label>
-                        <i id="replaceof-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Được thay thế cho tài liệu nào"></i>
-                        <br>
-                        <input type="checkbox"
-                               id="DCCAudited"
-                               name="DCCAudited" />
-                        <input type="hidden"
-                               id="DCCAudited"
-                               name="DCCAudited" />
                     </div>
                 </div>
             </div>
@@ -462,6 +471,7 @@
 {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
+        const uploadFileRootPath = '/Uploads';
         const cultureSelector = '@CurrentLanguage.Name';
         const hostUrl = '@Url.GetHost()';
 
@@ -484,6 +494,10 @@
         let $ScopeOfApplication = $('#ScopeOfApplication');
         let $ScopeOfDeloyment = $('#ScopeOfDeloyment');
         let $Module = $('#Module');
+        let $PromulgateStatusId = $('#PromulgateStatusId');
+        let $StatusId = $('#StatusId');
+        let $OneYear = $('#OneYear');
+        let $TwoYear = $('#TwoYear');
 
         let $btnSubmit = $('#btnSubmit');
         let storedFiles = [];
@@ -520,15 +534,26 @@
     <script type="text/javascript" src="~/Scripts/jqwidgets/globalization/globalize.js"></script>
     <script type="text/javascript" src="~/Scripts/jqwidgets/localization.js"></script>
     <script type="text/javascript" src="~/Scripts/demos.js"></script>
-    <script type="text/javascript">
-        Globalize.cultureSelector = '@CurrentLanguage.Name';
-    </script>
     <script src="~/Scripts/jquery.fileupload.js"></script>
     <script src="~/Scripts/tmpl.min.js"></script>
     <script type="text/javascript">
+        Globalize.cultureSelector = '@CurrentLanguage.Name';
+    </script>
+
+    <script type="text/javascript">
         $('#DCCAudited').jqxCheckBox();
 
+        $('#DCCAudited').on('change', function (event) {
+            const checked = event.args.checked;
+            $('input:hidden[name=DCCAudited]').val(`${checked}`);
+        });
+
         $('#Active').jqxCheckBox();
+
+        $('#Active').on('change', function (event) {
+            const checked = event.args.checked;
+            $('input:hidden[name=Active]').val(`${checked}`);
+        });
         const uploadTemplate = tmpl('template-upload');
         $(document).ready(function () {
             $('#fileupload').fileupload({
@@ -607,6 +632,8 @@
             reviewDate: '',
             name: '',
             code: '',
+            fileName: '',
+            folderName: '',
             documentNumber: ''
         }];
         let grdReplaceOf = $('#grdReplaceOf');
@@ -630,6 +657,8 @@
                     { name: 'id', type: 'int' },
                     { name: 'code', type: 'string' },
                     { name: 'name', type: 'string' },
+                    { name: 'fileName', type: 'string' },
+                    { name: 'folderName', type: 'string' },
                     { name: 'documentNumber', type: 'string' },
                     { name: 'reviewNumber', type: 'string' },
                     { name: 'effectiveDate', type: 'date' },
@@ -647,6 +676,7 @@
                         { name: 'id', type: 'int' },
                         { name: 'code', type: 'string' },
                         { name: 'name', type: 'string' },
+                        { name: 'displayText', type: 'string' },
                         { name: 'documentNumber', type: 'string' },
                         { name: 'reviewNumber', type: 'string' }
                     ]
@@ -695,6 +725,8 @@
                                 reviewDate: '',
                                 name: '',
                                 code: '',
+                                fileName: '',
+                                folderName: '',
                                 documentNumber: ''
                             };
                             observableSourceReplaceOf.push(datarow);
@@ -704,9 +736,7 @@
                             const selectedrowindex = grdReplaceOf.jqxGrid('getselectedrowindex');
                             const rowscount = grdReplaceOf.jqxGrid('getdatainformation').rowscount;
                             if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
-                                const id = grdReplaceOf.jqxGrid('getrowid', selectedrowindex);
-                                grdReplaceOf.jqxGrid('deleterow', id);
-                                grdReplaceOf.jqxGrid('updatebounddata');
+                                observableSourceReplaceOf.splice(selectedrowindex, 1);
                             }
                         });
                     },
@@ -729,7 +759,7 @@
                         {
                             text: 'Tên tài liệu',
                             columntype: 'textbox',
-                            datafield: 'name',
+                            datafield: 'displayText',
                             pinned: false,
                             editable: true,
                             width: 300,
@@ -754,24 +784,85 @@
                                     height: height,
                                     width: width,
                                     minLength: 1,
-                                    displayMember: 'name',
-                                    source: getEditorDataAdapter('name')
+                                    displayMember: 'displayText',
+                                    //valueMember:'name',
+                                    source: getEditorDataAdapter('displayText')
                                 });
 
                                 editor.on('select', function (event) {
                                     if (event.args) {
                                         let item = event.args.item;
+                                        console.log(item);
                                         if (!isVariableHaveDefaltVal(item)) {
-                                            const document = documents.filter(document => document.name === item.value);
+                                            const document = documents.filter(document => document.displayText === item.label);
                                             if (!isVariableHaveDefaltVal(document)) {
                                                 observableSourceReplaceOf.set(`${row}.documentNumber`, document[0].documentNumber);
                                                 observableSourceReplaceOf.set(`${row}.effectiveDate`, document[0].effectiveDate);
                                                 observableSourceReplaceOf.set(`${row}.reviewDate`, document[0].reviewDate);
+                                                observableSourceReplaceOf.set(`${row}.code`, document[0].code);
+                                                observableSourceReplaceOf.set(`${row}.fileName`, document[0].fileName);
+                                                observableSourceReplaceOf.set(`${row}.folderName`, document[0].folderName);
                                             }
                                         }
                                     }
                                 });
-
+                            },
+                            validation: function (cell, value) {
+                                if (isVariableHaveDefaltVal(value)) {
+                                    return { result: false, message: "Tên tài liệu không được bỏ trống(chú ý nếu đang edit thì cần nhấn phím Enter để update thông tin)" };
+                                }
+                                const index = getReplaceToDocumentIndexByText(value, cell.row);
+                                if (index >= 0) {
+                                    return { result: false, message: "Tài liệu này đã tồn tại trong danh sách" };
+                                }
+                                return true;
+                            }
+                        },
+                        {
+                            text: 'Files',
+                            columntype: 'textbox',
+                            datafield: 'fileName',
+                            pinned: false,
+                            editable: false,
+                            width: 250,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                const fileNames = value.split(';');
+                                const folderName = replaceOfDataAdapter.records[row].folderName;
+                                if (!isVariableHaveDefaltVal(fileNames)
+                                    && !isVariableHaveDefaltVal(folderName)) {
+                                    if (fileNames.length > 0) {
+                                        let html = '';
+                                        for (let index = 0; index < fileNames.length; index++) {
+                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
+                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                                let fileIcon = 'fa fa-file-o';
+                                                switch (getFileExtension(fileNames[index])) {
+                                                    case 'pdf':
+                                                        fileIcon = 'fa fa-file-pdf-o';
+                                                        break;
+                                                    case 'xls':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'xlsx':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'doc':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                    case 'docx':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                }
+                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                            }
+                                        }
+                                        if (!isVariableHaveDefaltVal(html)) {
+                                            element.html(html);
+                                        }
+                                    }
+                                }
+                                return element[0].outerHTML;
                             }
                         },
                         {
@@ -803,13 +894,40 @@
                             filtertype: 'range',
                             cellsformat: 'd',
                             editable: false
+                        },
+                        {
+                            text: 'Mã tài liệu',
+                            columntype: 'textbox',
+                            hidden: true,
+                            datafield: 'code',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        },
+                        {
+                            columntype: 'textbox',
+                            hidden: true,
+                            datafield: 'folderName',
+                            pinned: false,
+                            editable: false,
+                            width: 300
                         }]
                 });
+        }
+        function getReplaceToDocumentIndexByText(text, currentRowIndex) {
+            let index = -1;
+            for (let i = 0; i < replaceOfDataAdapter.records.length; i++) {
+                if (i !== currentRowIndex && replaceOfDataAdapter.records[i].displayText === text) {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
         }
 
         function getReplaceToDocuments() {
             let documents = replaceOfDataAdapter.records.filter(function (d) {
-                if (!isVariableHaveDefaltVal(d.name)) {
+                if (!isVariableHaveDefaltVal(d.code)) {
                     return true;
                 }
                 return false;
@@ -819,7 +937,17 @@
     </script>
     <!--Relate To Documents-->
     <script>
-        let relateToDocuments = [{ id: 1, name: '', code: '', documentNumber: ''}];
+        let relateToDocuments = [{
+            id: 1,
+            effectiveDate: '',
+            reviewDate: '',
+            displayText: '',
+            fileName: '',
+            folderName: '',
+            name: '',
+            code: '',
+            documentNumber: ''
+        }];
         let grdRelateToDocuments = $('#grdRelateToDocuments');
         let observableSourceRelateToDocuments = new $.jqx.observableArray(relateToDocuments);
         let sourceRelateToDocument =
@@ -841,6 +969,8 @@
                     { name: 'id', type: 'int' },
                     { name: 'code', type: 'string' },
                     { name: 'name', type: 'string' },
+                    { name: 'fileName', type: 'string' },
+                    { name: 'folderName', type: 'string' },
                     { name: 'effectiveDate', type: 'date' },
                     { name: 'reviewDate', type: 'date' },
                     { name: 'documentNumber', type: 'string' },
@@ -883,8 +1013,13 @@
                         $('#btnAddRelateToDocuments').on('click', function () {
                             const datarow = {
                                 id: 2,
+                                fileName: '',
+                                folderName: '',
+                                displayText:'',
                                 name: '',
                                 code: '',
+                                effectiveDate: '',
+                                reviewDate: '',
                                 documentNumber: ''
                             };
                             observableSourceRelateToDocuments.push(datarow);
@@ -894,9 +1029,7 @@
                             const selectedrowindex = grdRelateToDocuments.jqxGrid('getselectedrowindex');
                             const rowscount = grdRelateToDocuments.jqxGrid('getdatainformation').rowscount;
                             if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
-                                const id = grdRelateToDocuments.jqxGrid('getrowid', selectedrowindex);
-                                grdRelateToDocuments.jqxGrid('deleterow', id);
-                                grdRelateToDocuments.jqxGrid('updatebounddata');
+                                observableSourceRelateToDocuments.splice(selectedrowindex, 1);
                             }
                         });
                     },
@@ -919,7 +1052,7 @@
                         {
                             text: 'Tên tài liệu',
                             columntype: 'textbox',
-                            datafield: 'name',
+                            datafield: 'displayText',
                             pinned: false,
                             editable: true,
                             width: 300,
@@ -944,24 +1077,85 @@
                                     height: height,
                                     width: width,
                                     minLength: 1,
-                                    displayMember: 'name',
-                                    source: getEditorDataAdapter('name')
+                                    displayMember: 'displayText',
+                                    //valueMember:'name',
+                                    source: getEditorDataAdapter('displayText')
                                 });
 
                                 editor.on('select', function (event) {
                                     if (event.args) {
                                         let item = event.args.item;
+                                        console.log(item);
                                         if (!isVariableHaveDefaltVal(item)) {
-                                            const document = documents.filter(document => document.name === item.value);
+                                            const document = documents.filter(document => document.displayText === item.label);
                                             if (!isVariableHaveDefaltVal(document)) {
                                                 observableSourceRelateToDocuments.set(`${row}.documentNumber`, document[0].documentNumber);
                                                 observableSourceRelateToDocuments.set(`${row}.effectiveDate`, document[0].effectiveDate);
                                                 observableSourceRelateToDocuments.set(`${row}.reviewDate`, document[0].reviewDate);
+                                                observableSourceRelateToDocuments.set(`${row}.code`, document[0].code);
+                                                observableSourceRelateToDocuments.set(`${row}.fileName`, document[0].fileName);
+                                                observableSourceRelateToDocuments.set(`${row}.folderName`, document[0].folderName);
                                             }
                                         }
                                     }
                                 });
-
+                            },
+                            validation: function (cell, value) {
+                                if (isVariableHaveDefaltVal(value)){
+                                    return { result: false, message: "Tên tài liệu không được bỏ trống(chú ý nếu đang edit thì cần nhấn phím Enter để update thông tin)" };
+                                }
+                                const index = getRelateToDocumentIndexByText(value, cell.row);
+                                if (index >= 0) {
+                                    return { result: false, message: "Tài liệu này đã tồn tại trong danh sách" };
+                                }
+                                return true;
+                            }
+                        },
+                        {
+                            text: 'Files',
+                            columntype: 'textbox',
+                            datafield: 'fileName',
+                            pinned: false,
+                            editable: false,
+                            width: 250,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                const fileNames = value.split(';');
+                                const folderName = relateToDocumentsDataAdapter.records[row].folderName;
+                                if (!isVariableHaveDefaltVal(fileNames)
+                                    && !isVariableHaveDefaltVal(folderName)) {
+                                    if (fileNames.length > 0) {
+                                        let html = '';
+                                        for (let index = 0; index < fileNames.length; index++) {
+                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
+                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                                let fileIcon = 'fa fa-file-o';
+                                                switch (getFileExtension(fileNames[index])) {
+                                                    case 'pdf':
+                                                        fileIcon = 'fa fa-file-pdf-o';
+                                                        break;
+                                                    case 'xls':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'xlsx':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'doc':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                    case 'docx':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                }
+                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                            }
+                                        }
+                                        if (!isVariableHaveDefaltVal(html)) {
+                                            element.html(html);
+                                        }
+                                    }
+                                }
+                                return element[0].outerHTML;
                             }
                         },
                         {
@@ -993,13 +1187,41 @@
                             filtertype: 'range',
                             cellsformat: 'd',
                             editable: false
+                        },
+                        {
+                            text: 'Mã tài liệu',
+                            columntype: 'textbox',
+                            hidden: true,
+                            datafield: 'code',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        },
+                        {
+                            columntype: 'textbox',
+                            hidden: true,
+                            datafield: 'folderName',
+                            pinned: false,
+                            editable: false,
+                            width: 300
                         }]
                 });
         }
 
+        function getRelateToDocumentIndexByText(text, currentRowIndex) {
+            let index = -1;
+            for (let i = 0; i < relateToDocumentsDataAdapter.records.length; i++) {
+                if (i !== currentRowIndex && relateToDocumentsDataAdapter.records[i].displayText === text) {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+
         function getRelateToDocuments() {
             let documents = relateToDocumentsDataAdapter.records.filter(function (d) {
-                if (!isVariableHaveDefaltVal(d.name)) {
+                if (!isVariableHaveDefaltVal(d.code)) {
                     return true;
                 }
                 return false;
@@ -1017,15 +1239,56 @@
         const getAllGroupsFromActiveDirectoryUrl = `${hostUrl}/api/masterdatas/getallgroupsfromactivedirectory`;
         const getAllModulesUrl = `${hostUrl}/api/modules/getallmodules`;
         const getAllDocumentsUrl = `${hostUrl}/api/documents/getalldocuments`;
+        const getAllStatusesUrl = `${hostUrl}/api/statuses/getallstatuses`;
+        const getAllPromulgateStatusesUrl = `${hostUrl}/api/promulgatestatuses/getallpromulgatestatuses`;
         const createDocumentUrl = `${hostUrl}/api/documents/review`;
+
+        // Get all statuses
+        function getAllStatuses() {
+            return $.getJSON(getAllStatusesUrl,
+                function (data) {
+                    statuses = data.map((status) => {
+                        return {
+                            id: status.id,
+                            text: status.name
+                        };
+                    });
+                });
+        }
+
+        // Get all promulgateStatuses
+        function getAllPromulgateStatuses() {
+            return $.getJSON(getAllPromulgateStatusesUrl,
+                function (data) {
+                    promulgateStatuses = data.map((status) => {
+                        return {
+                            id: status.id,
+                            text: status.name
+                        };
+                    });
+                });
+        }
 
         // Get all documents
         function getAllDocuments() {
             return $.getJSON(getAllDocumentsUrl,
                 function (data) {
-                    documents = data;
+                    documents = data.map(document => {
+                        return {
+                            name: document.name,
+                            code: document.code,
+                            displayText: `${document.name} ${document.code} ${document.reviewNumber}`,
+                            fileName: document.fileName,
+                            folderName: document.folderName,
+                            documentNumber: document.documentNumber,
+                            reviewNumber: document.reviewNumber,
+                            effectiveDate: document.effectiveDate,
+                            reviewDate: document.reviewDate
+                        };
+                    });
                 });
         }
+
 
         // Get departments
         function getAllDepartments() {
@@ -1115,6 +1378,8 @@
             getAllGroupsFromActiveDirectory(),
             getAllModules(),
             getAllDocuments(),
+            getAllStatuses(),
+            getAllPromulgateStatuses()
         ]).then(() => {
             $Approver.select2({
                 data: users,
@@ -1154,6 +1419,14 @@
                 data: modules
             });
 
+            $StatusId.select2({
+                data: statuses
+            });
+
+            $PromulgateStatusId.select2({
+                data: promulgateStatuses
+            });
+
             initGrdReplaceOf();
 
             initGrdRelateToDocuments();
@@ -1178,11 +1451,14 @@
                 formData.append('files', storedFiles[i]);
             }
 
-            formData.set('Approver', $Approver.val().join(';'));
-            formData.set('Auditor', $Auditor.val().join(';'));
-            formData.set('Drafter', $Drafter.val().join(';'));
-            // formData.set('ScopeOfApplication', $ScopeOfApplication.val().join(';'));
-            formData.set('ScopeOfDeloyment', $ScopeOfDeloyment.val().join(';'));
+            if (!isVariableHaveDefaltVal($Approver.val()))
+                formData.set('Approver', $Approver.val().join(';'));
+            if (!isVariableHaveDefaltVal($Auditor.val()))
+                formData.set('Auditor', $Auditor.val().join(';'));
+            if (!isVariableHaveDefaltVal($Drafter.val()))
+                formData.set('Drafter', $Drafter.val().join(';'));
+            if (!isVariableHaveDefaltVal($ScopeOfDeloyment.val()))
+                formData.set('ScopeOfDeployment', $ScopeOfDeloyment.val().join(';'));
 
             const replaceToDocuments = getReplaceToDocuments().map((document) => document.code);
             const relateToDocuments = getRelateToDocuments().map((document) => document.code);
@@ -1216,9 +1492,6 @@
                 language: cultureSelector,
                 showOn: 'focus',
                 autoclose: true
-            }).on("changeDate", function (e) {
-                $(this).trigger(enterKeyUp);
-                $(this).focus();
             });
 
             // Review date
@@ -1226,9 +1499,6 @@
                 language: cultureSelector,
                 showOn: 'focus',
                 autoclose: true
-            }).on("changeDate", function (e) {
-                $(this).trigger(enterKeyUp);
-                $(this).focus();
             });
 
             if (cultureSelector === 'vi-VN') {
@@ -1262,6 +1532,22 @@
                 if (!isVariableHaveDefaltVal(selectedDepartment)) {
                     $DepartmentName.val(selectedDepartment[0].text);
                 }
+            });
+
+            let format = 'DD/MM/YYYY HH:mm:ss';
+            if (cultureSelector !== 'en')
+                format = $.fn.datepicker.dates[cultureSelector].format.toUpperCase() + ' HH:mm:ss';
+            else
+                format = $.fn.datepicker.defaults.format.toUpperCase();
+
+            $OneYear.click(function () {
+                let date = moment($('#EffectiveDate').val(), format, false).add(1, 'year');
+                $('#ReviewDate').datepicker('setDate', date.toDate());
+            });
+
+            $TwoYear.click(function () {
+                let date = moment($('#EffectiveDate').val(), format, false).add(2, 'year');
+                $('#ReviewDate').datepicker('setDate', date.toDate());
             });
         });
     </script>

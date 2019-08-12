@@ -290,6 +290,22 @@
                 </div>-->
                 <div class="col-md-4">
                     <div class="form-group">
+                        <label>@L(DocumentResourceNames.DCCAudited)</label>
+                        <i id="replaceof-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Được thay thế cho tài liệu nào"></i>
+                        <br>
+                        <input type="checkbox"
+                               id="DCCAudited"
+                               name="DCCAudited" />
+                        <input type="hidden"
+                               name="DCCAudited" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
                         <label>@L(DocumentResourceNames.Active)</label>
                         <i id="clientid-help"
                            class="fa fa-info-circle red-text"
@@ -301,10 +317,10 @@
                                id="Active"
                                name="Active" />
                         <input type="hidden"
-                               id="Active"
                                name="Active" />
                     </div>
                 </div>
+
                 <!--<div class="col-md-4">
                     <div class="form-group">
                         <label>@L(DocumentResourceNames.PromulgateStatus)<span style="color: red">(*)</span></label>
@@ -345,38 +361,16 @@
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
                            data-placement="top"
-                           title="Phòng ban là bắt buộc không được bỏ trống"></i>
-                        <!--<select type="text"
-                        class="form-control"
-                        id="ScopeOfDeloyment"
-                        name="ScopeOfDeloyment"
-                        multiple></select>-->
-                        <textarea type="text"
-                                  class="form-control"
-                                  id="ScopeOfDeloyment"
-                                  name="ScopeOfDeloyment"></textarea>
+                           title="Phạm vi triển khai"></i>
+                        <select type="text"
+                                class="form-control"
+                                id="ScopeOfDeloyment"
+                                name="ScopeOfDeloyment"
+                                multiple></select>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>@L(DocumentResourceNames.DCCAudited)</label>
-                        <i id="replaceof-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Được thay thế cho tài liệu nào"></i>
-                        <br>
-                        <input type="checkbox"
-                               id="DCCAudited"
-                               name="DCCAudited" />
-                        <input type="hidden"
-                               id="DCCAudited"
-                               name="DCCAudited" />
-                    </div>
-                </div>
-            </div>
+
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -461,6 +455,7 @@
 {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
+        const uploadFileRootPath = '/Uploads';
         const cultureSelector = '@CurrentLanguage.Name';
         const hostUrl = '@Url.GetHost()';
 
@@ -604,6 +599,7 @@
             }
         }
     </script>
+    <!-- Gen document code-->
     <script>
         function genDocumentCode() {
             return 'BM' + moment().format('Ymdhmmss');;
@@ -611,7 +607,35 @@
     </script>
     <!--Relate To Documents-->
     <script>
-        let relateToDocuments = [{ id: 1, name: '', code: '', documentNumber: ''}];
+        let getEditorDataAdapter = function (datafield) {
+            let source =
+            {
+                localdata: documents,
+                datatype: "array",
+                datafields:
+                    [
+                        { name: 'id', type: 'int' },
+                        { name: 'code', type: 'string' },
+                        { name: 'name', type: 'string' },
+                        { name: 'displayText', type: 'string' },
+                        { name: 'documentNumber', type: 'string' },
+                        { name: 'reviewNumber', type: 'string' }
+                    ]
+            };
+            let dataAdapter = new $.jqx.dataAdapter(source, { uniqueDataFields: [datafield] });
+            return dataAdapter;
+        }
+        let relateToDocuments = [{
+            id: 1,
+            effectiveDate: '',
+            reviewDate: '',
+            displayText: '',
+            fileName: '',
+            folderName: '',
+            name: '',
+            code: '',
+            documentNumber: ''
+        }];
         let grdRelateToDocuments = $('#grdRelateToDocuments');
         let observableSourceRelateToDocuments = new $.jqx.observableArray(relateToDocuments);
         let sourceRelateToDocument =
@@ -633,28 +657,14 @@
                     { name: 'id', type: 'int' },
                     { name: 'code', type: 'string' },
                     { name: 'name', type: 'string' },
+                    { name: 'fileName', type: 'string' },
+                    { name: 'folderName', type: 'string' },
+                    { name: 'effectiveDate', type: 'date' },
+                    { name: 'reviewDate', type: 'date' },
                     { name: 'documentNumber', type: 'string' },
                     { name: 'reviewNumber', type: 'string' }
                 ]
         };
-
-        let getEditorDataAdapter = function (datafield) {
-            let source =
-            {
-                localdata: documents,
-                datatype: "array",
-                datafields:
-                    [
-                        { name: 'id', type: 'int' },
-                        { name: 'code', type: 'string' },
-                        { name: 'name', type: 'string' },
-                        { name: 'documentNumber', type: 'string' },
-                        { name: 'reviewNumber', type: 'string' }
-                    ]
-            };
-            let dataAdapter = new $.jqx.dataAdapter(source, { uniqueDataFields: [datafield] });
-            return dataAdapter;
-        }
 
         let relateToDocumentsDataAdapter = new $.jqx.dataAdapter(sourceRelateToDocument);
         const initGrdRelateToDocuments = function () {
@@ -691,8 +701,13 @@
                         $('#btnAddRelateToDocuments').on('click', function () {
                             const datarow = {
                                 id: 2,
+                                fileName: '',
+                                folderName: '',
+                                displayText:'',
                                 name: '',
                                 code: '',
+                                effectiveDate: '',
+                                reviewDate: '',
                                 documentNumber: ''
                             };
                             observableSourceRelateToDocuments.push(datarow);
@@ -702,9 +717,7 @@
                             const selectedrowindex = grdRelateToDocuments.jqxGrid('getselectedrowindex');
                             const rowscount = grdRelateToDocuments.jqxGrid('getdatainformation').rowscount;
                             if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
-                                const id = grdRelateToDocuments.jqxGrid('getrowid', selectedrowindex);
-                                grdRelateToDocuments.jqxGrid('deleterow', id);
-                                grdRelateToDocuments.jqxGrid('updatebounddata');
+                                observableSourceRelateToDocuments.splice(selectedrowindex, 1);
                             }
                         });
                     },
@@ -727,7 +740,7 @@
                         {
                             text: 'Tên tài liệu',
                             columntype: 'textbox',
-                            datafield: 'name',
+                            datafield: 'displayText',
                             pinned: false,
                             editable: true,
                             width: 300,
@@ -752,24 +765,85 @@
                                     height: height,
                                     width: width,
                                     minLength: 1,
-                                    displayMember: 'name',
-                                    source: getEditorDataAdapter('name')
+                                    displayMember: 'displayText',
+                                    //valueMember:'name',
+                                    source: getEditorDataAdapter('displayText')
                                 });
 
                                 editor.on('select', function (event) {
                                     if (event.args) {
                                         let item = event.args.item;
+                                        console.log(item);
                                         if (!isVariableHaveDefaltVal(item)) {
-                                            const document = documents.filter(document => document.name === item.value);
+                                            const document = documents.filter(document => document.displayText === item.label);
                                             if (!isVariableHaveDefaltVal(document)) {
                                                 observableSourceRelateToDocuments.set(`${row}.documentNumber`, document[0].documentNumber);
+                                                observableSourceRelateToDocuments.set(`${row}.effectiveDate`, document[0].effectiveDate);
+                                                observableSourceRelateToDocuments.set(`${row}.reviewDate`, document[0].reviewDate);
                                                 observableSourceRelateToDocuments.set(`${row}.code`, document[0].code);
-                                                console.log(relateToDocumentsDataAdapter.records);
+                                                observableSourceRelateToDocuments.set(`${row}.fileName`, document[0].fileName);
+                                                observableSourceRelateToDocuments.set(`${row}.folderName`, document[0].folderName);
                                             }
                                         }
                                     }
                                 });
-
+                            },
+                            validation: function (cell, value) {
+                                if (isVariableHaveDefaltVal(value)){
+                                    return { result: false, message: "Tên tài liệu không được bỏ trống(chú ý nếu đang edit thì cần nhấn phím Enter để update thông tin)" };
+                                }
+                                const index = getRelateToDocumentIndexByText(value, cell.row);
+                                if (index >= 0) {
+                                    return { result: false, message: "Tài liệu này đã tồn tại trong danh sách" };
+                                }
+                                return true;
+                            }
+                        },
+                        {
+                            text: 'Files',
+                            columntype: 'textbox',
+                            datafield: 'fileName',
+                            pinned: false,
+                            editable: false,
+                            width: 250,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                const fileNames = value.split(';');
+                                const folderName = relateToDocumentsDataAdapter.records[row].folderName;
+                                if (!isVariableHaveDefaltVal(fileNames)
+                                    && !isVariableHaveDefaltVal(folderName)) {
+                                    if (fileNames.length > 0) {
+                                        let html = '';
+                                        for (let index = 0; index < fileNames.length; index++) {
+                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
+                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                                let fileIcon = 'fa fa-file-o';
+                                                switch (getFileExtension(fileNames[index])) {
+                                                    case 'pdf':
+                                                        fileIcon = 'fa fa-file-pdf-o';
+                                                        break;
+                                                    case 'xls':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'xlsx':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'doc':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                    case 'docx':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                }
+                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                            }
+                                        }
+                                        if (!isVariableHaveDefaltVal(html)) {
+                                            element.html(html);
+                                        }
+                                    }
+                                }
+                                return element[0].outerHTML;
                             }
                         },
                         {
@@ -778,7 +852,29 @@
                             datafield: 'documentNumber',
                             pinned: false,
                             editable: false,
-                            width: 300
+                            width: 100
+                        },
+                        {
+                            text: 'Ban hành ngày',
+                            datafield: 'effectiveDate',
+                            columntype: 'datetimeinput',
+                            width: 110,
+                            align: 'right',
+                            cellsalign: 'right',
+                            filtertype: 'range',
+                            cellsformat: 'd',
+                            editable: false
+                        },
+                        {
+                            text: 'Soán xét',
+                            datafield: 'reviewDate',
+                            columntype: 'datetimeinput',
+                            width: 110,
+                            align: 'right',
+                            cellsalign: 'right',
+                            filtertype: 'range',
+                            cellsformat: 'd',
+                            editable: false
                         },
                         {
                             text: 'Mã tài liệu',
@@ -788,19 +884,39 @@
                             pinned: false,
                             editable: false,
                             width: 300
+                        },
+                        {
+                            columntype: 'textbox',
+                            hidden: true,
+                            datafield: 'folderName',
+                            pinned: false,
+                            editable: false,
+                            width: 300
                         }]
                 });
         }
 
+        function getRelateToDocumentIndexByText(text, currentRowIndex) {
+            let index = -1;
+            for (let i = 0; i < relateToDocumentsDataAdapter.records.length; i++) {
+                if (i !== currentRowIndex && relateToDocumentsDataAdapter.records[i].displayText === text) {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+
         function getRelateToDocuments() {
             let documents = relateToDocumentsDataAdapter.records.filter(function (d) {
-                if (!isVariableHaveDefaltVal(d.name)) {
+                if (!isVariableHaveDefaltVal(d.code)) {
                     return true;
                 }
                 return false;
             });
             return documents;
         }
+
     </script>
     <!-- Appendie Documents -->
     <script>
@@ -970,7 +1086,19 @@
         function getAllDocuments() {
             return $.getJSON(getAllDocumentsUrl,
                 function (data) {
-                    documents = data;
+                    documents = data.map(document => {
+                        return {
+                            name: document.name,
+                            code: document.code,
+                            displayText: `${document.name} ${document.code} ${document.reviewNumber}`,
+                            fileName: document.fileName,
+                            folderName: document.folderName,
+                            documentNumber: document.documentNumber,
+                            reviewNumber: document.reviewNumber,
+                            effectiveDate: document.effectiveDate,
+                            reviewDate: document.reviewDate
+                        };
+                    });
                 });
         }
 
@@ -1093,6 +1221,10 @@
                 data: documentTypes
             });
 
+            $ScopeOfDeloyment.select2({
+                data: groups
+            });
+
             $Module.select2({
                 data: modules
             });
@@ -1127,6 +1259,8 @@
                 formData.set('Auditor', $Auditor.val().join(';'));
             if (!isVariableHaveDefaltVal($Drafter.val()))
                 formData.set('Drafter', $Drafter.val().join(';'));
+            if (!isVariableHaveDefaltVal($ScopeOfDeloyment.val()))
+                formData.set('ScopeOfDeployment', $ScopeOfDeloyment.val().join(';'));
 
             const relateToDocuments = getRelateToDocuments().map((document) => document.code);
             formData.set('RelateToDocuments', relateToDocuments.join(';'));

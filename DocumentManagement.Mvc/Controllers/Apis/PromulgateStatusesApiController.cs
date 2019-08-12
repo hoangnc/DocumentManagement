@@ -51,5 +51,13 @@ namespace DocumentManagement.Mvc.Controllers.Apis
                 Token = token
             });
         }
+
+        [Route("api/PromulgateStatuses/getallPromulgateStatuses")]
+        [HttpGet]
+        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiPromulgateStatuses)]
+        public async Task<List<GetAllPromulgateStatusesDto>> GetAllStatuses()
+        {
+            return await Mediator.Send(new GetAllPromulgateStatusesQuery());
+        }
     }
 }

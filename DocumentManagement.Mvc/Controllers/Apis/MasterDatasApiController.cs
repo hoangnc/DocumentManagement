@@ -1,5 +1,6 @@
-﻿using DT.Core.Web.Common.Api.WebApi.Controllers;
-using IdentityModel.Client;
+﻿using DocumentManagement.Mvc.Constants;
+using DT.Core.Web.Common.Api.WebApi.Controllers;
+using LazyCache;
 using Newtonsoft.Json;
 using System;
 using System.Configuration;
@@ -15,12 +16,19 @@ namespace DocumentManagement.Mvc.Controllers.Apis
     {
         private string MasterDataEndpoint => ConfigurationManager.AppSettings["MasterDataEndpoint"].ToString();
 
+        private readonly IAppCache _appCache;
+        public MasterDatasApiController(IAppCache appCache)
+        {
+            _appCache = appCache;
+        }
         [Route("api/masterdatas/getalldepartments")]
         public async Task<dynamic> GetAllDepartments()
         {
             ClaimsPrincipal user = User as ClaimsPrincipal;
             string token = user.FindFirst("access_token").Value;
-            return await CallApi(new Uri($"{MasterDataEndpoint}/api/v1/masterdatas/getalldepartments"), token);
+            Func<Task<dynamic>> departments = async () => await CallApi(new Uri($"{MasterDataEndpoint}/api/v1/masterdatas/getalldepartments"), token);
+            dynamic result = await _appCache.GetOrAddAsync(CacheKeys.DepartmentCacheKey, departments);
+            return result;
         }
 
         [Route("api/masterdatas/getallusers")]
@@ -29,7 +37,9 @@ namespace DocumentManagement.Mvc.Controllers.Apis
         {
             ClaimsPrincipal user = User as ClaimsPrincipal;
             string token = user.FindFirst("access_token").Value;
-            return await CallApi(new Uri($"{MasterDataEndpoint}/api/v1/masterdatas/getallusers"), token);
+            Func<Task<dynamic>> users = async () => await CallApi(new Uri($"{MasterDataEndpoint}/api/v1/masterdatas/getallusers"), token);
+            dynamic result = await _appCache.GetOrAddAsync(CacheKeys.UserCacheKey, users);
+            return result;
         }
 
         [Route("api/masterdatas/getallcompanies")]
@@ -38,7 +48,9 @@ namespace DocumentManagement.Mvc.Controllers.Apis
         {
             ClaimsPrincipal user = User as ClaimsPrincipal;
             string token = user.FindFirst("access_token").Value;
-            return await CallApi(new Uri($"{MasterDataEndpoint}/api/v1/masterdatas/getallcompanies"), token);
+            Func<Task<dynamic>> companies = async () => await CallApi(new Uri($"{MasterDataEndpoint}/api/v1/masterdatas/getallcompanies"), token);
+            dynamic result = await _appCache.GetOrAddAsync(CacheKeys.CompanyKey, companies);
+            return result;
         }
 
 
@@ -48,17 +60,9 @@ namespace DocumentManagement.Mvc.Controllers.Apis
         {
             ClaimsPrincipal user = User as ClaimsPrincipal;
             string token = user.FindFirst("access_token").Value;
-            return await CallApi(new Uri($"{MasterDataEndpoint}/api/v1/masterdatas/getallgroupsfromactivedirectory"), token);
-        }
-
-        private async Task<TokenResponse> GetTokenAsync()
-        {
-            TokenClient client = new TokenClient(
-                "https://localhost:44319/identity/connect/token",
-                "masterdata",
-                "967ef861-1b5f-4ea1-9fd9-b66c24a8335c");
-
-            return await client.RequestClientCredentialsAsync("documentapi");
+            Func<Task<dynamic>> groups = async () => await CallApi(new Uri($"{MasterDataEndpoint}/api/v1/masterdatas/getallgroupsfromactivedirectory"), token);
+            dynamic result = await _appCache.GetOrAddAsync(CacheKeys.GroupKey, groups);
+            return result;
         }
 
         private async Task<dynamic> CallApi(Uri uri, string token)

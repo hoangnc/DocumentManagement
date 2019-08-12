@@ -1,11 +1,167 @@
 ﻿using Abp.Localization;
+using DocumentManagement.Application.DocumentTypes.Queries;
 using DocumentManagement.Mvc.Constants;
 using DT.Core.Web.Common.Models;
 using DT.Core.Web.Ui.Navigation;
+using MediatR;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace DocumentManagement.Mvc.Services
 {
+    public static class SimpleCache
+    {
+        private static List<GetAllDocumentTypesDto> _documentTypes;
+
+        public static List<GetAllDocumentTypesDto> DocumentTypes
+        {
+            get
+            {
+                if (_documentTypes == null)
+                {
+
+                    _documentTypes = new List<GetAllDocumentTypesDto>();
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "SDTC",
+                        Name = "SĐTC"
+
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "ST",
+                        Name = "Sổ tay"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "CS",
+                        Name = "Chính sách"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "TNSM",
+                        Name = "Tầm nhìn sư mệnh"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "TT",
+                        Name = "Thủ tục"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "QC",
+                        Name = "Quy chế"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "CN",
+                        Name = "Cẩm nang"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "QT",
+                        Name = "Quy trình"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "QD",
+                        Name = "Quy định"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "NQ",
+                        Name = "Nội quy"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "DL",
+                        Name = "Điều lệ"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "QCA",
+                        Name = "Quy cách"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "QTD",
+                        Name = "Quyết định"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "HD",
+                        Name = "Hướng dẫn"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "TC",
+                        Name = "Tiêu chuẩn"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "DM",
+                        Name = "Định mức"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "TB",
+                        Name = "Thông báo"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "CK",
+                        Name = "Cam kết"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "TNQH",
+                        Name = "Trách nhiệm quyền hạn"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "MSDS",
+                        Name = "MSDS"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "PL",
+                        Name = "Phụ lục"
+                    });
+
+                    _documentTypes.Add(new GetAllDocumentTypesDto
+                    {
+                        Code = "OR",
+                        Name = "Khác"
+                    });
+                }
+                return _documentTypes;
+            }
+        }
+    }
     public static class MenuNameConstants
     {
         public const string DocumentManagement = "DocumentManagement";
@@ -24,14 +180,18 @@ namespace DocumentManagement.Mvc.Services
         public const string Module = "Module";
         public const string DocumentType = "DocumentType";
         public const string PromulgateStatus = "PromulgateStatus";
+
+        public const string OperationData = "OperationData";  
     }
 
     public class MenuConfigurationContext : IMenuConfigurationContext
     {
         private readonly ILocalizationManager _localizationManager;
-        public MenuConfigurationContext(ILocalizationManager localizationManager)
+        private readonly IMediator _mediator;
+        public MenuConfigurationContext(ILocalizationManager localizationManager, IMediator mediator)
         {
             _localizationManager = localizationManager;
+            _mediator = mediator;
         }
         public ModuleMenuItems Menu => BuildDocumentMenu();
 
@@ -97,7 +257,7 @@ namespace DocumentManagement.Mvc.Services
             #endregion
             moduleMenuItem.Items.Add(menuAppendiceDocument);
 
-            #region Category
+            #region Categories
             MenuItem menuCategory = new MenuItem();
             menuCategory.Name = MenuNameConstants.Category;
             menuCategory.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuCategory);
@@ -131,6 +291,33 @@ namespace DocumentManagement.Mvc.Services
             });
             #endregion
             moduleMenuItem.Items.Add(menuCategory);
+
+            #region Operation Data
+            MenuItem menuOperationData = new MenuItem();
+            menuOperationData.Name = MenuNameConstants.OperationData;
+            menuOperationData.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuOperationData);
+            menuOperationData.Order = 0;
+            menuOperationData.Url = "#";
+            menuOperationData.Icon = "fa  fa-list";
+            menuOperationData.CssClass = "treeview";
+
+            var documentTypes = SimpleCache.DocumentTypes;
+            if(documentTypes != null && documentTypes.Any())
+            {
+                foreach(var documentType in documentTypes)
+                {
+                    menuOperationData.Items.Add(new MenuItem
+                    {
+                        Name = documentType.Code,
+                        DisplayName = documentType.Name,
+                        Url = $"/OperationData/list?code={documentType.Code}",
+                        Order = 2
+                    });
+                }
+            }
+
+            #endregion
+            moduleMenuItem.Items.Add(menuOperationData);
 
             moduleMenuItems.Add(moduleMenuItem);
 

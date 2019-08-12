@@ -33,12 +33,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.Code) <span style="color: red">(*)</span></label>
-                        <i id="code-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Mã tài liệu là bắt buộc không được bỏ trống"></i>
+                        <label>@L(DocumentResourceNames.Code)</label>
                         <input type="text"
                                class="form-control"
                                name="Code"
@@ -49,193 +44,68 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.Name) <span style="color: red">(*)</span></label>
-                        <i id="code-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Tên tài liệu là bắt buộc không được bỏ trống"></i>
+                        <label>@L(DocumentResourceNames.Name)</label>
                         <input type="text"
                                class="form-control"
                                name="Name"
                                id="Name"
-                               value="@Model.Name"
-                               data-validation="length"
-                               data-validation-length="4-512"
-                               data-validation-allowing=" " />
+                               value="@Model.Name" />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.DocumentType) <span style="color: red">(*)</span></label>
-                        <i id="companycode-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Loại tài liệu là bắt buộc không được bỏ trống"></i>
+                        <label>@L(DocumentResourceNames.DocumentType)</label>
                         <select type="text"
                                 class="form-control"
                                 id="DocumentType"
-                                name="DocumentType"
-                                data-validation="required"></select>
+                                name="DocumentType"></select>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.CompanyCode) <span style="color: red">(*)</span></label>
-                        <i id="companycode-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Công ty là bắt buộc không được bỏ trống"></i>
+                        <label>@L(DocumentResourceNames.CompanyCode)</label>
                         <select type="text"
                                 class="form-control"
                                 id="CompanyCode"
-                                name="CompanyCode"
-                                data-validation="required"></select>
-                        <input type="hidden"
-                               id="CompanyName"
-                               name="CompanyName" />
+                                name="CompanyCode"></select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.DepartmentCode) <span style="color: red">(*)</span></label>
-                        <i id="clientid-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Phòng ban là bắt buộc không được bỏ trống"></i>
+                        <label>@L(DocumentResourceNames.DepartmentCode)</label>
                         <select type="text"
                                 class="form-control"
                                 id="DepartmentCode"
-                                name="DepartmentCode"
-                                data-validation="required"></select>
-                        <input type="hidden"
-                               id="DepartmentName"
-                               name="DepartmentName" />
+                                name="DepartmentCode"></select>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.Module) <span style="color: red">(*)</span></label>
-                        <i id="clientid-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Phân hệ là bắt buộc không được bỏ trống"></i>
+                        <label>@L(DocumentResourceNames.Module)</label>
                         <select type="text"
                                 class="form-control"
                                 id="Module"
-                                name="Module"
-                                data-validation="required"></select>
+                                name="Module"></select>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>@L(DocumentResourceNames.Drafter) <span style="color: red">(*)</span></label>
-                        <i id="companycode-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Người soạn thảo là bắt buộc không được bỏ trống"></i>
-                        <select class="form-control"
-                                id="Drafter"
-                                name="Drafter"
-                                multiple
-                                data-validation="required"></select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>@L(DocumentResourceNames.Auditor) <span style="color: red">(*)</span></label>
-                        <i id="clientid-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Người kiểm tra là bắt buộc không được bỏ trống"></i>
-                        <select class="form-control"
-                                id="Auditor"
-                                name="Auditor"
-                                multiple
-                                data-validation="required"></select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>@L(DocumentResourceNames.Approver) <span style="color: red">(*)</span></label>
-                        <i id="clientid-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Người phê duyệt là bắt buộc không được bỏ trống"></i>
-                        <select type="text"
-                                class="form-control"
-                                id="Approver"
-                                name="Approver"
-                                multiple
-                                data-validation="required"></select>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>@L(DocumentResourceNames.Description)</label>
-                <i id="code-help"
-                   class="fa fa-info-circle red-text"
-                   data-toggle="tooltip"
-                   data-placement="top"
-                   title="Diễn giải vắn tắt các thông tin về tài liệu"></i>
-                <textarea class="form-control"
-                          name="Description"
-                          id="Description">@Model.Description</textarea>
-            </div>
-            <div class="form-group">
-                <label>@L(DocumentResourceNames.ContentChange)</label>
-                <i id="code-help"
-                   class="fa fa-info-circle red-text"
-                   data-toggle="tooltip"
-                   data-placement="top"
-                   title="Nội dung thay đổi nếu có"></i>
-                <textarea class="form-control"
-                          name="ContentChange"
-                          id="ContentChange">
-@Model.ContentChange
-</textarea>
-            </div>
-
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.DocumentNumber) <span style="color: red">(*)</span></label>
-                        <i id="companycode-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Số hiệu là bắt buộc không được bỏ trống"></i>
+                        <label>@L(DocumentResourceNames.DocumentNumber)</label>
                         <input type="text"
                                class="form-control"
                                autocomplete="off"
                                id="DocumentNumber"
                                name="DocumentNumber"
-                               value="@Model.DocumentNumber" />
+                               value="@Model.DocumentNumber"/>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.ReviewNumber)<span style="color: red">(*)</span></label>
-                        <i id="clientid-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Số soán xét là bắt buộc"></i>
+                        <label>@L(DocumentResourceNames.ReviewNumber)</label>
                         <input type="text"
                                class="form-control"
                                autocomplete="off"
@@ -249,60 +119,105 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.EffectiveDate) <span style="color: red">(*)</span></label>
-                        <i id="companycode-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Ngày hiệu lực là bắt buộc không được bỏ trống"></i>
+                        <label>@L(DocumentResourceNames.EffectiveDate)</label>
                         <input type="text"
                                class="form-control"
                                autocomplete="off"
                                id="EffectiveDate"
-                               name="EffectiveDate" />
+                               name="EffectiveDate"
+                                />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.ReviewDate)<span style="color: red">(*)</span></label>
-                        <i id="clientid-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Ngày soán xét là bắt buộc không được bỏ trống"></i>
+                        <label>@L(DocumentResourceNames.ReviewDate)</label>
                         <input type="text"
                                class="form-control"
                                autocomplete="off"
                                id="ReviewDate"
-                               name="ReviewDate" />
+                               name="ReviewDate"
+                                />
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.ScopeOfApplication) <span style="color: red">(*)</span></label>
-                        <i id="companycode-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Phạm vi áp dụng"></i>
-                        <textarea type="text"
+                        <label>@L(DocumentResourceNames.Drafter)</label>
+                        <select class="form-control"
+                                id="Drafter"
+                                name="Drafter"
+                                multiple
+                                ></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Auditor)</label>
+                        <select class="form-control"
+                                id="Auditor"
+                                name="Auditor"
+                                multiple
+                                ></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Approver)</label>
+                        <select type="text"
                                 class="form-control"
-                                id="ScopeOfApplication"
-                                name="ScopeOfApplication">@Model.ScopeOfApplication</textarea>
+                                id="Approver"
+                                name="Approver"
+                                multiple
+                                ></select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.DCCAudited)</label>
+                        <br>
+                        <input type="checkbox"
+                               id="DCCAudited"
+                               name="DCCAudited"
+                                />
+                        <input type="hidden"
+                               id="DCCAudited"
+                               name="DCCAudited" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>@L(DocumentResourceNames.Description)</label>
+                <textarea class="form-control"
+                          name="Description"  
+                          rows="10"
+                          id="Description">@Model.Description></textarea>
+            </div>
+            <div class="form-group">
+                <label>@L(DocumentResourceNames.ContentChange)</label>
+                <textarea class="form-control"
+                          name="ContentChange"
+                          id="ContentChange"
+                          rows="10">@Model.ContentChange</textarea>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ScopeOfApplication)</label>
+                        <textarea type="text"
+                                  class="form-control"
+                                  id="ScopeOfApplication"
+                                  name="ScopeOfApplication"
+                                  rows="10">@Model.ScopeOfApplication</textarea>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.ScopeOfDeloyment) <span style="color: red">(*)</span></label>
-                        <i id="clientid-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Phạm vi triển khai là bắt buộc không được bỏ trống"></i>
+                        <label>@L(DocumentResourceNames.ScopeOfDeloyment)</label>
                         <select type="text"
                                 class="form-control"
                                 id="ScopeOfDeloyment"
@@ -311,8 +226,9 @@
                     </div>
                 </div>
             </div>
+
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-12">
                     <div class="form-group">
                         <label>@L(DocumentResourceNames.ReplaceOf)</label>
                         <i id="replaceof-help"
@@ -320,31 +236,11 @@
                            data-toggle="tooltip"
                            data-placement="top"
                            title="Được thay thế cho tài liệu nào"></i>
-                        <input type="text"
-                               class="form-control"
-                               id="ReplaceOf"
-                               name="ReplaceOf"
-                               value="@Model.ReplaceOf" />
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>@L(DocumentResourceNames.DCCAudited)</label>
-                        <i id="replaceof-help"
-                           class="fa fa-info-circle red-text"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="Đã được DCC kiểm tra chưa"></i>
-                        <br>
-                        <input type="checkbox"
-                               id="DCCAudited"
-                               name="DCCAudited" />
-                        <input type="hidden"
-                               id="DCCAudited"
-                               name="DCCAudited" />
+                        <div id="grdReplaceOf"></div>
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -354,11 +250,7 @@
                            data-toggle="tooltip"
                            data-placement="top"
                            title="Các tài liệu liên quan"></i>
-                        <input type="text"
-                               class="form-control"
-                               id="RelateToDocuments"
-                               name="RelateToDocuments"
-                               value="@Model.RelateToDocuments" />
+                        <div id="grdRelateToDocuments"></div>
                     </div>
                 </div>
             </div>

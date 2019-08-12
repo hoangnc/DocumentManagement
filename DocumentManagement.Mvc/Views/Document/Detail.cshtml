@@ -1,6 +1,6 @@
 ﻿@model DocumentManagement.Application.Documents.Queries.GetDocumentByCodeDto
 @{
-    ViewBag.Title = "Update";
+    ViewBag.Title = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @section styles{
@@ -70,7 +70,7 @@
                                 id="CompanyCode"
                                 name="CompanyCode"
                                 disabled></select>
-                      </div>
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
@@ -93,60 +93,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>@L(DocumentResourceNames.Drafter)</label>
-                        <select class="form-control"
-                                id="Drafter"
-                                name="Drafter"
-                                multiple
-                                disabled></select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>@L(DocumentResourceNames.Auditor)</label>
-                        <select class="form-control"
-                                id="Auditor"
-                                name="Auditor"
-                                multiple
-                                disabled></select>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>@L(DocumentResourceNames.Approver)</label>
-                        <select type="text"
-                                class="form-control"
-                                id="Approver"
-                                name="Approver"
-                                multiple
-                                disabled></select>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>@L(DocumentResourceNames.Description)</label>
-                <textarea class="form-control"
-                          name="Description"
-                          readonly
-                          id="Description">@Model.Description
-                </textarea>
-            </div>
-            <div class="form-group">
-                <label>@L(DocumentResourceNames.ContentChange)</label>
-                <textarea class="form-control"
-                          name="ContentChange"
-                          id="ContentChange"
-                          readonly>@Model.ContentChange
-                </textarea>
-            </div>
-
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -199,27 +145,33 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.ScopeOfApplication)</label>
-                        <textarea type="text"
-                                class="form-control"
-                                id="ScopeOfApplication"
-                                name="ScopeOfApplication"
-                                disabled>
-@Model.ScopeOfApplication
-</textarea>
+                        <label>@L(DocumentResourceNames.Drafter)</label>
+                        <select class="form-control"
+                                id="Drafter"
+                                name="Drafter"
+                                multiple
+                                disabled></select>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label>@L(DocumentResourceNames.ScopeOfDeloyment)</label>
+                        <label>@L(DocumentResourceNames.Auditor)</label>
+                        <select class="form-control"
+                                id="Auditor"
+                                name="Auditor"
+                                multiple
+                                disabled></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Approver)</label>
                         <select type="text"
                                 class="form-control"
-                                id="ScopeOfDeloyment"
-                                name="ScopeOfDeloyment"
+                                id="Approver"
+                                name="Approver"
                                 multiple
                                 disabled></select>
                     </div>
@@ -237,6 +189,49 @@
                         <input type="hidden"
                                id="DCCAudited"
                                name="DCCAudited" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>@L(DocumentResourceNames.Description)</label>
+                <textarea class="form-control"
+                          name="Description"
+                          readonly
+                          rows="10"
+                          id="Description">@Model.Description></textarea>
+            </div>
+            <div class="form-group">
+                <label>@L(DocumentResourceNames.ContentChange)</label>
+                <textarea class="form-control"
+                          name="ContentChange"
+                          id="ContentChange"
+                          rows="10"
+                          readonly>@Model.ContentChange
+                </textarea>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ScopeOfApplication)</label>
+                        <textarea type="text"
+                                  class="form-control"
+                                  id="ScopeOfApplication"
+                                  name="ScopeOfApplication"
+                                  rows="10"
+                                  disabled>@Model.ScopeOfApplication</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.ScopeOfDeloyment)</label>
+                        <select type="text"
+                                class="form-control"
+                                id="ScopeOfDeloyment"
+                                name="ScopeOfDeloyment"
+                                multiple
+                                disabled></select>
                     </div>
                 </div>
             </div>
@@ -513,7 +508,7 @@
                 data: groups
             });
 
-            let scopeOfDeloyment = '@Model.ScopeOfDeloyment';
+            let scopeOfDeloyment = `@Model.ScopeOfDeloyment`;
             $ScopeOfDeloyment.val(scopeOfDeloyment.split(';')).trigger('change');
 
             $Module.select2({
@@ -543,8 +538,16 @@
                 showOn: 'focus',
                 autoclose: true
             });
+            let format = 'DD/MM/YYYY HH:mm:ss';
+            if (cultureSelector !== 'en')
+                format = $.fn.datepicker.dates[cultureSelector].format.toUpperCase() + ' HH:mm:ss';
+            else
+                format = $.fn.datepicker.defaults.format.toUpperCase();
 
-            $('#EffectiveDate').datepicker('setDate', new Date('@Model.EffectiveDate').toLocaleString(cultureSelector));
+            let effectiveDate = moment('@Model.EffectiveDate', format);
+            let reviewDate = moment('@Model.ReviewDate', format);
+
+            $('#EffectiveDate').datepicker('setDate', effectiveDate.toDate());
 
             // Review date
             $('#ReviewDate').datepicker({
@@ -553,10 +556,7 @@
                 autoclose: true
             });
 
-            //$('#ReviewDate').datepicker('setDate', new Date('@Model.ReviewDate').toLocaleString(cultureSelector));
-            $('#ReviewDate').datepicker('setDate', '@Model.ReviewDate');
-
-            //$('#ReviewDate').val(new Date('@Model.ReviewDate').toLocaleString(cultureSelector));
+            $('#ReviewDate').datepicker('setDate', reviewDate.toDate());
 
             $CompanyCode.on('change', function (e) {
                 const selectedCompany = $CompanyCode.select2('data');
@@ -576,7 +576,7 @@
 
     <!--Replace to documents-->
     <script>
-        
+
         let grdReplaceOf = $('#grdReplaceOf');
         let observableSourceReplaceOf = new $.jqx.observableArray(replaceToDocuments);
         let sourceReplaceOf =
@@ -597,6 +597,8 @@
                 [
                     { name: 'id', type: 'int' },
                     { name: 'code', type: 'string' },
+                    { name: 'fileName', type: 'string' },
+                    { name: 'folderName', type: 'string' },
                     { name: 'name', type: 'string' },
                     { name: 'documentNumber', type: 'string' },
                     { name: 'reviewNumber', type: 'string' },
@@ -613,7 +615,7 @@
                     height: 250,
                     source: replaceOfDataAdapter,
                     pageable: true,
-                    autorowheight: false,
+                    autorowheight: true,
                     columnsresize: true,
                     altrows: false,
                     editable: false,
@@ -638,6 +640,54 @@
                                 return "<div style='margin:4px;'>" + (value + 1) + "</div>";
                             }
                         },
+                        {
+                            text: 'Files',
+                            columntype: 'textbox',
+                            datafield: 'fileName',
+                            pinned: true,
+                            editable: false,
+                            width: 250,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                const fileNames = value.split(';');
+                                const folderName = replaceOfDataAdapter.records[row].folderName;
+                                if (!isVariableHaveDefaltVal(fileNames)
+                                    && !isVariableHaveDefaltVal(folderName)) {
+                                    if (fileNames.length > 0) {
+                                        let html = '';
+                                        for (let index = 0; index < fileNames.length; index++) {
+                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
+                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                                let fileIcon = 'fa fa-file-o';
+                                                switch (getFileExtension(fileNames[index])) {
+                                                    case 'pdf':
+                                                        fileIcon = 'fa fa-file-pdf-o';
+                                                        break;
+                                                    case 'xls':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'xlsx':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'doc':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                    case 'docx':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                }
+                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                            }
+                                        }
+                                        if (!isVariableHaveDefaltVal(html)) {
+                                            element.html(html);
+                                        }
+                                    }
+                                }
+                                return element[0].outerHTML;
+                            }
+                        },
+
                         {
                             text: 'Tên tài liệu',
                             columntype: 'textbox',
@@ -712,6 +762,8 @@
                     { name: 'id', type: 'int' },
                     { name: 'code', type: 'string' },
                     { name: 'name', type: 'string' },
+                    { name: 'fileName', type: 'string' },
+                    { name: 'folderName', type: 'string' },
                     { name: 'documentNumber', type: 'string' },
                     { name: 'reviewNumber', type: 'string' },
                     { name: 'effectiveDate', type: 'date' },
@@ -727,7 +779,7 @@
                     height: 250,
                     source: relateToDocumentsDataAdapter,
                     pageable: true,
-                    autorowheight: false,
+                    autorowheight: true,
                     columnsresize: true,
                     altrows: false,
                     editable: false,
@@ -750,6 +802,53 @@
                             width: 40,
                             cellsrenderer: function (row, column, value) {
                                 return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                            }
+                        },
+                        {
+                            text: 'Files',
+                            columntype: 'textbox',
+                            datafield: 'fileName',
+                            pinned: true,
+                            editable: false,
+                            width: 250,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                const fileNames = value.split(';');
+                                const folderName = relateToDocumentsDataAdapter.records[row].folderName;
+                                if (!isVariableHaveDefaltVal(fileNames)
+                                    && !isVariableHaveDefaltVal(folderName)) {
+                                    if (fileNames.length > 0) {
+                                        let html = '';
+                                        for (let index = 0; index < fileNames.length; index++) {
+                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
+                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                                let fileIcon = 'fa fa-file-o';
+                                                switch (getFileExtension(fileNames[index])) {
+                                                    case 'pdf':
+                                                        fileIcon = 'fa fa-file-pdf-o';
+                                                        break;
+                                                    case 'xls':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'xlsx':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'doc':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                    case 'docx':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                }
+                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                            }
+                                        }
+                                        if (!isVariableHaveDefaltVal(html)) {
+                                            element.html(html);
+                                        }
+                                    }
+                                }
+                                return element[0].outerHTML;
                             }
                         },
                         {
@@ -816,7 +915,9 @@
                 [
                     { name: 'id', type: 'int' },
                     { name: 'code', type: 'string' },
+                    { name: 'fileName', type: 'string' },
                     { name: 'name', type: 'string' },
+                    { name: 'documentType', type: 'string'},
                     { name: 'documentNumber', type: 'string' },
                     { name: 'reviewNumber', type: 'string' }
                 ]
@@ -830,7 +931,7 @@
                     height: 250,
                     source: appendieDocumentsDataAdapter,
                     pageable: true,
-                    autorowheight: false,
+                    autorowheight: true,
                     columnsresize: true,
                     altrows: false,
                     editable: true,
@@ -854,6 +955,53 @@
                             width: 40,
                             cellsrenderer: function (row, column, value) {
                                 return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                            }
+                        },
+                        {
+                            text: 'Files',
+                            columntype: 'textbox',
+                            datafield: 'fileName',
+                            pinned: true,
+                            editable: false,
+                            width: 250,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                const fileNames = value.split(';');
+                                const folderName = appendieDocumentsDataAdapter.records[row].documentType;
+                                if (!isVariableHaveDefaltVal(fileNames)
+                                    && !isVariableHaveDefaltVal(folderName)) {
+                                    if (fileNames.length > 0) {
+                                        let html = '';
+                                        for (let index = 0; index < fileNames.length; index++) {
+                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
+                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                                let fileIcon = 'fa fa-file-o';
+                                                switch (getFileExtension(fileNames[index])) {
+                                                    case 'pdf':
+                                                        fileIcon = 'fa fa-file-pdf-o';
+                                                        break;
+                                                    case 'xls':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'xlsx':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'doc':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                    case 'docx':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                }
+                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                            }
+                                        }
+                                        if (!isVariableHaveDefaltVal(html)) {
+                                            element.html(html);
+                                        }
+                                    }
+                                }
+                                return element[0].outerHTML;
                             }
                         },
                         {

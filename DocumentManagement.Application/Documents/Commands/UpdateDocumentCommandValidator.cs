@@ -2,7 +2,7 @@
 
 namespace DocumentManagement.Application.Documents.Commands
 {
-    public class UpdateDocumentCommandValidator : AbstractValidator<CreateDocumentCommand>
+    public class UpdateDocumentCommandValidator : AbstractValidator<UpdateDocumentCommand>
     {
         public UpdateDocumentCommandValidator()
         {
@@ -24,7 +24,7 @@ namespace DocumentManagement.Application.Documents.Commands
             RuleFor(x => x.Drafter).MaximumLength(128);
             RuleFor(x => x.Auditor).MaximumLength(128);
             RuleFor(x => x.Approver).MaximumLength(128);
-            RuleFor(x => x.ScopeOfApplication).MaximumLength(512);
+            RuleFor(x => x.ScopeOfApplication).MaximumLength(4000);
             RuleFor(x => x.ScopeOfDeloyment).MaximumLength(128);
             RuleFor(x => x.ReplaceOf).MaximumLength(128);
             RuleFor(x => x.RelateToDocuments).MaximumLength(128);

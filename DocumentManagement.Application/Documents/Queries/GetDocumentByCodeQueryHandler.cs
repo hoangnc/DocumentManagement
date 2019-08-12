@@ -49,6 +49,8 @@ namespace DocumentManagement.Application.Documents.Queries
                                                    {
                                                        Code = d1.Code,
                                                        Name = d1.Name,
+                                                       FileName = d1.FileName,
+                                                       FolderName = d1.FolderName,
                                                        DocumentNumber = d1.DocumentNumber,
                                                        EffectiveDate = d1.EffectiveDate,
                                                        ReviewDate = d1.ReviewDate
@@ -60,6 +62,8 @@ namespace DocumentManagement.Application.Documents.Queries
                                                    {
                                                        Code = d1.Code,
                                                        Name = d1.Name,
+                                                       FileName = d1.FileName,
+                                                       FolderName = d1.FolderName,
                                                        DocumentNumber = d1.DocumentNumber,
                                                        EffectiveDate = d1.EffectiveDate,
                                                        ReviewDate = d1.ReviewDate
@@ -69,6 +73,8 @@ namespace DocumentManagement.Application.Documents.Queries
                                                     {
                                                         Code = a.Code,
                                                         Name = a.Name,
+                                                        DocumentType = a.DocumentType,
+                                                        FileName = a.FileName,
                                                         DocumentNumber = a.AppendiceNumber,
                                                         ReviewNumber = a.ReviewNumber
                                                     }).ToList()

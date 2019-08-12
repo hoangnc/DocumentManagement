@@ -27,5 +27,20 @@ namespace DocumentManagement.Mvc.Controllers
 
             return PartialView("_LanguagesPartial", model);
         }
+
+        [ChildActionOnly]
+        public PartialViewResult _LeftSideColumnPartial()
+        {
+            LanguageSelectionViewModel model = new LanguageSelectionViewModel
+            {
+                CurrentLanguage = _languageManager.CurrentLanguage,
+                Languages = _languageManager.GetLanguages().Where(l => !l.IsDisabled).ToList()
+                    .Where(l => !l.IsDisabled)
+                    .ToList(),
+                CurrentUrl = Request.Path
+            };
+
+            return PartialView("_LanguagesPartial", model);
+        }
     }
 }

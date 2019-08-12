@@ -15,6 +15,7 @@
         public const string MenuReleaseAppendice = "MenuReleaseAppendice";
         public const string MenuReleaseNewAppendice = "MenuReleaseNewAppendice";
         public const string MenuReviewAppendice = "MenuReviewAppendice";
+        public const string MenuOperationData = "MenuOperationData";
 
         public const string DocumentList = "DocumentList";
         public const string DocumentInformation = "DocumentInformation";

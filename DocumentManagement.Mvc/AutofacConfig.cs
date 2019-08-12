@@ -53,15 +53,6 @@ namespace DocumentManagement.Mvc
             // OPTIONAL: Register the Autofac model binder provider.
             builder.RegisterWebApiModelBinderProvider();
 
-            builder.Register<ServiceFactory>(ctx =>
-            {
-                IComponentContext c = ctx.Resolve<IComponentContext>();
-                return t => c.Resolve(t);
-            });
-
-            builder.RegisterAssemblyTypes(typeof(IMediator).GetTypeInfo().Assembly)
-                .AsImplementedInterfaces();
-
             builder.RegisterAssemblyTypes(typeof(CreateDocumentCommandValidator).Assembly)
                 .AsImplementedInterfaces() ;
 

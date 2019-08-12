@@ -8,6 +8,7 @@ using DocumentManagement.Application.Modules.Commands;
 using DocumentManagement.Application.Modules.Queries;
 using DocumentManagement.Application.PromulgateStatuses.Commands;
 using DocumentManagement.Application.PromulgateStatuses.Queries;
+using DocumentManagement.Application.Statuses.Queries;
 using DocumentManagement.Domain.Entities;
 
 namespace DocumentManagement.Application.Mapper
@@ -28,6 +29,11 @@ namespace DocumentManagement.Application.Mapper
         public static SearchDocumentsByTokenPagedDto ToSearchDocumentsByTokenPagedDto(this Document entity)
         {
             return entity.MapTo<Document, SearchDocumentsByTokenPagedDto>();
+        }
+
+        public static SearchDocumentsByDocumentTypeAndTokenPagedDto ToSearchDocumentsByDocumentTypeAndTokenPagedDto(this Document entity)
+        {
+            return entity.MapTo<Document, SearchDocumentsByDocumentTypeAndTokenPagedDto>();
         }
 
         public static GetDocumentByIdDto ToGetDocumentByIdDto(this Document entity)
@@ -130,6 +136,20 @@ namespace DocumentManagement.Application.Mapper
         public static GetPromulgateStatusByIdDto ToGetPromulgateStatusByIdDto(this PromulgateStatus promulgateStatus)
         {
             return promulgateStatus.MapTo<PromulgateStatus, GetPromulgateStatusByIdDto>();
+        }
+        #endregion
+
+        #region PromulgateStatuses
+        public static GetAllPromulgateStatusesDto ToGetAllPromulgateStatusesDto(this PromulgateStatus entity)
+        {
+            return entity.MapTo<PromulgateStatus, GetAllPromulgateStatusesDto>();
+        }
+        #endregion
+
+        #region Statuses
+        public static GetAllStatusesDto ToGetAllStatusesDto(this Status entity)
+        {
+            return entity.MapTo<Status, GetAllStatusesDto>();
         }
         #endregion
     }

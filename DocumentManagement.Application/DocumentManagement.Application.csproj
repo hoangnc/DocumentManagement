@@ -100,6 +100,9 @@
     <Compile Include="Documents\Queries\GetDocumentByIdDto.cs" />
     <Compile Include="Documents\Queries\GetDocumentByIdQuery.cs" />
     <Compile Include="Documents\Queries\GetDocumentByIdQueryHandler.cs" />
+    <Compile Include="Documents\Queries\SearchDocumentsByDocumentTypeAndTokenPagedDto.cs" />
+    <Compile Include="Documents\Queries\SearchDocumentsByDocumentTypeAndTokenPagedQuery.cs" />
+    <Compile Include="Documents\Queries\SearchDocumentsByDocumentTypeAndTokenPagedQueryHandler.cs" />
     <Compile Include="Documents\Queries\SearchDocumentsByTokenPagedDto.cs" />
     <Compile Include="Documents\Queries\SearchDocumentsByTokenPagedQuery.cs" />
     <Compile Include="Documents\Queries\SearchDocumentsByTokenPagedQueryHandler.cs" />
@@ -137,6 +140,9 @@
     <Compile Include="PromulgateStatuses\Commands\CreatePromulgateStatusCommandHandler.cs" />
     <Compile Include="PromulgateStatuses\Commands\UpdatePromulgateStatusCommand.cs" />
     <Compile Include="PromulgateStatuses\Commands\UpdatePromulgateStatusCommandHandler.cs" />
+    <Compile Include="PromulgateStatuses\Queries\GetAllPromulgateStatusesDto.cs" />
+    <Compile Include="PromulgateStatuses\Queries\GetAllPromulgateStatusesQuery.cs" />
+    <Compile Include="PromulgateStatuses\Queries\GetAllPromulgateStatusesQueryHandler.cs" />
     <Compile Include="PromulgateStatuses\Queries\GetPromulgateStatusByIdDto.cs" />
     <Compile Include="PromulgateStatuses\Queries\GetPromulgateStatusByIdQuery.cs" />
     <Compile Include="PromulgateStatuses\Queries\GetPromulgateStatusByIdQueryHandler.cs" />
@@ -145,6 +151,9 @@
     <Compile Include="PromulgateStatuses\Queries\SearchPromulgateStatusByTokenPagedQueryHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchDocumentsQueryBaseHandler.cs" />
+    <Compile Include="Statuses\Queries\GetAllStatusesDto.cs" />
+    <Compile Include="Statuses\Queries\GetAllStatusesQuery.cs" />
+    <Compile Include="Statuses\Queries\GetAllStatusesQueryHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
