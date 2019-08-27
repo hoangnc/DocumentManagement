@@ -2,10 +2,11 @@
 using DocumentManagement.Application.Appendices.Queries;
 using DT.Core.Data.Models;
 using DT.Core.Web.Common.Api.WebApi.Controllers;
-using DT.Core.Web.Common.Api.WebApi.Formatter;
 using DT.Core.Web.Common.Identity.Extensions;
+using MultipartDataMediaFormatter.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -43,34 +44,44 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             return await Mediator.Send(createAppendiceCommand);
         }
 
+
+        [Route("api/appendices/delete")]
+        [HttpPost]
+        [ResourceAuthorize(DtPermissionBaseTypes.Delete, DocumentResources.ApiAppendices)]
+        public async Task<int> Delete([FromBody]DeleteAppendiceCommand deleteAppendiceCommand)
+        {
+            if (deleteAppendiceCommand == null)
+            {
+                throw new ArgumentNullException(nameof(deleteAppendiceCommand));
+            }
+
+            return await Mediator.Send(deleteAppendiceCommand);
+        }
+
+        public void SaveAs(string filePath, HttpFile httpFile)
+        {
+            using (FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            {
+                using (MemoryStream memoryStream = new MemoryStream(httpFile.Buffer))
+                {
+                    memoryStream.WriteTo(file);
+                }
+            }
+        }
+
         private Task<string> UploadAppendices(CreateAppendiceCommand command)
         {
             List<string> files = new List<string>();
             if (command.Files.Any())
             {
-                foreach (HttpPostedFileMultipart file in command.Files)
+                foreach (HttpFile file in command.Files)
                 {
                     string filePath = HttpContext.Current.Server.MapPath("~/" + $"Uploads/{command.DocumentType}/{file.FileName}");
                     files.Add(file.FileName);
-                    file.SaveAs(filePath);
+                    SaveAs(filePath, file);
                 }
             }
             return Task.FromResult(string.Join(";", files));
         }
-
-        /*private Task<string> UploadDocuments(UpdateDocumentCommand command)
-        {
-            List<string> files = new List<string>();
-            if (command.Files.Any())
-            {
-                foreach (HttpPostedFileMultipart file in command.Files)
-                {
-                    string filePath = HttpContext.Current.Server.MapPath("~/" + $"Uploads/{command.DocumentType}/{file.FileName}");
-                    files.Add(file.FileName);
-                    file.SaveAs(filePath);
-                }
-            }
-            return Task.FromResult(string.Join(";", files));
-        }*/
     }
 }

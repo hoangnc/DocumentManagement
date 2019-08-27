@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DocumentManagement.Application.Documents.Queries
 {
@@ -12,6 +14,7 @@ namespace DocumentManagement.Application.Documents.Queries
         public string DepartmentName { get; set; }
         public string Module { get; set; }
         public string DocumentType { get; set; }
+        public string DocumentTypeName { get; set; }
         public string Name { get; set; }
         public string FileName { get; set; }
         public string DocumentNumber { get; set; }
@@ -25,9 +28,33 @@ namespace DocumentManagement.Application.Documents.Queries
         public DateTime? ReviewDate { get; set; }
         public string ScopeOfApplication { get; set; }
         public string ScopeOfDeloyment { get; set; }
+        public List<string> ListReplaceOf { get; set; }
         public string ReplaceOf { get; set; }
-        public DateTime? ReplaceEffectiveDate { get; set; }
         public string RelateToDocuments { get; set; }
+        public string ReplaceOfName
+        {
+            get
+            {
+                if (ListReplaceOf != null && ListReplaceOf.Any())
+                {
+                    return string.Join(";", ListReplaceOf);
+                }
+                return string.Empty;
+            }
+        }
+        public string RelateToDocumentNames
+        {
+            get
+            {
+                if (ListRelateToDocuments != null && ListRelateToDocuments.Any())
+                {
+                    return string.Join(";", ListRelateToDocuments);
+                }
+                return string.Empty;
+            }
+        }
+        public List<string> ListRelateToDocuments { get; set; }
+        public DateTime? ReplaceEffectiveDate { get; set; }
         public bool DDCAudited { get; set; }
         public string FolderName { get; set; }
         public string LinkFile { get; set; }

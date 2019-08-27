@@ -11,6 +11,7 @@ using DocumentManagement.Application.PromulgateStatuses.Commands;
 using DocumentManagement.Application.Appendices.Queries;
 using DocumentManagement.Application.Appendices.Commands;
 using DocumentManagement.Application.Statuses.Queries;
+using DocumentManagement.Application.Groups.Queries;
 
 namespace DocumentManagement.Application.Mapper
 {
@@ -29,6 +30,8 @@ namespace DocumentManagement.Application.Mapper
                 cfg.CreateMap<Document, GetDocumentByCodeDto>();
 
                 cfg.CreateMap<Document, GetAllDocumentDto>();
+
+                cfg.CreateMap<Document, GetDocumentsByMonthDto>();
 
                 cfg.CreateMap<CreateDocumentCommand, Document>();
 
@@ -65,6 +68,8 @@ namespace DocumentManagement.Application.Mapper
                 cfg.CreateMap<PromulgateStatus, GetAllPromulgateStatusesDto>();
 
                 cfg.CreateMap<Status, GetAllStatusesDto>();
+
+                cfg.CreateMap<Group, GetAllGroupsDto>();
             });
 
             Mapper = MapperConfiguration.CreateMapper();

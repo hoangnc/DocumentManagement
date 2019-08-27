@@ -4,6 +4,7 @@ using DocumentManagement.Application.Documents.Commands;
 using DocumentManagement.Application.Documents.Queries;
 using DocumentManagement.Application.DocumentTypes.Commands;
 using DocumentManagement.Application.DocumentTypes.Queries;
+using DocumentManagement.Application.Groups.Queries;
 using DocumentManagement.Application.Modules.Commands;
 using DocumentManagement.Application.Modules.Queries;
 using DocumentManagement.Application.PromulgateStatuses.Commands;
@@ -49,6 +50,11 @@ namespace DocumentManagement.Application.Mapper
         public static GetAllDocumentDto ToGetAllDocumentDto(this Document entity)
         {
             return entity.MapTo<Document, GetAllDocumentDto>();
+        }
+
+        public static GetDocumentsByMonthDto ToGetDocumentsByMonthDto(this Document entity)
+        {
+            return entity.MapTo<Document, GetDocumentsByMonthDto>();
         }
 
         public static Document ToDocument(this CreateDocumentCommand command)
@@ -150,6 +156,13 @@ namespace DocumentManagement.Application.Mapper
         public static GetAllStatusesDto ToGetAllStatusesDto(this Status entity)
         {
             return entity.MapTo<Status, GetAllStatusesDto>();
+        }
+        #endregion
+
+        #region Groups
+        public static GetAllGroupsDto ToGetAllGroupsDto(this Group entity)
+        {
+            return entity.MapTo<Group, GetAllGroupsDto>();
         }
         #endregion
     }

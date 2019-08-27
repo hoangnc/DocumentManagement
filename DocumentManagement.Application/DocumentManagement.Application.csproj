@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DocumentManagement.Application</RootNamespace>
     <AssemblyName>DocumentManagement.Application</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,6 +53,9 @@
     <Reference Include="MediatR, Version=7.0.0.0, Culture=neutral, PublicKeyToken=bb9a41a5e8aaa7e2, processorArchitecture=MSIL">
       <HintPath>..\packages\MediatR.7.0.0\lib\net461\MediatR.dll</HintPath>
     </Reference>
+    <Reference Include="MultipartDataMediaFormatter, Version=2.0.2.0, Culture=neutral, PublicKeyToken=67148dd0761d95a0, processorArchitecture=MSIL">
+      <HintPath>..\packages\MultipartDataMediaFormatter.V2.2.0.2\lib\net45\MultipartDataMediaFormatter.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -77,6 +81,8 @@
     <Compile Include="Appendices\Commands\CreateAppendiceCommand.cs" />
     <Compile Include="Appendices\Commands\CreateAppendiceCommandHandler.cs" />
     <Compile Include="Appendices\Commands\CreateAppendiceCommandValidator.cs" />
+    <Compile Include="Appendices\Commands\DeleteAppendiceCommand.cs" />
+    <Compile Include="Appendices\Commands\DeleteAppendiceCommandHandler.cs" />
     <Compile Include="Appendices\Queries\SearchAppendicesByTokenPagedDto.cs" />
     <Compile Include="Appendices\Queries\SearchAppendicesByTokenPagedQuery.cs" />
     <Compile Include="Appendices\Queries\SearchAppendicesByTokenPagedQueryHandler.cs" />
@@ -100,6 +106,9 @@
     <Compile Include="Documents\Queries\GetDocumentByIdDto.cs" />
     <Compile Include="Documents\Queries\GetDocumentByIdQuery.cs" />
     <Compile Include="Documents\Queries\GetDocumentByIdQueryHandler.cs" />
+    <Compile Include="Documents\Queries\GetDocumentsByMonthDto.cs" />
+    <Compile Include="Documents\Queries\GetDocumentsByMonthQuery.cs" />
+    <Compile Include="Documents\Queries\GetDocumentsByMonthQueryHandler.cs" />
     <Compile Include="Documents\Queries\SearchDocumentsByDocumentTypeAndTokenPagedDto.cs" />
     <Compile Include="Documents\Queries\SearchDocumentsByDocumentTypeAndTokenPagedQuery.cs" />
     <Compile Include="Documents\Queries\SearchDocumentsByDocumentTypeAndTokenPagedQueryHandler.cs" />
@@ -119,6 +128,9 @@
     <Compile Include="DocumentTypes\Queries\SearchDocumentTypesByTokenPagedDto.cs" />
     <Compile Include="DocumentTypes\Queries\SearchDocumentTypesByTokenPagedQuery.cs" />
     <Compile Include="DocumentTypes\Queries\SearchDocumentTypesByTokenPagedQueryHandler.cs" />
+    <Compile Include="Groups\Queries\GetAllGroupsDto.cs" />
+    <Compile Include="Groups\Queries\GetAllGroupsQuery.cs" />
+    <Compile Include="Groups\Queries\GetAllGroupsQueryHandler.cs" />
     <Compile Include="Mapper\AutoMapperConfiguration.cs" />
     <Compile Include="Mapper\MappingExtensions.cs" />
     <Compile Include="Modules\Commands\CreateModuleCommand.cs" />

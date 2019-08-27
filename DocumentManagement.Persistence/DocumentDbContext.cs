@@ -45,6 +45,7 @@ namespace DocumentManagement.Persistence
         public DbSet<FormType> FormTypes { get; set; }
         public DbSet<PromulgateStatus> PromulgateStatuses { get; set; }
         public DbSet<Module> Modules { get; set; }
+        public DbSet<Group> Groups { get; set; }
 
         [DbFunction("DocumentDbContext", "STRING_SPLIT")]
         public IQueryable<string> Split(string text, char? delimiter)

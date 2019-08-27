@@ -1,14 +1,14 @@
 ﻿using DocumentManagement.Application.Documents.Commands;
 using DocumentManagement.Application.Documents.Queries;
 using DT.Core.Data.Models;
-using DT.Core.Web.Common.Api.WebApi.Controllers;
-using DT.Core.Web.Common.Api.WebApi.Formatter;
 using DT.Core.Web.Common.Identity.Extensions;
+using MultipartDataMediaFormatter.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using Thinktecture.IdentityModel.WebApi;
 using static DT.Core.Web.Common.Identity.Constants;
@@ -16,8 +16,13 @@ using static DT.Core.Web.Common.Identity.Constants;
 namespace DocumentManagement.Mvc.Controllers.Apis
 {
     [Authorize]
-    public class DocumentsApiController : BaseApiController
+    public class DocumentsApiController : DocumentManagementApiControllerBase
     {
+        private readonly string UploadFolderPath = ConfigurationManager.AppSettings["UploadFolderPath"];
+        public DocumentsApiController()
+        {
+        }
+
         [Route("api/documents/searchdocumentsbytokenpaged")]
         [HttpGet]
         [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocuments)]
@@ -33,33 +38,85 @@ namespace DocumentManagement.Mvc.Controllers.Apis
 
         [Route("api/documents/searchdocumentsbydtandtokenpaged")]
         [HttpGet]
-        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocuments)]
         public async Task<DataSourceResult> SearchDocumentsByTypeAndToken([FromUri]DataSourceRequest dataSourceRequest, string token, bool advancedSearch, string documentType)
         {
             return await Mediator.Send(new SearchDocumentsByDocumentTypeAndTokenPagedQuery
             {
                 DataSourceRequest = dataSourceRequest,
                 Token = token,
+                Department = User.Identity.GetDepartment(),
                 AdvancedSearch = advancedSearch,
                 DocumentType = documentType
             });
         }
 
+        public class JqGridRequest
+        {
+            public string Sidx { get; set; }
+            public int Rows { get; set; }
+            public int Page { get; set; }
+            public string Sord { get; set; }
+            public string Token { get; set; }
+            public bool AdvancedSearch { get; set; }
+            public string DocumentType { get; set; }
+        }
+
+        [Route("api/documents/searchdocumentsforjqgrid")]
+        [HttpGet]
+        public async Task<DataSourceResult> SearchDocumentsByTypeAndTokenForJqGrid([FromUri]JqGridRequest request)
+        {
+            DataSourceRequest dataSourceRequest = new DataSourceRequest
+            {
+                SortDataField = "name",
+                SortOrder = request.Sord,
+                PageSize = request.Rows,
+                PageNum = request.Page - 1
+            };
+            return await Mediator.Send(new SearchDocumentsByDocumentTypeAndTokenPagedQuery
+            {
+                DataSourceRequest = dataSourceRequest,
+                Token = request.Token,
+                AdvancedSearch = request.AdvancedSearch,
+                DocumentType = request.DocumentType
+            });
+        }
+
+        public class PqGridRequest
+        {
+            public string Sidx { get; set; }
+            public int Pq_CurPage { get; set; }
+            public int Pq_rpp { get; set; }
+            public string Sord { get; set; }
+            public string Token { get; set; }
+            public bool AdvancedSearch { get; set; }
+            public string DocumentType { get; set; }
+        }
+
+        [Route("api/documents/searchdocumentsforpqgrid")]
+        [HttpGet]
+        public async Task<DataSourceResult> SearchDocumentsByTypeAndTokenForPqGrid([FromUri]PqGridRequest request)
+        {
+            DataSourceRequest dataSourceRequest = new DataSourceRequest
+            {
+                SortDataField = "name",
+                SortOrder = "asc",
+                PageSize = request.Pq_rpp,
+                PageNum = request.Pq_CurPage - 1
+            };
+            return await Mediator.Send(new SearchDocumentsByDocumentTypeAndTokenPagedQuery
+            {
+                DataSourceRequest = dataSourceRequest,
+                Token = request.Token,
+                AdvancedSearch = request.AdvancedSearch,
+                DocumentType = request.DocumentType
+            });
+        }
 
         [Route("api/documents/getalldocuments")]
         [HttpGet]
         [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocumentTypes)]
         public async Task<List<GetAllDocumentDto>> GetAlls()
         {
-            /*List<GetAllDocumentDto> documents = await Mediator.Send(new GetAllDocumentQuery());
-            return documents.Select(document => new GetAllDocumentDto
-            {
-                Id= document.Id,
-                Code = document.Code,
-                Name = $"{document.Name} {document.DocumentNumber} {document.ReviewNumber}",
-                DocumentNumber = document.DocumentNumber,
-                ReviewNumber = document.ReviewNumber,
-            }).ToList();*/
             return await Mediator.Send(new GetAllDocumentQuery());
         }
 
@@ -74,6 +131,48 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             createDocumentCommand.FileName = await UploadDocuments(createDocumentCommand);
 
             return await Mediator.Send(createDocumentCommand);
+        }
+
+        [Route("api/documents/createandrelease")]
+        [HttpPost]
+        [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.ApiDocuments)]
+        public async Task<int> CreateAndRelease([FromBody]CreateDocumentCommand createDocumentCommand)
+        {
+            createDocumentCommand.CreatedBy = User.Identity.GetUserName();
+            createDocumentCommand.CreatedOn = DateTime.Now;
+            createDocumentCommand.Deleted = false;
+            createDocumentCommand.FileName = await UploadDocuments(createDocumentCommand);
+
+            int id = await Mediator.Send(createDocumentCommand);
+            if (id > 0)
+            {
+                await SendMailReleaseDocument(createDocumentCommand);
+            }
+            return id;
+        }
+
+        [Route("api/documents/release")]
+        [HttpPost]
+        [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.ApiDocuments)]
+        public async Task<int> Release([FromBody]GetDocumentByIdDto documentByIdDto)
+        {
+            if (documentByIdDto.Id > 0)
+            {
+                GetDocumentByIdDto document = await Mediator.Send(new GetDocumentByIdQuery
+                {
+                    Id = documentByIdDto.Id
+                });
+
+                if (document != null && document.Id > 0)
+                {
+                    return await SendMailReleaseDocument(document);
+                }
+                else
+                {
+                    throw new NullReferenceException("Không tìm thấy tài liệu");
+                }
+            }
+            throw new ArgumentNullException(nameof(documentByIdDto.Id), "Id is not null");
         }
 
         [Route("api/documents/update")]
@@ -97,9 +196,27 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             reviewDocumentCommand.CreatedBy = User.Identity.GetUserName();
             reviewDocumentCommand.CreatedOn = DateTime.Now;
             reviewDocumentCommand.Deleted = false;
-            reviewDocumentCommand.FileName = await ReviewDocuments(reviewDocumentCommand);
+            reviewDocumentCommand.FileName = await UploadDocuments(reviewDocumentCommand);
 
             return await Mediator.Send(reviewDocumentCommand);
+        }
+
+        [Route("api/documents/reviewandrelease")]
+        [HttpPost]
+        [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.ApiDocuments)]
+        public async Task<int> ReviewAndRelease([FromBody]ReviewDocumentCommand reviewDocumentCommand)
+        {
+            reviewDocumentCommand.CreatedBy = User.Identity.GetUserName();
+            reviewDocumentCommand.CreatedOn = DateTime.Now;
+            reviewDocumentCommand.Deleted = false;
+            reviewDocumentCommand.FileName = await UploadDocuments(reviewDocumentCommand);
+
+            int id = await Mediator.Send(reviewDocumentCommand);
+            if (id > 0)
+            {
+                await SendMailReviewDocument(reviewDocumentCommand);
+            }
+            return id;
         }
 
         [Route("api/documents/deletefile")]
@@ -110,16 +227,52 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             return await Mediator.Send(deleteFileByIdAndFileNameCommand);
         }
 
+        [Route("api/documents/sendmaildocumentbymonth")]
+        [HttpPost]
+        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocumentTypes)]
+        public async Task<int> SendMailDocumentByMonth(GetDocumentsByMonthQuery query)
+        {
+            List<GetDocumentsByMonthDto> documents = await Mediator.Send(query);
+            await SendMailDocumentsỊnMonth(documents, query.Month, query.Year);
+            return 1;
+        }
+
+        public void SaveAs(string filePath, HttpFile httpFile)
+        {
+            using (FileStream file = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+            {
+                using (MemoryStream memoryStream = new MemoryStream(httpFile.Buffer))
+                {
+                    memoryStream.WriteTo(file);
+                }
+            }
+        }
+
         private Task<string> UploadDocuments(CreateDocumentCommand command)
         {
             List<string> files = new List<string>();
-            if (command.Files.Any())
+            string folderPath = GetFolderPath(command.Code);
+            if (command.Files != null && command.Files.Any())
             {
-                foreach (HttpPostedFileMultipart file in command.Files)
+                foreach (HttpFile file in command.Files)
                 {
-                    string filePath = HttpContext.Current.Server.MapPath("~/" + $"Uploads/{command.DocumentType}/{file.FileName}");
+                    string filePath = $"{folderPath}/{file.FileName}";
+                    command.FolderName = folderPath.Replace(UploadFolderPath, string.Empty);
+                    command.LinkFile = $"/downloadfile/viewfile?sourcedoc={folderPath.Replace(UploadFolderPath, string.Empty)}/{file.FileName}";
                     files.Add(file.FileName);
-                    file.SaveAs(filePath);
+                    SaveAs(filePath, file);
+                }
+            }
+
+            if (command.AppendiceFiles != null && command.AppendiceFiles.Any())
+            {
+                int index = 0;
+                foreach (HttpFile file in command.AppendiceFiles)
+                {
+                    string filePath = $"{folderPath}/{file.FileName}";
+                    SaveAs(filePath, file);
+                    command.Appendices[index].LinkFile = $"/downloadfile/viewfile?sourcedoc={folderPath.Replace(UploadFolderPath, string.Empty)}/{file.FileName}";
+                    index++;
                 }
             }
             return Task.FromResult(string.Join(";", files));
@@ -127,29 +280,60 @@ namespace DocumentManagement.Mvc.Controllers.Apis
 
         private Task<string> UploadDocuments(UpdateDocumentCommand command)
         {
+            string folderPath = GetFolderPath(command.Code);
+            command.FolderName = folderPath.Replace(UploadFolderPath, string.Empty);
             List<string> files = new List<string>();
-            if (command.Files.Any())
+            if (command.Files != null && command.Files.Any())
             {
-                foreach (HttpPostedFileMultipart file in command.Files)
+                foreach (HttpFile file in command.Files)
                 {
-                    string filePath = HttpContext.Current.Server.MapPath("~/" + $"Uploads/{command.DocumentType}/{file.FileName}");
+                    string filePath = $"{folderPath}/{file.FileName}";
+                    command.FolderName = folderPath.Replace(UploadFolderPath, string.Empty);
+                    command.LinkFile = $"/downloadfile/viewfile?sourcedoc={folderPath.Replace(UploadFolderPath, string.Empty)}/{file.FileName}";
                     files.Add(file.FileName);
-                    file.SaveAs(filePath);
+                    SaveAs(filePath, file);
+                }
+            }
+
+            if (command.AppendiceFiles != null && command.AppendiceFiles.Any())
+            {
+                foreach (HttpFile file in command.AppendiceFiles)
+                {
+                    string filePath = $"{folderPath}/{file.FileName}";
+                    SaveAs(filePath, file);
+                    Application.Documents.Commands.AppendiceDto appendice = command.Appendices?.FirstOrDefault(a => a.FileName == file.FileName);
+                    if (appendice != null)
+                        appendice.LinkFile = $"/downloadfile/viewfile?sourcedoc={folderPath.Replace(UploadFolderPath, string.Empty)}/{file.FileName}";
                 }
             }
             return Task.FromResult(string.Join(";", files));
         }
 
-        private Task<string> ReviewDocuments(ReviewDocumentCommand command)
+        private Task<string> UploadDocuments(ReviewDocumentCommand command)
         {
             List<string> files = new List<string>();
-            if (command.Files.Any())
+            string folderPath = GetFolderPath(command.Code);
+            if (command.Files != null && command.Files.Any())
             {
-                foreach (HttpPostedFileMultipart file in command.Files)
+                foreach (HttpFile file in command.Files)
                 {
-                    string filePath = HttpContext.Current.Server.MapPath("~/" + $"Uploads/{command.DocumentType}/{file.FileName}");
+                    string filePath = $"{folderPath}/{file.FileName}";
+                    command.FolderName = folderPath.Replace(UploadFolderPath, string.Empty);
+                    command.LinkFile = $"/downloadfile/viewfile?sourcedoc={folderPath.Replace(UploadFolderPath, string.Empty)}/{file.FileName}";
                     files.Add(file.FileName);
-                    file.SaveAs(filePath);
+                    SaveAs(filePath, file);
+                }
+            }
+
+            if (command.AppendiceFiles != null && command.AppendiceFiles.Any())
+            {
+                foreach (HttpFile file in command.AppendiceFiles)
+                {
+                    string filePath = $"{folderPath}/{file.FileName}";
+                    SaveAs(filePath, file);
+                    Application.Documents.Commands.AppendiceDto appendice = command.Appendices?.FirstOrDefault(a => a.FileName == file.FileName);
+                    if (appendice != null)
+                        appendice.LinkFile = $"/downloadfile/viewfile?sourcedoc={folderPath.Replace(UploadFolderPath, string.Empty)}/{file.FileName}";
                 }
             }
             return Task.FromResult(string.Join(";", files));

@@ -1,4 +1,4 @@
-﻿@model DocumentManagement.Mvc.Models.Documents.DocumentUpdateModel
+﻿@model DocumentManagement.Application.Documents.Queries.GetDocumentByIdDto
 @{
     ViewBag.Title = "Update";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -25,6 +25,9 @@
                     <button id="btnSubmit" type="submit" class="btn btn-primary btn-sm">
                         <i class="fa fa-floppy-o" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Save)
                     </button>
+                    <a href="#" id="btnRelease" class="btn btn-primary btn-sm">
+                        <i class="fa fa-envelope-o" aria-hidden="true"></i> @L(DocumentResourceNames.Release)
+                    </a>
                 </div>
             </div>
         </div>
@@ -70,6 +73,10 @@
                                 class="form-control"
                                 id="CompanyCode"
                                 name="CompanyCode"></select>
+                        <input type="hidden"
+                               id="CompanyName"
+                               name="CompanyName"
+                               value="@Model.CompanyName"/>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -79,6 +86,10 @@
                                 class="form-control"
                                 id="DepartmentCode"
                                 name="DepartmentCode"></select>
+                        <input type="hidden"
+                               id="DepartmentName"
+                               name="DepartmentName"
+                               value="@Model.DepartmentName"/>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -100,7 +111,7 @@
                                autocomplete="off"
                                id="DocumentNumber"
                                name="DocumentNumber"
-                               value="@Model.DocumentNumber"/>
+                               value="@Model.DocumentNumber" />
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -124,8 +135,7 @@
                                class="form-control"
                                autocomplete="off"
                                id="EffectiveDate"
-                               name="EffectiveDate"
-                                />
+                               name="EffectiveDate" />
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -135,8 +145,41 @@
                                class="form-control"
                                autocomplete="off"
                                id="ReviewDate"
-                               name="ReviewDate"
-                                />
+                               name="ReviewDate" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.Status) <span style="color: red">(*)</span></label>
+                        <i id="companycode-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Tình trạng tài liệu"></i>
+                        <select type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                id="StatusId"
+                                name="StatusId"
+                                disabled></select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>@L(DocumentResourceNames.PromulgateStatus)<span style="color: red">(*)</span></label>
+                        <i id="clientid-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Trạng thái ban hành tài liệu"></i>
+                        <select type="text"
+                                class="form-control"
+                                autocomplete="off"
+                                id="PromulgateStatusId"
+                                name="PromulgateStatusId"
+                                disabled></select>
                     </div>
                 </div>
             </div>
@@ -147,8 +190,7 @@
                         <select class="form-control"
                                 id="Drafter"
                                 name="Drafter"
-                                multiple
-                                ></select>
+                                multiple></select>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -157,8 +199,7 @@
                         <select class="form-control"
                                 id="Auditor"
                                 name="Auditor"
-                                multiple
-                                ></select>
+                                multiple></select>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -168,8 +209,7 @@
                                 class="form-control"
                                 id="Approver"
                                 name="Approver"
-                                multiple
-                                ></select>
+                                multiple></select>
                     </div>
                 </div>
             </div>
@@ -180,27 +220,43 @@
                         <br>
                         <input type="checkbox"
                                id="DCCAudited"
-                               name="DCCAudited"
-                                />
+                               name="DCCAudited" />
                         <input type="hidden"
-                               id="DCCAudited"
                                name="DCCAudited" />
                     </div>
                 </div>
+                <!--<div class="col-md-4">
+                <div class="form-group">
+                    <label>@L(DocumentResourceNames.Active)<span style="color: red">(*)</span></label>
+                    <i id="clientid-help"
+                       class="fa fa-info-circle red-text"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       title="Hiệu lực"></i>
+                    <br>
+                    <input type="checkbox"
+                           id="Active"
+                           name="Active"
+                           disabled/>
+                    <input type="hidden"
+                           name="Active" />
+                </div>
+            </div>-->
             </div>
             <div class="form-group">
                 <label>@L(DocumentResourceNames.Description)</label>
                 <textarea class="form-control"
-                          name="Description"  
+                          name="Description"
                           rows="10"
-                          id="Description">@Model.Description></textarea>
+                          id="Description">@Model.Description</textarea>
             </div>
             <div class="form-group">
                 <label>@L(DocumentResourceNames.ContentChange)</label>
                 <textarea class="form-control"
                           name="ContentChange"
                           id="ContentChange"
-                          rows="10">@Model.ContentChange</textarea>
+                          rows="10">@Model.ContentChange
+                </textarea>
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -218,8 +274,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>@L(DocumentResourceNames.ScopeOfDeloyment)</label>
-                        <select type="text"
-                                class="form-control"
+                        <select class="form-control"
                                 id="ScopeOfDeloyment"
                                 name="ScopeOfDeloyment"
                                 multiple></select>
@@ -258,6 +313,20 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
+                        <label>Phụ lục</label>
+                        <i id="RelateToDocuments-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phụ lục tài liệu"></i>
+                        <div id="grdAppendiceDocuments"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
                         @if (!string.IsNullOrEmpty(Model.FileName))
                         {
                             <table role="presentation" class="table table-striped">
@@ -265,7 +334,7 @@
                                 {
                                     <tr>
                                         <td class="name">
-                                            <a target="_blank" href="/Uploads/@Model.FolderName/@file"><i class="fa fa-paperclip"></i>@file</a>
+                                            <a target="_blank" href="/downloadfile/viewfile?sourceDoc=@Model.FolderName/@file"><i class="fa fa-paperclip"></i>@file</a>
                                         </td>
                                         <td>
                                             <button type="button"
@@ -328,23 +397,75 @@
                 </div>
             </div>
         </div>
+        <div class="box-footer clearfix no-border">
+            <div class="mailbox-controls">
+                <div class="btn-group">
+                    <a href="@Url.Action("List")" class="btn btn-success btn-sm">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.List)
+                    </a>
+                    <button id="btnSubmit" type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Save)
+                    </button>
+                    <button id="btnRelease" class="btn btn-primary btn-sm">
+                        <i class="fa fa-envelope-o" aria-hidden="true"></i> @L(DocumentResourceNames.Release)
+                    </button>
+                </div>
+            </div>
+        </div>
     </form>
 </div>
 
 @section scripts
 {
     @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        const uploadFileRootPath = '/Uploads';
-        const cultureSelector = '@CurrentLanguage.Name';
-        const hostUrl = '@Url.GetHost()';
+    <!-- Select 2-->
+    <script src="~/Scripts/admin_lte/bower_components/select2/dist/js/select2.full.min.js"></script>
+    <!-- InputMask -->
+    <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.js"></script>
+    <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+    <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.extensions.js"></script>
 
+    <!--Auto numeric-->
+    <script src="~/Scripts/autoNumeric-1.9.41.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.edit.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.selection.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.columnsresize.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxtextarea.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxnumberinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.pager.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.sort.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxfileupload.js"></script>
+    <script type="text/javascript" src="/Scripts/jqwidgets/jqxgrid.grouping.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/globalization/globalize.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/localization.js"></script>
+    <script type="text/javascript" src="~/Scripts/demos.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/tmpl.min.js"></script>s
+    <script type="text/javascript">
+        Globalize.cultureSelector = '@CurrentLanguage.Name';
+    </script>
+    <script>
         let departments = [];
         let documentTypes = [];
         let users = [];
         let companies = [];
         let groups = [];
         let modules = [];
+        let documents = [];
+        let statuses = [];
+        let promulgateStatuses = [];
 
         let $Approver = $('#Approver');
         let $Drafter = $('#Drafter');
@@ -357,25 +478,38 @@
         let $ScopeOfApplication = $('#ScopeOfApplication');
         let $ScopeOfDeloyment = $('#ScopeOfDeloyment');
         let $Module = $('#Module');
+        let $PromulgateStatusId = $('#PromulgateStatusId');
+        let $StatusId = $('#StatusId');
+        let $OneYear = $('#OneYear');
+        let $TwoYear = $('#TwoYear');
 
         let $btnSubmit = $('#btnSubmit');
         let storedFiles = [];
-    </script>
-    <!-- Select 2-->
-    <script src="~/Scripts/admin_lte/bower_components/select2/dist/js/select2.full.min.js"></script>
-    <!-- InputMask -->
-    <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.js"></script>
-    <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
-    <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+        let appendiceFiles = [];
 
-    <!--Auto numeric-->
-    <script src="~/Scripts/autoNumeric-1.9.41.js"></script>
-    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcore.js"></script>
-    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcheckbox.js"></script>
-    <script src="~/Scripts/jquery.fileupload.js"></script>
-    <script src="~/Scripts/tmpl.min.js"></script>
+        const documentCodeText = '@L(DocumentResourceNames.Code)';
+        const documentNameText = '@L(DocumentResourceNames.Name)';
+        const companyText = '@L(DocumentResourceNames.CompanyCode)';
+        const departmentText = '@L(DocumentResourceNames.DepartmentCode)';
+        const moduleText = '@L(DocumentResourceNames.Module)';
+        const documentNumberText = '@L(DocumentResourceNames.DocumentNumber)';
+        const reviewNumberText = '@L(DocumentResourceNames.ReviewNumber)';
+        const documentTypeText = '@L(DocumentResourceNames.DocumentType)';
+        const relateDocumentText = '@L(DocumentResourceNames.RelateToDocuments)';
+        const replaceOfText = '@L(DocumentResourceNames.ReplaceOf)';
+        const effectiveDateText = '@L(DocumentResourceNames.EffectiveDate)';
+        const reviewDateText = '@L(DocumentResourceNames.ReviewDate)';
+
+        let relateToDocuments = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(
+    Newtonsoft.Json.JsonConvert.SerializeObject(Model.RelateToDocuments, new Newtonsoft.Json.JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() })))");
+        let replaceToDocuments = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(
+    Newtonsoft.Json.JsonConvert.SerializeObject(Model.ReplaceToDocuments, new Newtonsoft.Json.JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() })))");
+        let appendices = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(
+    Newtonsoft.Json.JsonConvert.SerializeObject(Model.Appendices, new Newtonsoft.Json.JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() })))");
+    </script>
     <script type="text/javascript">
         $('#DCCAudited').jqxCheckBox();
+        $('#DCCAudited').jqxCheckBox({ disabled: false, checked: @Model.DDCAudited.ToString().ToLowerInvariant() });
         const uploadTemplate = tmpl('template-upload');
         $(document).ready(function () {
             $('#fileupload').fileupload({
@@ -441,6 +575,861 @@
             }
         }
     </script>
+    <!--Replace to documents-->
+    <script>
+        let replaceOfs = replaceToDocuments;
+        let grdReplaceOf = $('#grdReplaceOf');
+        let observableSourceReplaceOf = new $.jqx.observableArray(replaceOfs);
+        let sourceReplaceOf =
+        {
+            localdata: observableSourceReplaceOf,
+            datatype: "obserableArray",
+            id: "id",
+            updaterow: function (rowid, rowdata, commit) {
+                // synchronize with the server - send update command
+                // call commit with parameter true if the synchronization with the server is successful
+                // and with parameter false if the synchronization failder.
+
+                commit(true);
+            },
+            pagesize: 5,
+            pagesizeoptions: ["5", "10", "20"],
+            datafields:
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'code', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'fileName', type: 'string' },
+                    { name: 'displayText', type: 'string' },
+                    { name: 'folderName', type: 'string' },
+                    { name: 'documentNumber', type: 'string' },
+                    { name: 'reviewNumber', type: 'string' },
+                    { name: 'effectiveDate', type: 'date' },
+                    { name: 'reviewDate', type: 'date'}
+                ]
+        };
+
+        let getEditorDataAdapter = function (datafield) {
+            let source =
+            {
+                localdata: documents,
+                datatype: "array",
+                datafields:
+                    [
+                        { name: 'id', type: 'int' },
+                        { name: 'code', type: 'string' },
+                        { name: 'name', type: 'string' },
+                        { name: 'displayText', type: 'string' },
+                        { name: 'documentNumber', type: 'string' },
+                        { name: 'reviewNumber', type: 'string' }
+                    ]
+            };
+            let dataAdapter = new $.jqx.dataAdapter(source, { uniqueDataFields: [datafield] });
+            return dataAdapter;
+        }
+
+
+        let replaceOfDataAdapter = new $.jqx.dataAdapter(sourceReplaceOf);
+        const initGrdReplaceOf = function () {
+            grdReplaceOf.jqxGrid(
+                {
+                    width: '100%',
+                    height: 250,
+                    source: replaceOfDataAdapter,
+                    pageable: true,
+                    autorowheight: false,
+                    columnsresize: true,
+                    altrows: false,
+                    editable: true,
+                    pagesizeoptions: ["5", "10", "20"],
+                    localization: getLocalization('@CurrentLanguage.Name'),
+                    selectionmode: 'singlerow',
+                    editmode: 'singlecell',
+                    showstatusbar: false,
+                    showtoolbar: true,
+                    rendertoolbar: function (toolbar) {
+                        const container = $(`<div class="btn-group" style='margin: 2px;'></div>`);
+                        toolbar.append(container);
+                        container.append(`<button id="btnAddReplaceOfs"
+                                                         type="button"
+                                                         class="btn btn-primary btn-sm"
+                                                          >Thêm mới</button>`);
+                        let btnRemoveReplaceOf = $(`<button id="btnRemoveReplaceOfs"
+                                    type="button"
+                                    class="btn btn-primary btn-sm">
+                                    <i class="fa fa-trash-o"></i> Xóa
+                                    </button>`);
+                        container.append(btnRemoveReplaceOf);
+                        // create new row.
+                        $('#btnAddReplaceOfs').on('click', function () {
+                            const datarow = {
+                                id: -1,
+                                effectiveDate: '',
+                                reviewDate: '',
+                                name: '',
+                                code: '',
+                                fileName: '',
+                                folderName: '',
+                                documentNumber: ''
+                            };
+                            observableSourceReplaceOf.push(datarow);
+                        });
+
+                        btnRemoveReplaceOf.click(function () {
+                            const selectedrowindex = grdReplaceOf.jqxGrid('getselectedrowindex');
+                            const rowscount = grdReplaceOf.jqxGrid('getdatainformation').rowscount;
+                            if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+                                observableSourceReplaceOf.splice(selectedrowindex, 1);
+                            }
+                        });
+                    },
+                    columns: [
+                        {
+                            text: 'STT',
+                            sortable: false,
+                            filterable: false,
+                            editable: false,
+                            groupable: false,
+                            draggable: false,
+                            pinned: true,
+                            datafield: '',
+                            columntype: 'number',
+                            width: 40,
+                            cellsrenderer: function (row, column, value) {
+                                return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                            }
+                        },
+                        {
+                            text: 'Tên tài liệu',
+                            columntype: 'textbox',
+                            datafield: 'displayText',
+                            pinned: false,
+                            editable: true,
+                            width: 300,
+                            geteditorvalue: function (row, cellvalue, editor) {
+                                // return the editor's value.
+                                return editor.val();
+                            },
+                            initeditor: function (row, cellvalue, editor, celltext, pressedkey) {
+                                // set the editor's current value. The callback is called each time the editor is displayed.
+                                if (pressedkey) {
+                                    editor.val(pressedkey);
+                                    editor.jqxInput('selectLast');
+                                }
+                                else {
+                                    editor.val(cellvalue);
+                                    editor.jqxInput('selectAll');
+                                }
+                            },
+                            createeditor: function (row, cellvalue, editor, cellText, width, height) {
+                                editor.jqxInput({
+                                    placeHolder: "Nhập tên tài liệu",
+                                    height: height,
+                                    width: width,
+                                    minLength: 1,
+                                    displayMember: 'displayText',
+                                    //valueMember:'name',
+                                    source: getEditorDataAdapter('displayText')
+                                });
+
+                                editor.on('select', function (event) {
+                                    if (event.args) {
+                                        let item = event.args.item;
+                                        if (!isVariableHaveDefaultVal(item)) {
+                                            const document = documents.filter(document => document.displayText === item.label);
+                                            if (!isVariableHaveDefaultVal(document)) {
+                                                observableSourceReplaceOf.set(`${row}.documentNumber`, document[0].documentNumber);
+                                                observableSourceReplaceOf.set(`${row}.effectiveDate`, document[0].effectiveDate);
+                                                observableSourceReplaceOf.set(`${row}.reviewDate`, document[0].reviewDate);
+                                                observableSourceReplaceOf.set(`${row}.code`, document[0].code);
+                                                observableSourceReplaceOf.set(`${row}.fileName`, document[0].fileName);
+                                                observableSourceReplaceOf.set(`${row}.folderName`, document[0].folderName);
+                                            }
+                                        }
+                                    }
+                                });
+                            },
+                            validation: function (cell, value) {
+                                if (isVariableHaveDefaultVal(value)) {
+                                    return { result: false, message: "Tên tài liệu không được bỏ trống(chú ý nếu đang edit thì cần nhấn phím Enter để update thông tin)" };
+                                }
+                                const index = getReplaceToDocumentIndexByText(value, cell.row);
+                                if (index >= 0) {
+                                    return { result: false, message: "Tài liệu này đã tồn tại trong danh sách" };
+                                }
+                                return true;
+                            }
+                        },
+                        {
+                            text: 'Files',
+                            columntype: 'textbox',
+                            datafield: 'fileName',
+                            pinned: false,
+                            editable: false,
+                            width: 250,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                const fileNames = value.split(';');
+                                const folderName = replaceOfDataAdapter.records[row].folderName;
+                                if (!isVariableHaveDefaultVal(fileNames)
+                                    && !isVariableHaveDefaultVal(folderName)) {
+                                    if (fileNames.length > 0) {
+                                        let html = '';
+                                        for (let index = 0; index < fileNames.length; index++) {
+                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
+                                                const filePath = `/${folderName}/${fileNames[index]}`;
+                                                let fileIcon = 'fa fa-file-o';
+                                                switch (getFileExtension(fileNames[index])) {
+                                                    case 'pdf':
+                                                        fileIcon = 'fa fa-file-pdf-o';
+                                                        break;
+                                                    case 'xls':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'xlsx':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'doc':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                    case 'docx':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                }
+                                                html = html + `<a target="_blank" href="/dowloadfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                            }
+                                        }
+                                        if (!isVariableHaveDefaultVal(html)) {
+                                            element.html(html);
+                                        }
+                                    }
+                                }
+                                return element[0].outerHTML;
+                            }
+                        },
+                        {
+                            text: 'Số hiệu',
+                            columntype: 'textbox',
+                            datafield: 'documentNumber',
+                            pinned: false,
+                            editable: false,
+                            width: 100
+                        },
+                        {
+                            text: 'Ban hành ngày',
+                            datafield: 'effectiveDate',
+                            columntype: 'datetimeinput',
+                            width: 110,
+                            align: 'right',
+                            cellsalign: 'right',
+                            filtertype: 'range',
+                            cellsformat: 'd',
+                            editable: false
+                        },
+                        {
+                            text: 'Soán xét',
+                            datafield: 'reviewDate',
+                            columntype: 'datetimeinput',
+                            width: 110,
+                            align: 'right',
+                            cellsalign: 'right',
+                            filtertype: 'range',
+                            cellsformat: 'd',
+                            editable: false
+                        },
+                        {
+                            text: 'Mã tài liệu',
+                            columntype: 'textbox',
+                            hidden: true,
+                            datafield: 'code',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        },
+                        {
+                            columntype: 'textbox',
+                            hidden: true,
+                            datafield: 'folderName',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        }]
+                });
+        }
+        function getReplaceToDocumentIndexByText(text, currentRowIndex) {
+            let index = -1;
+            for (let i = 0; i < replaceOfDataAdapter.records.length; i++) {
+                if (i !== currentRowIndex && replaceOfDataAdapter.records[i].displayText === text) {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+
+        function getReplaceToDocuments() {
+            let documents = replaceOfDataAdapter.records.filter(function (d) {
+                if (!isVariableHaveDefaultVal(d.code)) {
+                    return true;
+                }
+                return false;
+            });
+            return documents;
+        }
+    </script>
+    <!--Relate To Documents-->
+    <script>
+        let grdRelateToDocuments = $('#grdRelateToDocuments');
+        let observableSourceRelateToDocuments = new $.jqx.observableArray(relateToDocuments);
+        let sourceRelateToDocument =
+        {
+            localdata: observableSourceRelateToDocuments,
+            datatype: "obserableArray",
+            id: "id",
+            updaterow: function (rowid, rowdata, commit) {
+                // synchronize with the server - send update command
+                // call commit with parameter true if the synchronization with the server is successful
+                // and with parameter false if the synchronization failder.
+
+                commit(true);
+            },
+            pagesize: 5,
+            pagesizeoptions: ["5", "10", "20"],
+            datafields:
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'code', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'displayText', type: 'string' },
+                    { name: 'fileName', type: 'string' },
+                    { name: 'folderName', type: 'string' },
+                    { name: 'effectiveDate', type: 'date' },
+                    { name: 'reviewDate', type: 'date' },
+                    { name: 'documentNumber', type: 'string' },
+                    { name: 'reviewNumber', type: 'string' }
+                ]
+        };
+
+
+        let relateToDocumentsDataAdapter = new $.jqx.dataAdapter(sourceRelateToDocument);
+        const initGrdRelateToDocuments = function () {
+            grdRelateToDocuments.jqxGrid(
+                {
+                    width: '100%',
+                    height: 250,
+                    source: relateToDocumentsDataAdapter,
+                    pageable: true,
+                    autorowheight: true,
+                    columnsresize: true,
+                    altrows: false,
+                    editable: true,
+                    pagesizeoptions: ["5", "10", "20"],
+                    localization: getLocalization('@CurrentLanguage.Name'),
+                    selectionmode: 'singlerow',
+                    editmode: 'singlecell',
+                    showstatusbar: false,
+                    showtoolbar: true,
+                    rendertoolbar: function (toolbar) {
+                        const container = $(`<div class="btn-group" style='margin: 2px;'></div>`);
+                        toolbar.append(container);
+                        container.append(`<button id="btnAddRelateToDocuments"
+                                                         type="button"
+                                                         class="btn btn-primary btn-sm"
+                                                          >Thêm mới</button>`);
+                        let btnRemoverelateToDocuments = $(`<button id="btnRemoveRelateToDocuments"
+                                    type="button"
+                                    class="btn btn-primary btn-sm">
+                                    <i class="fa fa-trash-o"></i> Xóa
+                                    </button>`);
+                        container.append(btnRemoverelateToDocuments);
+                        // create new row.
+                        $('#btnAddRelateToDocuments').on('click', function () {
+                            const datarow = {
+                                id: -1,
+                                fileName: '',
+                                folderName: '',
+                                displayText:'',
+                                name: '',
+                                code: '',
+                                effectiveDate: '',
+                                reviewDate: '',
+                                documentNumber: ''
+                            };
+                            observableSourceRelateToDocuments.push(datarow);
+                        });
+
+                        btnRemoverelateToDocuments.click(function () {
+                            const selectedrowindex = grdRelateToDocuments.jqxGrid('getselectedrowindex');
+                            const rowscount = grdRelateToDocuments.jqxGrid('getdatainformation').rowscount;
+                            if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+                                observableSourceRelateToDocuments.splice(selectedrowindex, 1);
+                            }
+                        });
+                    },
+                    columns: [
+                        {
+                            text: 'STT',
+                            sortable: false,
+                            filterable: false,
+                            editable: false,
+                            groupable: false,
+                            draggable: false,
+                            pinned: true,
+                            datafield: '',
+                            columntype: 'number',
+                            width: 40,
+                            cellsrenderer: function (row, column, value) {
+                                return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                            }
+                        },
+                        {
+                            text: documentNameText,
+                            columntype: 'textbox',
+                            datafield: 'displayText',
+                            pinned: true,
+                            editable: true,
+                            width: 300,
+                            geteditorvalue: function (row, cellvalue, editor) {
+                                // return the editor's value.
+                                return editor.val();
+                            },
+                            initeditor: function (row, cellvalue, editor, celltext, pressedkey) {
+                                // set the editor's current value. The callback is called each time the editor is displayed.
+                                if (pressedkey) {
+                                    editor.val(pressedkey);
+                                    editor.jqxInput('selectLast');
+                                }
+                                else {
+                                    editor.val(cellvalue);
+                                    editor.jqxInput('selectAll');
+                                }
+                            },
+                            createeditor: function (row, cellvalue, editor, cellText, width, height) {
+                                editor.jqxInput({
+                                    placeHolder: "Nhập tên tài liệu",
+                                    height: height,
+                                    width: width,
+                                    minLength: 1,
+                                    displayMember: 'displayText',
+                                    //valueMember:'name',
+                                    source: getEditorDataAdapter('displayText')
+                                });
+
+                                editor.on('select', function (event) {
+                                    if (event.args) {
+                                        let item = event.args.item;
+                                        if (!isVariableHaveDefaultVal(item)) {
+                                            const document = documents.filter(document => document.displayText === item.label);
+                                            if (!isVariableHaveDefaultVal(document)) {
+                                                observableSourceRelateToDocuments.set(`${row}.documentNumber`, document[0].documentNumber);
+                                                observableSourceRelateToDocuments.set(`${row}.effectiveDate`, document[0].effectiveDate);
+                                                observableSourceRelateToDocuments.set(`${row}.reviewDate`, document[0].reviewDate);
+                                                observableSourceRelateToDocuments.set(`${row}.code`, document[0].code);
+                                                observableSourceRelateToDocuments.set(`${row}.fileName`, document[0].fileName);
+                                                observableSourceRelateToDocuments.set(`${row}.folderName`, document[0].folderName);
+                                            }
+                                        }
+                                    }
+                                });
+                            },
+                            validation: function (cell, value) {
+                                if (isVariableHaveDefaultVal(value)){
+                                    return { result: false, message: "Tên tài liệu không được bỏ trống(chú ý nếu đang edit thì cần nhấn phím Enter để update thông tin)" };
+                                }
+                                const index = getRelateToDocumentIndexByText(value, cell.row);
+                                if (index >= 0) {
+                                    return { result: false, message: "Tài liệu này đã tồn tại trong danh sách" };
+                                }
+                                return true;
+                            }
+                        },
+                        {
+                            text: 'Files',
+                            columntype: 'textbox',
+                            datafield: 'fileName',
+                            pinned: false,
+                            editable: false,
+                            width: 250,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                const fileNames = value.split(';');
+                                const folderName = relateToDocumentsDataAdapter.records[row].folderName;
+
+                                if (!isVariableHaveDefaultVal(fileNames)
+                                    && !isVariableHaveDefaultVal(folderName)) {
+                                    if (fileNames.length > 0) {
+                                        let html = '';
+                                        for (let index = 0; index < fileNames.length; index++) {
+                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
+                                                const filePath = `/${folderName}/${fileNames[index]}`;
+                                                let fileIcon = 'fa fa-file-o';
+                                                switch (getFileExtension(fileNames[index])) {
+                                                    case 'pdf':
+                                                        fileIcon = 'fa fa-file-pdf-o';
+                                                        break;
+                                                    case 'xls':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'xlsx':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'doc':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                    case 'docx':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                }
+                                                html = html + `<a target="_blank" href="/dowloadfile/viewfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                            }
+                                        }
+                                        if (!isVariableHaveDefaultVal(html)) {
+                                            element.html(html);
+                                        }
+                                    }
+                                }
+                                return element[0].outerHTML;
+                            }
+                        },
+                        {
+                            text: documentNumberText,
+                            columntype: 'textbox',
+                            datafield: 'documentNumber',
+                            pinned: false,
+                            editable: false,
+                            width: 100
+                        },
+                        {
+                            text: effectiveDateText,
+                            datafield: 'effectiveDate',
+                            columntype: 'datetimeinput',
+                            width: 110,
+                            align: 'right',
+                            cellsalign: 'right',
+                            filtertype: 'range',
+                            cellsformat: 'd',
+                            editable: false
+                        },
+                        {
+                            text: reviewDateText,
+                            datafield: 'reviewDate',
+                            columntype: 'datetimeinput',
+                            width: 110,
+                            align: 'right',
+                            cellsalign: 'right',
+                            filtertype: 'range',
+                            cellsformat: 'd',
+                            editable: false
+                        },
+                        {
+                            text: 'Mã tài liệu',
+                            columntype: 'textbox',
+                            hidden: true,
+                            datafield: 'code',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        },
+                        {
+                            columntype: 'textbox',
+                            hidden: true,
+                            datafield: 'folderName',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        }]
+                });
+        }
+
+        function getRelateToDocumentIndexByText(text, currentRowIndex) {
+            let index = -1;
+            for (let i = 0; i < relateToDocumentsDataAdapter.records.length; i++) {
+                if (i !== currentRowIndex && relateToDocumentsDataAdapter.records[i].displayText === text) {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
+        }
+
+        function getRelateToDocuments() {
+            let documents = relateToDocumentsDataAdapter.records.filter(function (d) {
+                if (!isVariableHaveDefaultVal(d.code)) {
+                    return true;
+                }
+                return false;
+            });
+            return documents;
+        }
+    </script>
+    <!-- Appendice Documents -->
+    <script>
+        let appendiceDocuments = appendices;
+        let grdAppendiceDocuments = $('#grdAppendiceDocuments');
+        let observableSourceAppendiceDocuments = new $.jqx.observableArray(appendiceDocuments);
+        let sourceAppendiceDocument =
+        {
+            localdata: observableSourceAppendiceDocuments,
+            datatype: "obserableArray",
+            id: "id",
+            updaterow: function (rowid, rowdata, commit) {
+                // synchronize with the server - send update command
+                // call commit with parameter true if the synchronization with the server is successful
+                // and with parameter false if the synchronization failder.
+
+                commit(true);
+            },
+            pagesize: 5,
+            pagesizeoptions: ["5", "10", "20"],
+            datafields:
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'code', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'documentNumber', type: 'string' },
+                    { name: 'reviewNumber', type: 'string' },
+                    { name: 'linkFile', type: 'string' },
+                    { name: 'fileName', type: 'string'}
+                ]
+        };
+
+        let appendiceDocumentsDataAdapter = new $.jqx.dataAdapter(sourceAppendiceDocument, { uniqueDataFields: ['name'] });
+        const initGrdAppendiceDocuments = function () {
+            grdAppendiceDocuments.jqxGrid(
+                {
+                    width: '100%',
+                    height: 250,
+                    source: appendiceDocumentsDataAdapter,
+                    pageable: true,
+                    autorowheight: false,
+                    columnsresize: true,
+                    altrows: false,
+                    editable: true,
+                    pagesizeoptions: ["5", "10", "20"],
+                    localization: getLocalization('@CurrentLanguage.Name'),
+                    selectionmode: 'singlerow',
+                    editmode: 'singlecell',
+                    showstatusbar: false,
+                    showtoolbar: true,
+                    rendertoolbar: function (toolbar) {
+                        const container = $(`<div class="btn-group" style='margin: 2px;'></div>`);
+                        toolbar.append(container);
+                        container.append(`<button id="btnAddAppendiceDocuments"
+                                                         type="button"
+                                                         class="btn btn-primary btn-sm"
+                                                          >Thêm mới</button>`);
+                        let btnRemoveAppendiceDocuments = $(`<button id="btnRemoveAppendiceDocuments"
+                                    type="button"
+                                    class="btn btn-primary btn-sm">
+                                    <i class="fa fa-trash-o"></i> Xóa
+                                    </button>`);
+                        container.append(btnRemoveAppendiceDocuments);
+                        // create new row.
+                        $('#btnAddAppendiceDocuments').on('click', function () {
+                            const datarow = {
+                                id: -1,
+                                name: '',
+                                code: '',
+                                documentNumber: '',
+                                reviewNumber: '',
+                                fileName: ''
+                            };
+                            observableSourceAppendiceDocuments.push(datarow);
+                        });
+
+                        btnRemoveAppendiceDocuments.click(function () {
+                            const selectedrowindex = grdAppendiceDocuments.jqxGrid('getselectedrowindex');
+                            const rowscount = grdAppendiceDocuments.jqxGrid('getdatainformation').rowscount;
+                            if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+                                const appendiceId = appendiceDocumentsDataAdapter.records[selectedrowindex].id;
+                                if (!isVariableHaveDefaultVal(appendiceId)) {
+                                    if (appendiceId > 0) {
+                                        $.ajax({
+                                            url: `${hostUrl}/api/appendices/delete`,
+                                            type: "POST",
+                                            data: JSON.stringify({
+                                                id: appendiceId
+                                            }),
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: "json",
+                                            success: function (event, settings, xhr) {
+                                                xhr.message = {
+                                                    infor: 'Xóa phụ lục thành công',
+                                                    returnUrl: undefined
+                                                };
+                                                observableSourceAppendiceDocuments.splice(selectedrowindex, 1);
+                                            }
+                                        });
+                                    }
+                                }
+                                else
+                                    observableSourceAppendiceDocuments.splice(selectedrowindex, 1);
+                            }
+                        });
+                    },
+                    columns: [
+                        {
+                            text: 'STT',
+                            sortable: false,
+                            filterable: false,
+                            editable: false,
+                            groupable: false,
+                            draggable: false,
+                            pinned: true,
+                            datafield: '',
+                            columntype: 'number',
+                            width: 40,
+                            cellsrenderer: function (row, column, value) {
+                                return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                            }
+                        },
+                        {
+                            text: documentNameText,
+                            columntype: 'textbox',
+                            datafield: 'name',
+                            pinned: false,
+                            editable: true,
+                            width: 300,
+                            validation: function (cell, value) {
+                                if (isVariableHaveDefaultVal(value)) {
+                                    return { result: false, message: "Tên phụ lục không được bỏ trống(Enter để update thông tin)" };
+                                }
+
+                                if (isExistsAppendice(value, cell.row)) {
+                                    return { result: false, message: "Tên phụ lục đã tồn tại trong danh sách" };
+                                }
+
+                                updateAppendiceFile(observableSourceAppendiceDocuments[cell.row].fileName, value);
+                                return true;
+                            }
+                        },
+                        {
+                            text: 'File',
+                            columntype: 'template',
+                            datafield: 'fileName',
+                            pinned: false,
+                            editable: true,
+                            createeditor: function (row, cellvalue, editor, celltext, cellwidth, cellheight) {
+                                let fileUpload = $(`<input name="appendiceFile" data-name="${observableSourceAppendiceDocuments[row].name}" type="file"/>`).prependTo(editor);
+                                fileUpload.change(function (e) {
+                                    if (!isVariableHaveDefaultVal(e.target.files[0])) {
+                                       addFileToAppendiceFiles(e.target.files[0], $(this).attr('data-name'));
+                                    }
+                                });
+                            },
+                            initeditor: function (row, cellvalue, editor, celltext, pressedChar) {
+                                const file = getFileAppendice(observableSourceAppendiceDocuments[row].name);
+                                if (!isVariableHaveDefaultVal(file)) {
+                                    let list = new DataTransfer();
+                                    list.items.add(file.file);
+                                    editor.find(`input[name=appendiceFile]`).attr('data-name', observableSourceAppendiceDocuments[row].name);
+                                    editor.find(`input[name=appendiceFile]`).prop('files', list.files);
+                                }
+                            },
+                            geteditorvalue: function (row, cellvalue, editor) {
+                                const file = getFileAppendice(observableSourceAppendiceDocuments[row].name);
+                                if (!isVariableHaveDefaultVal(file)) {
+                                    return file.file.name;
+                                }
+                                return '';
+                            },
+                            validation: function (cell, value) {
+                                if (isVariableHaveDefaultVal(observableSourceAppendiceDocuments[cell.row].name)) {
+                                    return { result: false, message: "Vui lòng nhập tên phụ lục trước khi attach file" };
+                                }
+                                const file = getFileAppendice(observableSourceAppendiceDocuments[cell.row].name);
+                                if (isVariableHaveDefaultVal(file)) {
+                                    return { result: false, message: "File phụ lục không được bỏ trống(Enter để update thông tin)" };
+                                }
+                                return true;
+                            },
+                            width: 300
+                        },
+                        {
+                            text: documentNumberText,
+                            columntype: 'textbox',
+                            datafield: 'documentNumber',
+                            hidden: true,
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        },
+                        {
+                            text: reviewNumberText,
+                            columntype: 'textbox',
+                            datafield: 'reviewNumber',
+                            hidden: false,
+                            pinned: false,
+                            editable: true,
+                            width: 300
+                        },
+                        {
+                            text: 'Mã tài liệu',
+                            columntype: 'textbox',
+                            hidden: true,
+                            datafield: 'code',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        }
+                    ]
+                });
+        }
+
+        function updateAppendiceFile(fileName, appendiceName) {
+            const index = appendiceFiles.findIndex(f => {
+                return f.file.name === fileName;
+            });
+            if (index >= 0) {
+                appendiceFiles[index].appendiceName = appendiceName;
+            }
+        }
+
+        function addFileToAppendiceFiles(file, appendiceName) {
+            const index = appendiceFiles.findIndex(f => {
+                return f.appendiceName === appendiceName;
+            });
+            if (index >= 0) {
+                appendiceFiles[index] = {
+                    appendiceName: appendiceName,
+                    file: file
+                };
+            } else {
+                appendiceFiles.push({
+                    appendiceName: appendiceName,
+                    file: file
+                });
+            }
+        }
+
+        function isExistsAppendice(appendiceName, currentRowIndex) {
+            let index = -1;
+            for (let i = 0; i < appendiceDocumentsDataAdapter.records.length; i++) {
+                if (i !== currentRowIndex && appendiceDocumentsDataAdapter.records[i].name === appendiceName) {
+                    index = i;
+                    break;
+                }
+            }
+            return index >=0;
+        }
+
+        function getFileAppendice(appendiceName) {
+            const index = appendiceFiles.findIndex(f => {
+                return f.appendiceName === appendiceName;
+            });
+            return appendiceFiles[index];
+        }
+
+        function getAppendices() {
+            let appendices = appendiceDocumentsDataAdapter.records.filter(function (d) {
+                if (!isVariableHaveDefaultVal(d.name)) {
+                    return true;
+                }
+                return false;
+            });
+            return appendices;
+        }
+    </script>
     <!--Script get masterdata-->
     <script>
         const getAllDepartmentsUrl = `${hostUrl}/api/masterdatas/getalldepartments`;
@@ -448,8 +1437,60 @@
         const getAllCompaniesUrl = `${hostUrl}/api/masterdatas/getallcompanies`;
         const getAllDocumentTypesUrl = `${hostUrl}/api/documenttypes/getalldocumenttypes`;
         const getAllGroupsFromActiveDirectoryUrl = `${hostUrl}/api/masterdatas/getallgroupsfromactivedirectory`;
+        const getAllGroupsUrl = `${hostUrl}/api/groups/getallgroups`;
         const getAllModulesUrl = `${hostUrl}/api/modules/getallmodules`;
+        const getAllDocumentsUrl = `${hostUrl}/api/documents/getalldocuments`;
+        const getAllStatusesUrl = `${hostUrl}/api/statuses/getallstatuses`;
+        const getAllPromulgateStatusesUrl = `${hostUrl}/api/promulgatestatuses/getallpromulgatestatuses`;
         const updateDocumentUrl = `${hostUrl}/api/documents/update`;
+        const releaseDocumentUrl = `${hostUrl}/api/documents/release`;
+
+        // Get all statuses
+        function getAllStatuses() {
+            return $.getJSON(getAllStatusesUrl,
+                function (data) {
+                    statuses = data.map((status) => {
+                        return {
+                            id: status.id,
+                            text: status.name
+                        };
+                    });
+                });
+        }
+
+        // Get all promulgateStatuses
+        function getAllPromulgateStatuses() {
+            return $.getJSON(getAllPromulgateStatusesUrl,
+                function (data) {
+                    promulgateStatuses = data.map((status) => {
+                        return {
+                            id: status.id,
+                            text: status.name
+                        };
+                    });
+                });
+        }
+
+        // Get all documents
+        function getAllDocuments() {
+            return $.getJSON(getAllDocumentsUrl,
+                function (data) {
+                    documents = data.map(document => {
+                        return {
+                            name: document.name,
+                            code: document.code,
+                            displayText: `${document.name} ${document.code} ${document.reviewNumber}`,
+                            documentNumber: document.documentNumber,
+                            appendices: document.appendices,
+                            fileName: document.fileName,
+                            folderName: document.folderName,
+                            reviewNumber: document.reviewNumber,
+                            effectiveDate: document.effectiveDate,
+                            reviewDate: document.reviewDate
+                        };
+                    });
+                });
+        }
 
         // Get departments
         function getAllDepartments() {
@@ -458,6 +1499,10 @@
                     departments = data.map((department) => {
                         return { id: department.code, text: department.name };
                     });
+
+                    groups = data.map((department) => {
+                        return { id: department.code, text: department.name, email: department.email };
+                    });
                 });
         }
 
@@ -465,8 +1510,8 @@
         function getAllUsers() {
             return $.getJSON(getAllUsersUrl,
                 function (data) {
-                    users = data.map((user) => {
-                        return { id: user.userName, text: user.text, departmentName: user.departmentName };
+                    users = data/*.filter((user) => user.active === true)*/.map((user) => {
+                        return { id: user.userName, text: user.text, disabled: !user.active, departmentName: user.departmentName };
                     });
                 });
         }
@@ -501,6 +1546,16 @@
                 });
         }
 
+        // Get groups
+        function getAllGroups() {
+            return $.getJSON(getAllGroupsUrl,
+                function (data) {
+                    groups = data.map((group) => {
+                        return { id: group.code, text: group.name, email: group.email };
+                    });
+                });
+        }
+
         // Get modules
         function getAllModules() {
             return $.getJSON(getAllModulesUrl,
@@ -527,12 +1582,32 @@
             return $(`<span>${text}</span>`);
         }
 
+        function formatGroupSelection(group) {
+            if (!group.id)
+                return group.text;
+            const text = group.text;
+            return $(`<span>${text}</span>`);
+        }
+
+        function formatGroupResult(group) {
+            if (!group.id)
+                return group.text;
+            const text = group.text;
+            return $(`<span>${text}</span><div><small style="color: #a5a0a0">Email: ${group.email}</small></div>`);
+        }
+
+        $('#ReviewNumber').inputmask({ mask: "9*/9*"});
+
         Promise.all([getAllUsers(),
             getAllDepartments(),
             getAllCompanies(),
             getAllDocumentTypes(),
-            getAllGroupsFromActiveDirectory(),
-            getAllModules()
+            //getAllGroupsFromActiveDirectory(),
+            // getAllGroups(),
+            getAllModules(),
+            getAllDocuments(),
+            getAllStatuses(),
+            getAllPromulgateStatuses()
         ]).then(() => {
             $Approver.select2({
                 data: users,
@@ -577,13 +1652,16 @@
                 data: documentTypes
             });
 
-            $DocumentType.val(['@Model.DocumentType']).trigger('change');
+             $DocumentType.val(['@Model.DocumentType']).trigger('change');
 
             $ScopeOfDeloyment.select2({
-                data: groups
+                data: groups,
+                templateResult: formatGroupResult,
+                templateSelection: formatGroupSelection
             });
 
-            let scopeOfDeloyment = '@Model.ScopeOfDeloyment';
+            let scopeOfDeloyment = `@Model.ScopeOfDeloyment`;
+            console.log(scopeOfDeloyment);
             $ScopeOfDeloyment.val(scopeOfDeloyment.split(';')).trigger('change');
 
             $Module.select2({
@@ -592,6 +1670,23 @@
 
             $Module.val(['@Model.Module']).trigger('change');
 
+            $StatusId.select2({
+                data: statuses
+            });
+
+            $StatusId.val(['@Model.StatusId']).trigger('change');
+
+            $PromulgateStatusId.select2({
+                data: promulgateStatuses
+            });
+
+            $PromulgateStatusId.val(['@Model.PromulgateStatusId']).trigger('change');
+
+            initGrdReplaceOf();
+
+            initGrdRelateToDocuments();
+
+            initGrdAppendiceDocuments();
             // all requests finished successfully
         }).catch(() => {
             // all requests finished but one or more failed
@@ -600,7 +1695,7 @@
     </script>
     <!--Actions-->
     <script>
-        function update() {
+        function create() {
             // Create an FormData object
             let formData = $("#formDocument").submit(function (e) {
                 e.preventDefault();
@@ -609,9 +1704,34 @@
             //formData[0] contain form data only
             // You can directly make object via using form id but it require all ajax operation inside $("form").submit(<!-- Ajax Here   -->)
             formData = new FormData(formData[0]);
-            for (var i = 0, len = storedFiles.length; i < len; i++) {
+
+            // Document files
+            for (let i = 0, len = storedFiles.length; i < len; i++) {
                 formData.append('files', storedFiles[i]);
             }
+
+            // Appendice files
+            for (let i = 0; i < appendiceFiles.length; i++) {
+                formData.append('appendiceFiles', appendiceFiles[i].file);
+            }
+
+            const appendices = getAppendices();
+            objectToFormData(appendices, formData, 'appendices', []);
+
+            if (!isVariableHaveDefaultVal($Approver.val()))
+                formData.set('Approver', $Approver.val().join(';'));
+            if (!isVariableHaveDefaultVal($Auditor.val()))
+                formData.set('Auditor', $Auditor.val().join(';'));
+            if (!isVariableHaveDefaultVal($Drafter.val()))
+                formData.set('Drafter', $Drafter.val().join(';'));
+            if (!isVariableHaveDefaultVal($ScopeOfDeloyment.val()))
+                formData.set('ScopeOfDeloyment', $ScopeOfDeloyment.val().join(';'));
+
+            const replaceToDocuments = getReplaceToDocuments().map((document) => document.code);
+            const relateToDocuments = getRelateToDocuments().map((document) => document.code);
+
+            formData.set('ReplaceOf', replaceToDocuments.join(';'));
+            formData.set('RelateToDocuments', relateToDocuments.join(';'));
 
             $.ajax({
                 url: updateDocumentUrl,
@@ -633,6 +1753,12 @@
     <script>
         $(document).ready(function () {
             const enterKeyUp = $.Event("keyup", { keyCode: 13 });
+            $('#DCCAudited').jqxCheckBox();
+
+            $('#DCCAudited').on('change', function (event) {
+                const checked = event.args.checked;
+                $('input:hidden[name=DCCAudited]').val(`${checked}`);
+            });
 
             // Effective date
             $('#EffectiveDate').datepicker({
@@ -641,16 +1767,12 @@
                 autoclose: true
             });
 
-            $('#EffectiveDate').datepicker('setDate', new Date('@Model.EffectiveDate').toLocaleString(cultureSelector));
-
             // Review date
             $('#ReviewDate').datepicker({
                 language: cultureSelector,
                 showOn: 'focus',
                 autoclose: true
             });
-
-            $('#ReviewDate').datepicker('setDate', new Date('@Model.ReviewDate').toLocaleString(cultureSelector));
 
             if (cultureSelector === 'vi-VN') {
                 $.validate({
@@ -668,23 +1790,330 @@
 
             $("#formDocument").submit(function (e) {
                 e.preventDefault();
-                update();
+                create();
+            });
+
+            $('#btnRelease').click(function () {
+                $.ajax({
+                    url: releaseDocumentUrl,
+                    type: "POST",
+                    data: JSON.stringify({id: @Model.Id}),
+                    contentType: 'application/json',
+                    cache: false,
+                    success: function (event, settings, xhr) {
+                        xhr.message = {
+                            infor: 'Ban hành tài liệu thành công',
+                            //returnUrl: `${hostUrl}/document/list`
+                        };
+                    }
+                });
             });
 
             $CompanyCode.on('change', function (e) {
                 const selectedCompany = $CompanyCode.select2('data');
-                if (!isVariableHaveDefaltVal(selectedCompany)) {
+                if (!isVariableHaveDefaultVal(selectedCompany)) {
                     $CompanyName.val(selectedCompany[0].text);
                 }
             });
 
             $DepartmentCode.on('change', function (e) {
                 const selectedDepartment = $DepartmentCode.select2('data');
-                if (!isVariableHaveDefaltVal(selectedDepartment)) {
+                if (!isVariableHaveDefaultVal(selectedDepartment)) {
                     $DepartmentName.val(selectedDepartment[0].text);
                 }
             });
+
+            let format = 'DD/MM/YYYY HH:mm:ss';
+            if (cultureSelector !== 'en')
+                format = $.fn.datepicker.dates[cultureSelector].format.toUpperCase() + ' HH:mm:ss';
+            else
+                format = $.fn.datepicker.defaults.format.toUpperCase();
+
+            let effectiveDate = moment('@Model.EffectiveDate', format);
+            let reviewDate = moment('@Model.ReviewDate', format);
+
+            $('#EffectiveDate').datepicker('setDate', effectiveDate.toDate());
+            $('#ReviewDate').datepicker('setDate', reviewDate.toDate());
+
+            $OneYear.click(function () {
+                let date = moment($('#EffectiveDate').val(), format, false).add(1, 'year');
+                $('#ReviewDate').datepicker('setDate', date.toDate());
+            });
+
+            $TwoYear.click(function () {
+                let date = moment($('#EffectiveDate').val(), format, false).add(2, 'year');
+                $('#ReviewDate').datepicker('setDate', date.toDate());
+            });
         });
+    </script>
+    <!--Copy Appendice popup-->
+    <script>
+        const txtCopySearch = $('#txtCopySearch');
+        const grdCopyDocument = $("#grdCopyDocument");
+        txtCopySearch.on("keyup", function (e) {
+            const key = event.charCode ? event.charCode : event.keyCode ? event.keyCode : 0;
+            if (key === 13) {
+                grdCopyDocument.jqxGrid('updatebounddata');
+                grdCopyDocument.jqxGrid('gotopage', 0);
+            }
+        });
+
+        let source =
+        {
+            url: '@Url.ActionApiWithHost("documents", "searchdocumentsbytokenpaged")',
+            datatype: "json",
+            id: "id",
+            updaterow: function (rowid, rowdata, commit) {
+                // synchronize with the server - send update command
+                // call commit with parameter true if the synchronization with the server is successful
+                // and with parameter false if the synchronization failder.
+                commit(true);
+            },
+            cache: false,
+            pagesize: 20,
+            sort: function () {
+                // update the grid and send a request to the server.
+                grdCopyDocument.jqxGrid('updatebounddata', 'sort');
+            },
+            pagesizeoptions: ["20", "40", "60"],
+            datafields:
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'code', type: 'string' },
+                    { name: 'companyName', type: 'string' },
+                    { name: 'departmentName', type: 'string' },
+                    { name: 'module', type: 'string' },
+                    { name: 'documentType', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'documentNumber', type: 'string' },
+                    { name: 'reviewNumber', type: 'string' },
+                    { name: 'description', type: 'string' },
+                    { name: 'fileName', type: 'string' },
+                    { name: 'folderName', type: 'string' },
+                    { name: 'replaceOf', type: 'string' },
+                    { name: 'relateToDocuments', type: 'string'},
+                    { name: 'contentChange', type: 'string'}
+                ],
+            root: 'data',
+            beforeprocessing: function (data) {
+                source.totalrecords = data.total;
+                grdCopyDocument.jqxGrid('addgroup', 'companyName');
+                grdCopyDocument.jqxGrid('addgroup', 'departmentName');
+                grdCopyDocument.jqxGrid('addgroup', 'documentType');
+            }
+        };
+        let dataAdapter = new $.jqx.dataAdapter(source,
+            {
+                beforeSend: function (jqXHR, settings) {
+                    settings.url = `${settings.url}&token=${txtCopySearch.val()}&advancedSearch=${$('#CopyAdvancedSearch').val()}`;
+                    jqXHR.setRequestHeader('token', txtCopySearch.val());
+                    jqXHR.setRequestHeader('advancedSearch', $('#CopyAdvancedSearch').val());
+                }
+            });
+
+        function initGrid() {
+
+            grdCopyDocument.jqxGrid(
+                {
+                    width: '100%',
+                    height: 400,
+                    source: dataAdapter,
+                    pageable: true,
+                    autorowheight: true,
+                    columnsresize: true,
+                    altrows: true,
+                    editable: true,
+                    sortable: true,
+                    groupable: true,
+                    showgroupsheader: false,
+                    pagesizeoptions: ["20", "40", "60"],
+                    localization: getLocalization('@CurrentLanguage.Name'),
+                    selectionmode: 'singlerow',
+                    editmode: 'singlecell',
+                    showstatusbar: false,
+                    columns: [
+                        {
+                            text: 'STT',
+                            sortable: false,
+                            filterable: false,
+                            editable: false,
+                            groupable: false,
+                            draggable: false,
+                            pinned: true,
+                            datafield: '',
+                            columntype: 'number',
+                            width: 30,
+                            cellsrenderer: function (row, column, value) {
+                                return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                            }
+                        },
+                        {
+                            text: documentCodeText,
+                            columntype: 'textbox',
+                            datafield: 'code',
+                            pinned: true,
+                            editable: false,
+                            width: 100,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                //element.html(`<a href="${updateDocumentUrl}?id=${dataAdapter.records[row].id}"> <i class="fa fa-pencil"></i> ${value} </a>`);
+                                element.html(`<a href="/document/detail?code=${dataAdapter.records[row].code}"> <i class="fa fa-pencil"></i> ${value} </a>`);
+
+                                return element[0].outerHTML;
+                            }
+                        },
+                        {
+                            text: 'Files',
+                            columntype: 'textbox',
+                            datafield: 'fileName',
+                            pinned: true,
+                            editable: false,
+                            width: 250,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                const fileNames = value.split(';');
+                                const folderName = dataAdapter.records[row].folderName;
+                                if (!isVariableHaveDefaultVal(fileNames)
+                                    && !isVariableHaveDefaultVal(folderName)) {
+                                    if (fileNames.length > 0) {
+                                        let html = '';
+                                        for (let index = 0; index < fileNames.length; index++) {
+                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
+                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                                let fileIcon = 'fa fa-file-o';
+                                                switch (getFileExtension(fileNames[index])) {
+                                                    case 'pdf':
+                                                        fileIcon = 'fa fa-file-pdf-o';
+                                                        break;
+                                                    case 'xls':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'xlsx':
+                                                        fileIcon = 'fa fa-file-excel-o';
+                                                        break;
+                                                    case 'doc':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                    case 'docx':
+                                                        fileIcon = 'fa fa-file-word-o';
+                                                        break;
+                                                }
+                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                            }
+                                        }
+                                        if (!isVariableHaveDefaultVal(html)) {
+                                            element.html(html);
+                                        }
+                                    }
+                                }
+                                return element[0].outerHTML;
+                            }
+                        },
+                        {
+                            text: documentNameText,
+                            columntype: 'textbox',
+                            datafield: 'name',
+                            pinned: true,
+                            editable: false,
+                            width: 200
+                        },
+                        {
+                            text: companyText,
+                            columntype: 'textbox',
+                            datafield: 'companyName',
+                            pinned: false,
+                            editable: false,
+                            width: 150
+                        },
+                        {
+                            text: departmentText,
+                            columntype: 'textbox',
+                            datafield: 'departmentName',
+                            pinned: false,
+                            editable: false,
+                            width: 150
+                        },
+                        {
+                            text: moduleText,
+                            columntype: 'textbox',
+                            datafield: 'module',
+                            editable: false,
+                            width: 150
+                        },
+                        {
+                            text: replaceOfText,
+                            columntype: 'textbox',
+                            datafield: 'replaceOf',
+                            editable: false,
+                            width: 150,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                const documents = value.split(';');
+                                if (!isVariableHaveDefaultVal(documents)) {
+                                    if (documents.length > 0) {
+                                        let html = '';
+                                        for (let index = 0; index < documents.length; index++) {
+                                            if (!isVariableHaveDefaultVal(documents[index])) {
+                                                html = html + `<a target="_blank" href="/document/detail?code=${documents[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                            }
+                                        }
+                                        if (!isVariableHaveDefaultVal(html)) {
+                                            element.html(html);
+                                        }
+                                    }
+                                }
+                                return element[0].outerHTML;
+                            }
+                        },
+                        {
+                            text: relateDocumentText,
+                            columntype: 'textbox',
+                            datafield: 'relateToDocuments',
+                            editable: false,
+                            width: 150,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                const documents = value.split(';');
+                                if (!isVariableHaveDefaultVal(documents)) {
+                                    if (documents.length > 0) {
+                                        let html = '';
+                                        for (let index = 0; index < documents.length; index++) {
+                                            if (!isVariableHaveDefaultVal(documents[index])) {
+                                                html = html + `<a target="_blank" href="/document/detail?code=${documents[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                            }
+                                        }
+                                        if (!isVariableHaveDefaultVal(html)) {
+                                            element.html(html);
+                                        }
+                                    }
+                                }
+                                return element[0].outerHTML;
+                            }
+                        },
+                        {
+                            text: documentTypeText,
+                            columntype: 'textbox',
+                            datafield: 'documentType',
+                            editable: false,
+                            width: 150
+                        },
+                        {
+                            text: documentNumberText,
+                            columntype: 'textbox',
+                            datafield: 'documentNumber',
+                            editable: false,
+                            width: 150
+                        },
+                        {
+                            text: reviewNumberText,
+                            datafield: 'reviewNumber',
+                            editable: false,
+                            width: 150
+                        }
+                    ]
+                });
+        }
+
     </script>
 
     <script>

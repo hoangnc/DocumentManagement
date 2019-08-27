@@ -1,10 +1,20 @@
 ﻿using DT.Core.Command;
-using DT.Core.Web.Common.Api.WebApi.Formatter;
+using MultipartDataMediaFormatter.Infrastructure;
 using System;
 using System.Collections.Generic;
 
 namespace DocumentManagement.Application.Documents.Commands
 {
+    public class AppendiceDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public string FileName { get; set; }
+        public string LinkFile { get; set; }
+        public string ReviewNumber { get; set; }
+    }
+
     public class CreateDocumentCommand : BaseCommand<int>
     {
         public string Code { get; set; }
@@ -39,6 +49,9 @@ namespace DocumentManagement.Application.Documents.Commands
         public bool Active { get; set; }
         public int PromulgateStatusId { get; set; }
 
-        public List<HttpPostedFileMultipart> Files { get; set; }
+        public List<AppendiceDto> Appendices { get; set; }
+
+        public List<HttpFile> Files { get; set; }
+        public List<HttpFile> AppendiceFiles { get; set; }
     }
 }

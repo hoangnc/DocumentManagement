@@ -6,6 +6,7 @@
         {
             public const string UserImage = "user_image";
             public const string Permission = "permission";
+            public const string Department = "department";
         }
 
         public static class DtPermissionBaseTypes

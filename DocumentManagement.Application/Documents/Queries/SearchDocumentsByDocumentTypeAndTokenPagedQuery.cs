@@ -7,5 +7,6 @@ namespace DocumentManagement.Application.Documents.Queries
     {
         public bool AdvancedSearch { get; set; }
         public string DocumentType { get; set; }
+        public string Department { get; set; }
     }
 }

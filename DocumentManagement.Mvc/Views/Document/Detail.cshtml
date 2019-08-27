@@ -13,10 +13,8 @@
 }
 <div class="box box-info">
     <form role="form" action="/" id="formDocument">
-        @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.Id)
         <div class="box-header with-border">
-            <h3 class="box-title">@L(DocumentResourceNames.DocumentInformation)</h3>
             <div class="mailbox-controls">
                 <div class="btn-group">
                     <a href="@Url.Action("List")" class="btn btn-success btn-sm">
@@ -24,9 +22,13 @@
                     </a>
                 </div>
             </div>
+            @*<h3 class="box-title">@L(DocumentResourceNames.DocumentInformation)</h3>*@
+            <div class="callout callout-info">
+                <p id="WarningInfo"></p>
+            </div>
+
         </div>
         <div class="box-body">
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
@@ -187,10 +189,26 @@
                                name="DCCAudited"
                                disabled />
                         <input type="hidden"
-                               id="DCCAudited"
                                name="DCCAudited" />
                     </div>
                 </div>
+                <!--<div class="col-md-4">
+        <div class="form-group">
+            <label>@L(DocumentResourceNames.Active)<span style="color: red">(*)</span></label>
+            <i id="clientid-help"
+               class="fa fa-info-circle red-text"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="Hiệu lực"></i>
+            <br>
+            <input type="checkbox"
+                   id="Active"
+                   name="Active"
+                   disabled/>
+            <input type="hidden"
+                   name="Active" />
+        </div>
+    </div>-->
             </div>
             <div class="form-group">
                 <label>@L(DocumentResourceNames.Description)</label>
@@ -198,7 +216,7 @@
                           name="Description"
                           readonly
                           rows="10"
-                          id="Description">@Model.Description></textarea>
+                          id="Description">@Model.Description</textarea>
             </div>
             <div class="form-group">
                 <label>@L(DocumentResourceNames.ContentChange)</label>
@@ -289,7 +307,7 @@
                                 {
                                     <tr>
                                         <td class="name">
-                                            <a target="_blank" href="/Uploads/@Model.FolderName/@file"><i class="fa fa-paperclip"></i>@file</a>
+                                            <a target="_blank" href="/downloadfile/viewfile?sourceDoc=@Model.FolderName/@file"><i class="fa fa-paperclip"></i>@file</a>
                                         </td>
                                     </tr>
                                 }
@@ -305,10 +323,6 @@
 @section scripts
 {
     <script>
-        const uploadFileRootPath = '/Uploads';
-        const cultureSelector = '@CurrentLanguage.Name';
-        const hostUrl = '@Url.GetHost()';
-
         let departments = [];
         let documentTypes = [];
         let users = [];
@@ -364,7 +378,8 @@
         Globalize.cultureSelector = '@CurrentLanguage.Name';
     </script>
     <script type="text/javascript">
-        $('#DCCAudited').jqxCheckBox();
+        $('#DCCAudited').jqxCheckBox({ disabled: true, checked: @Model.DDCAudited.ToString().ToLowerInvariant() });
+        // $('#Active').jqxCheckBox({ disabled: true, checked: @Model.Active.ToString().ToLowerInvariant() });
     </script>
     <!--Script get masterdata-->
     <script>
@@ -382,6 +397,10 @@
                 function (data) {
                     departments = data.map((department) => {
                         return { id: department.code, text: department.name };
+                    });
+
+                    groups = data.map((department) => {
+                        return { id: department.code, text: department.name, email: department.email };
                     });
                 });
         }
@@ -456,7 +475,7 @@
             getAllDepartments(),
             getAllCompanies(),
             getAllDocumentTypes(),
-            getAllGroupsFromActiveDirectory(),
+            // getAllGroupsFromActiveDirectory(),
             getAllModules()
         ]).then(() => {
             $Approver.select2({
@@ -547,6 +566,25 @@
             let effectiveDate = moment('@Model.EffectiveDate', format);
             let reviewDate = moment('@Model.ReviewDate', format);
 
+            let replaceBy = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(
+    Newtonsoft.Json.JsonConvert.SerializeObject(Model.ReplaceByDocuments, new Newtonsoft.Json.JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() })))");
+
+            let status = 'Hiệu lực: Vẫn còn hiệu lực';
+
+            if (!isVariableHaveDefaultVal(replaceBy)) {
+                if (replaceBy.length > 0) {
+                    let replaceByTexts = replaceBy.map(d => { return d.name; }).join(';');
+
+                    status = `Tình trạng: Đã hết hiệu lực <br> Được thay thế bởi: ${replaceByTexts}`;
+                }
+            }
+
+            if (moment() > reviewDate) {
+                status = 'Tình trạng: Đã hết hiệu lực';
+            }
+
+            $('#WarningInfo').html(`Ban hành: ${moment().to(effectiveDate)} <br> Hiệu lực còn: ${moment().to(reviewDate)} <br> ${status}`);
+
             $('#EffectiveDate').datepicker('setDate', effectiveDate.toDate());
 
             // Review date
@@ -560,20 +598,19 @@
 
             $CompanyCode.on('change', function (e) {
                 const selectedCompany = $CompanyCode.select2('data');
-                if (!isVariableHaveDefaltVal(selectedCompany)) {
+                if (!isVariableHaveDefaultVal(selectedCompany)) {
                     $CompanyName.val(selectedCompany[0].text);
                 }
             });
 
             $DepartmentCode.on('change', function (e) {
                 const selectedDepartment = $DepartmentCode.select2('data');
-                if (!isVariableHaveDefaltVal(selectedDepartment)) {
+                if (!isVariableHaveDefaultVal(selectedDepartment)) {
                     $DepartmentName.val(selectedDepartment[0].text);
                 }
             });
         });
     </script>
-
     <!--Replace to documents-->
     <script>
 
@@ -650,14 +687,14 @@
                             cellsrenderer: function (row, column, value, defaultHtml) {
                                 const element = $(defaultHtml);
                                 const fileNames = value.split(';');
-                                const folderName = replaceOfDataAdapter.records[row].folderName;
-                                if (!isVariableHaveDefaltVal(fileNames)
-                                    && !isVariableHaveDefaltVal(folderName)) {
+                                const folderName = dataAdapter.records[row].folderName;
+                                if (!isVariableHaveDefaultVal(fileNames)
+                                    && !isVariableHaveDefaultVal(folderName)) {
                                     if (fileNames.length > 0) {
                                         let html = '';
                                         for (let index = 0; index < fileNames.length; index++) {
-                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
-                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
+                                                const filePath = `${folderName}/${fileNames[index]}`;
                                                 let fileIcon = 'fa fa-file-o';
                                                 switch (getFileExtension(fileNames[index])) {
                                                     case 'pdf':
@@ -676,10 +713,10 @@
                                                         fileIcon = 'fa fa-file-word-o';
                                                         break;
                                                 }
-                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                                html = html + `<a target="_blank" href="/downloadfile/viewfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
-                                        if (!isVariableHaveDefaltVal(html)) {
+                                        if (!isVariableHaveDefaultVal(html)) {
                                             element.html(html);
                                         }
                                     }
@@ -731,7 +768,7 @@
 
         function getReplaceToDocuments() {
             let documents = replaceOfDataAdapter.records.filter(function (d) {
-                if (!isVariableHaveDefaltVal(d.name)) {
+                if (!isVariableHaveDefaultVal(d.name)) {
                     return true;
                 }
                 return false;
@@ -814,14 +851,14 @@
                             cellsrenderer: function (row, column, value, defaultHtml) {
                                 const element = $(defaultHtml);
                                 const fileNames = value.split(';');
-                                const folderName = relateToDocumentsDataAdapter.records[row].folderName;
-                                if (!isVariableHaveDefaltVal(fileNames)
-                                    && !isVariableHaveDefaltVal(folderName)) {
+                                const folderName = dataAdapter.records[row].folderName;
+                                if (!isVariableHaveDefaultVal(fileNames)
+                                    && !isVariableHaveDefaultVal(folderName)) {
                                     if (fileNames.length > 0) {
                                         let html = '';
                                         for (let index = 0; index < fileNames.length; index++) {
-                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
-                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
+                                                const filePath = `${folderName}/${fileNames[index]}`;
                                                 let fileIcon = 'fa fa-file-o';
                                                 switch (getFileExtension(fileNames[index])) {
                                                     case 'pdf':
@@ -840,10 +877,10 @@
                                                         fileIcon = 'fa fa-file-word-o';
                                                         break;
                                                 }
-                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                                html = html + `<a target="_blank" href="/downloadfile/viewfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
-                                        if (!isVariableHaveDefaltVal(html)) {
+                                        if (!isVariableHaveDefaultVal(html)) {
                                             element.html(html);
                                         }
                                     }
@@ -916,6 +953,7 @@
                     { name: 'id', type: 'int' },
                     { name: 'code', type: 'string' },
                     { name: 'fileName', type: 'string' },
+                    { name: 'linkFile', type: 'string' },
                     { name: 'name', type: 'string' },
                     { name: 'documentType', type: 'string'},
                     { name: 'documentNumber', type: 'string' },
@@ -966,17 +1004,12 @@
                             width: 250,
                             cellsrenderer: function (row, column, value, defaultHtml) {
                                 const element = $(defaultHtml);
-                                const fileNames = value.split(';');
-                                const folderName = appendieDocumentsDataAdapter.records[row].documentType;
-                                if (!isVariableHaveDefaltVal(fileNames)
-                                    && !isVariableHaveDefaltVal(folderName)) {
-                                    if (fileNames.length > 0) {
-                                        let html = '';
-                                        for (let index = 0; index < fileNames.length; index++) {
-                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
-                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
-                                                let fileIcon = 'fa fa-file-o';
-                                                switch (getFileExtension(fileNames[index])) {
+                                const linkFile = appendieDocumentsDataAdapter.records[row].linkFile;
+                                console.log(linkFile);
+                                if (!isVariableHaveDefaultVal(linkFile)) {
+                                    let html = '';
+                                    let fileIcon = 'fa fa-file-o';
+                                    switch (getFileExtension(linkFile)) {
                                                     case 'pdf':
                                                         fileIcon = 'fa fa-file-pdf-o';
                                                         break;
@@ -992,14 +1025,11 @@
                                                     case 'docx':
                                                         fileIcon = 'fa fa-file-word-o';
                                                         break;
-                                                }
-                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
-                                            }
-                                        }
-                                        if (!isVariableHaveDefaltVal(html)) {
-                                            element.html(html);
-                                        }
                                     }
+                                    html = html + `<a target="_blank" href="${linkFile}"> <i class="${fileIcon}"></i> ${value}</a><br>`;                                      
+                                   if (!isVariableHaveDefaultVal(html)) {
+                                            element.html(html);
+                                   }
                                 }
                                 return element[0].outerHTML;
                             }
@@ -1018,7 +1048,15 @@
                             datafield: 'documentNumber',
                             pinned: false,
                             editable: false,
-                            width: 300
+                            width: 150
+                        },
+                        {
+                            text: 'Số soán xét',
+                            columntype: 'textbox',
+                            datafield: 'reviewNumber',
+                            pinned: false,
+                            editable: false,
+                            width: 150
                         }]
                 });
         }

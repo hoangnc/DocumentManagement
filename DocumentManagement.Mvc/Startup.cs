@@ -67,7 +67,7 @@ namespace DocumentManagement.Mvc
                     RedirectUri = openIdConnectionOption.RedirectUri,
                     SignInAsAuthenticationType = openIdConnectionOption.SignInAsAuthenticationType,
                     UseTokenLifetime = openIdConnectionOption.UseTokenLifetime,
-
+                    RequireHttpsMetadata = false,
                     Notifications = new OpenIdConnectAuthenticationNotifications
                     {
                         

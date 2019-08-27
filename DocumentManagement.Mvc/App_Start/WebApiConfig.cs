@@ -1,13 +1,16 @@
 ﻿using DT.Core.Web.Common.Api.WebApi.Filters;
-using DT.Core.Web.Common.Api.WebApi.Formatter;
 using DT.Core.Web.Common.Api.WebApi.ModelBinder;
 using FluentValidation.WebApi;
+using MultipartDataMediaFormatter;
+using MultipartDataMediaFormatter.Infrastructure;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ModelBinding.Binders;
 using System.Web.Http.Validation;
+using System.Web.Http.ValueProviders;
+using System.Web.Http.ValueProviders.Providers;
 
 namespace DocumentManagement.Mvc
 {
@@ -16,7 +19,7 @@ namespace DocumentManagement.Mvc
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-
+           
             // Web API routes
             config.MapHttpAttributeRoutes();
 
@@ -30,19 +33,18 @@ namespace DocumentManagement.Mvc
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 
             config.Services.Clear(typeof(ModelValidatorProvider));
-
+        
             config.BindParameter(typeof(DateTime), new DateTimeModelBinder());
             config.BindParameter(typeof(DateTime?), new DateTimeModelBinder());
 
-            config.Formatters.Add(new FormMultipartEncodedMediaTypeFormatter());
-
+            // config.Formatters.Add(new FormMultipartEncodedMediaTypeFormatter());
+            config.Formatters.Add(new FormMultipartEncodedMediaTypeFormatter(new MultipartFormatterSettings()));
             config.Filters.Add(new DtExceptionFilterAttribute());
 
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
+               name: "DefaultApi",
+               routeTemplate: "api/{controller}/{action}"
+           );
         }
     }
 }

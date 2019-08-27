@@ -1,4 +1,5 @@
-﻿using DT.Core.Web.Common.Models;
+﻿using DT.Core.Authorization;
+using DT.Core.Web.Common.Models;
 using DT.Core.Web.Ui.Navigation;
 using System;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace DocumentManagement.Mvc.Services
         public IMenuConfigurationContext MenuConfigurationContext => DependencyResolver.Current.GetService<IMenuConfigurationContext>();
 
         public string SelectedMenu { get; set; }
-
+               
         public string RenderToHtml()
         {
             StringBuilder htmlBuilder = new StringBuilder();

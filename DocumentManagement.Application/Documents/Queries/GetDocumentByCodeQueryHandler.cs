@@ -30,17 +30,29 @@ namespace DocumentManagement.Application.Documents.Queries
                     Approver = d.Approver,
                     Auditor = d.Auditor,
                     DDCAudited = d.DDCAudited,
+                    Active = d.Active,
                     ContentChange = d.ContentChange,
                     DocumentNumber = d.DocumentNumber,
                     Drafter = d.Drafter,
                     DocumentType = d.DocumentType,
                     EffectiveDate = d.EffectiveDate,
                     FileName = d.FileName,
+                    FolderName = d.FolderName,
                     Module = d.Module,
                     ReviewDate = d.ReviewDate,
                     ReviewNumber = d.ReviewNumber,
                     ScopeOfApplication = d.ScopeOfApplication,
                     ScopeOfDeloyment = d.ScopeOfDeloyment,
+                    ReplaceByDocuments = _context.Documents.Where(d1=>_context.StringSplit(d1.RelateToDocuments, ";").Any(d2=>d2.SplitData == d.Code))
+                    .Select(d1=>new ReplaceToDocumentDto {
+                        Code = d1.Code,
+                        Name = d1.Name,
+                        FileName = d1.FileName,
+                        FolderName = d1.FolderName,
+                        DocumentNumber = d1.DocumentNumber,
+                        EffectiveDate = d1.EffectiveDate,
+                        ReviewDate = d1.ReviewDate
+                    }).ToList(),
                     RelateToDocuments = _context.Documents.Join(
                                                    _context.StringSplit(d.RelateToDocuments, ";"),
                                                    d1 => d1.Code,
@@ -76,7 +88,8 @@ namespace DocumentManagement.Application.Documents.Queries
                                                         DocumentType = a.DocumentType,
                                                         FileName = a.FileName,
                                                         DocumentNumber = a.AppendiceNumber,
-                                                        ReviewNumber = a.ReviewNumber
+                                                        ReviewNumber = a.ReviewNumber,
+                                                        LinkFile = a.LinkFile
                                                     }).ToList()
                 })
                 .FirstOrDefaultAsync();

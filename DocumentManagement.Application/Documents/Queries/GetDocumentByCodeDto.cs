@@ -9,6 +9,11 @@ namespace DocumentManagement.Application.Documents.Queries
         public string FolderName { get; set; }
         public string FileName { get; set; }
         public string Name { get; set; }
+        public string DisplayText { get
+            {
+                return $"{Name} {Code} {ReviewNumber}";
+            }
+        }
         public string DocumentNumber { get; set; }
         public string ReviewNumber { get; set; }
         public DateTime? EffectiveDate { get; set; }
@@ -22,6 +27,13 @@ namespace DocumentManagement.Application.Documents.Queries
         public string FolderName { get; set; }
         public string FileName { get; set; }
         public string DocumentNumber { get; set; }
+        public string DisplayText
+        {
+            get
+            {
+                return $"{Name} {Code} {ReviewNumber}";
+            }
+        }
         public string ReviewNumber { get; set; }
         public DateTime? EffectiveDate { get; set; }
         public DateTime? ReviewDate { get; set; }
@@ -29,12 +41,21 @@ namespace DocumentManagement.Application.Documents.Queries
 
     public class AppendiceDto
     {
+        public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
+        public string DisplayText
+        {
+            get
+            {
+                return $"{Name} {Code} {ReviewNumber}";
+            }
+        }
         public string DocumentNumber { get; set; }
         public string DocumentType { get; set; }
         public string ReviewNumber { get; set; }
         public string FileName { get; set; }
+        public string LinkFile { get; set; }
     }
 
     public class GetDocumentByCodeDto
@@ -62,11 +83,13 @@ namespace DocumentManagement.Application.Documents.Queries
         public string ScopeOfApplication { get; set; }
         public string ScopeOfDeloyment { get; set; }
 
+        public List<ReplaceToDocumentDto> ReplaceByDocuments { get; set; }
         public List<ReplaceToDocumentDto> ReplaceToDocuments { get; set; }
         public List<RelateToDocumentDto> RelateToDocuments { get; set; }
         public List<AppendiceDto> Appendices { get; set; }
         
         public bool DDCAudited { get; set; }
+        public bool Active { get; set; }
         public string FolderName { get; set; }
         public string LinkFile { get; set; }
     }

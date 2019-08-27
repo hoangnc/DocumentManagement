@@ -24,6 +24,9 @@
                     <button id="btnSubmit" type="submit" class="btn btn-primary btn-sm">
                         <i class="fa fa-floppy-o" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Save)
                     </button>
+                    <button id="btnSaveAndRelease" type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> @L(DocumentResourceNames.SaveAndRelease)
+                    </button>
                 </div>
             </div>
         </div>
@@ -207,11 +210,11 @@
                                 <div class="btn-group-sm" data-toggle="buttons">
                                     <button class="btn btn-sm btn-success"
                                             id="OneYear">
-                                        1 năm
+                                        1 @L(DocumentResourceNames.Year)
                                     </button>
                                     <button class="btn btn-sm btn-success"
                                             id="TwoYear">
-                                        2 năm
+                                        2 @L(DocumentResourceNames.Year)
                                     </button>
                                 </div>
                             </div>
@@ -414,7 +417,19 @@
                     </div>
                 </div>
             </div>
-
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Phụ lục</label>
+                        <i id="RelateToDocuments-help"
+                           class="fa fa-info-circle red-text"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="Phụ lục tài liệu"></i>
+                        <div id="grdAppendieDocuments"></div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -471,10 +486,6 @@
 {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        const uploadFileRootPath = '/Uploads';
-        const cultureSelector = '@CurrentLanguage.Name';
-        const hostUrl = '@Url.GetHost()';
-
         let departments = [];
         let documentTypes = [];
         let users = [];
@@ -499,8 +510,24 @@
         let $OneYear = $('#OneYear');
         let $TwoYear = $('#TwoYear');
 
+        let appendiceFiles = [];
+
         let $btnSubmit = $('#btnSubmit');
         let storedFiles = [];
+
+        const documentCodeText = '@L(DocumentResourceNames.Code)';
+        const documentNameText = '@L(DocumentResourceNames.Name)';
+        const companyText = '@L(DocumentResourceNames.CompanyCode)';
+        const departmentText = '@L(DocumentResourceNames.DepartmentCode)';
+        const moduleText = '@L(DocumentResourceNames.Module)';
+        const documentNumberText = '@L(DocumentResourceNames.DocumentNumber)';
+        const reviewNumberText = '@L(DocumentResourceNames.ReviewNumber)';
+        const documentTypeText = '@L(DocumentResourceNames.DocumentType)';
+        const relateDocumentText = '@L(DocumentResourceNames.RelateToDocuments)';
+        const replaceOfText = '@L(DocumentResourceNames.ReplaceOf)';
+        const effectiveDateText = '@L(DocumentResourceNames.EffectiveDate)';
+        const reviewDateText = '@L(DocumentResourceNames.ReviewDate)';
+
     </script>
     <!-- Select 2-->
     <script src="~/Scripts/admin_lte/bower_components/select2/dist/js/select2.full.min.js"></script>
@@ -554,7 +581,9 @@
             const checked = event.args.checked;
             $('input:hidden[name=Active]').val(`${checked}`);
         });
+
         const uploadTemplate = tmpl('template-upload');
+
         $(document).ready(function () {
             $('#fileupload').fileupload({
                 autoUpload: false,
@@ -792,23 +821,40 @@
                                 editor.on('select', function (event) {
                                     if (event.args) {
                                         let item = event.args.item;
-                                        console.log(item);
-                                        if (!isVariableHaveDefaltVal(item)) {
+                                        if (!isVariableHaveDefaultVal(item)) {
                                             const document = documents.filter(document => document.displayText === item.label);
-                                            if (!isVariableHaveDefaltVal(document)) {
+                                            if (!isVariableHaveDefaultVal(document)) {
                                                 observableSourceReplaceOf.set(`${row}.documentNumber`, document[0].documentNumber);
                                                 observableSourceReplaceOf.set(`${row}.effectiveDate`, document[0].effectiveDate);
                                                 observableSourceReplaceOf.set(`${row}.reviewDate`, document[0].reviewDate);
                                                 observableSourceReplaceOf.set(`${row}.code`, document[0].code);
                                                 observableSourceReplaceOf.set(`${row}.fileName`, document[0].fileName);
                                                 observableSourceReplaceOf.set(`${row}.folderName`, document[0].folderName);
+
+                                                if (!isVariableHaveDefaultVal(document[0].appendices)) {
+                                                    const datarows = document[0].appendices.map((a) => {
+                                                        return {
+                                                            id: a.id,
+                                                            name: a.name,
+                                                            code: a.code,
+                                                            documentNumber: a.documentNumber,
+                                                            reviewNumber: a.reviewNumber,
+                                                            fileName: a.fileName,
+                                                            linkFile: a.linkFile
+                                                        };
+                                                    });
+
+                                                    for (let index = 0; index < datarows.length; index++) {
+                                                        observableSourceAppendieDocuments.push(datarows[index]);
+                                                    }
+                                                }
                                             }
                                         }
                                     }
                                 });
                             },
                             validation: function (cell, value) {
-                                if (isVariableHaveDefaltVal(value)) {
+                                if (isVariableHaveDefaultVal(value)) {
                                     return { result: false, message: "Tên tài liệu không được bỏ trống(chú ý nếu đang edit thì cần nhấn phím Enter để update thông tin)" };
                                 }
                                 const index = getReplaceToDocumentIndexByText(value, cell.row);
@@ -829,12 +875,12 @@
                                 const element = $(defaultHtml);
                                 const fileNames = value.split(';');
                                 const folderName = replaceOfDataAdapter.records[row].folderName;
-                                if (!isVariableHaveDefaltVal(fileNames)
-                                    && !isVariableHaveDefaltVal(folderName)) {
+                                if (!isVariableHaveDefaultVal(fileNames)
+                                    && !isVariableHaveDefaultVal(folderName)) {
                                     if (fileNames.length > 0) {
                                         let html = '';
                                         for (let index = 0; index < fileNames.length; index++) {
-                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
+                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
                                                 const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
                                                 let fileIcon = 'fa fa-file-o';
                                                 switch (getFileExtension(fileNames[index])) {
@@ -857,7 +903,7 @@
                                                 html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
-                                        if (!isVariableHaveDefaltVal(html)) {
+                                        if (!isVariableHaveDefaultVal(html)) {
                                             element.html(html);
                                         }
                                     }
@@ -927,7 +973,7 @@
 
         function getReplaceToDocuments() {
             let documents = replaceOfDataAdapter.records.filter(function (d) {
-                if (!isVariableHaveDefaltVal(d.code)) {
+                if (!isVariableHaveDefaultVal(d.code)) {
                     return true;
                 }
                 return false;
@@ -1086,22 +1132,23 @@
                                     if (event.args) {
                                         let item = event.args.item;
                                         console.log(item);
-                                        if (!isVariableHaveDefaltVal(item)) {
+                                        if (!isVariableHaveDefaultVal(item)) {
                                             const document = documents.filter(document => document.displayText === item.label);
-                                            if (!isVariableHaveDefaltVal(document)) {
+                                            if (!isVariableHaveDefaultVal(document)) {
                                                 observableSourceRelateToDocuments.set(`${row}.documentNumber`, document[0].documentNumber);
                                                 observableSourceRelateToDocuments.set(`${row}.effectiveDate`, document[0].effectiveDate);
                                                 observableSourceRelateToDocuments.set(`${row}.reviewDate`, document[0].reviewDate);
                                                 observableSourceRelateToDocuments.set(`${row}.code`, document[0].code);
                                                 observableSourceRelateToDocuments.set(`${row}.fileName`, document[0].fileName);
                                                 observableSourceRelateToDocuments.set(`${row}.folderName`, document[0].folderName);
+
                                             }
                                         }
                                     }
                                 });
                             },
                             validation: function (cell, value) {
-                                if (isVariableHaveDefaltVal(value)){
+                                if (isVariableHaveDefaultVal(value)){
                                     return { result: false, message: "Tên tài liệu không được bỏ trống(chú ý nếu đang edit thì cần nhấn phím Enter để update thông tin)" };
                                 }
                                 const index = getRelateToDocumentIndexByText(value, cell.row);
@@ -1122,12 +1169,12 @@
                                 const element = $(defaultHtml);
                                 const fileNames = value.split(';');
                                 const folderName = relateToDocumentsDataAdapter.records[row].folderName;
-                                if (!isVariableHaveDefaltVal(fileNames)
-                                    && !isVariableHaveDefaltVal(folderName)) {
+                                if (!isVariableHaveDefaultVal(fileNames)
+                                    && !isVariableHaveDefaultVal(folderName)) {
                                     if (fileNames.length > 0) {
                                         let html = '';
                                         for (let index = 0; index < fileNames.length; index++) {
-                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
+                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
                                                 const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
                                                 let fileIcon = 'fa fa-file-o';
                                                 switch (getFileExtension(fileNames[index])) {
@@ -1150,7 +1197,7 @@
                                                 html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
-                                        if (!isVariableHaveDefaltVal(html)) {
+                                        if (!isVariableHaveDefaultVal(html)) {
                                             element.html(html);
                                         }
                                     }
@@ -1221,7 +1268,7 @@
 
         function getRelateToDocuments() {
             let documents = relateToDocumentsDataAdapter.records.filter(function (d) {
-                if (!isVariableHaveDefaltVal(d.code)) {
+                if (!isVariableHaveDefaultVal(d.code)) {
                     return true;
                 }
                 return false;
@@ -1229,6 +1276,265 @@
             return documents;
         }
 
+    </script>
+    <!-- Appendie Documents -->
+    <script>
+        let appendieDocuments = [];/*[{
+            id: 1,
+            name: '',
+            code: '',
+            documentNumber: '',
+            reviewNumber: '',
+            fileName: '',
+        }];*/
+        let grdAppendieDocuments = $('#grdAppendieDocuments');
+        let observableSourceAppendieDocuments = new $.jqx.observableArray(appendieDocuments);
+        let sourceAppendieDocument =
+        {
+            localdata: observableSourceAppendieDocuments,
+            datatype: "obserableArray",
+            id: "id",
+            updaterow: function (rowid, rowdata, commit) {
+                // synchronize with the server - send update command
+                // call commit with parameter true if the synchronization with the server is successful
+                // and with parameter false if the synchronization failder.
+
+                commit(true);
+            },
+            pagesize: 5,
+            pagesizeoptions: ["5", "10", "20"],
+            datafields:
+                [
+                    { name: 'id', type: 'int' },
+                    { name: 'code', type: 'string' },
+                    { name: 'name', type: 'string' },
+                    { name: 'documentNumber', type: 'string' },
+                    { name: 'reviewNumber', type: 'string' },
+                    { name: 'fileName', type: 'string' },
+                    { name: 'linkFile', type: 'string'}
+                ]
+        };
+
+        let appendieDocumentsDataAdapter = new $.jqx.dataAdapter(sourceAppendieDocument, { uniqueDataFields: ['name'] });
+        const initGrdAppendieDocuments = function () {
+            grdAppendieDocuments.jqxGrid(
+                {
+                    width: '100%',
+                    height: 250,
+                    source: appendieDocumentsDataAdapter,
+                    pageable: true,
+                    autorowheight: false,
+                    columnsresize: true,
+                    altrows: false,
+                    editable: true,
+                    pagesizeoptions: ["5", "10", "20"],
+                    localization: getLocalization('@CurrentLanguage.Name'),
+                    selectionmode: 'singlerow',
+                    editmode: 'singlecell',
+                    showstatusbar: false,
+                    showtoolbar: true,
+                    rendertoolbar: function (toolbar) {
+                        const container = $(`<div class="btn-group" style='margin: 2px;'></div>`);
+                        toolbar.append(container);
+                        container.append(`<button id="btnAddAppendieDocuments"
+                                                         type="button"
+                                                         class="btn btn-primary btn-sm"
+                                                          >Thêm mới</button>`);
+                        let btnRemoveAppendieDocuments = $(`<button id="btnRemoveAppendieDocuments"
+                                    type="button"
+                                    class="btn btn-primary btn-sm">
+                                    <i class="fa fa-trash-o"></i> Xóa
+                                    </button>`);
+                        container.append(btnRemoveAppendieDocuments);
+
+                        /*container.append(`<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-default">
+                Copy appendice
+              </button>`);*/
+                        // create new row.
+                        $('#btnAddAppendieDocuments').on('click', function () {
+                            const datarow = {
+                                id: -1,
+                                name: '',
+                                code: '',
+                                documentNumber: '',
+                                reviewNumber: '',
+                                fileName: ''
+                            };
+                            observableSourceAppendieDocuments.push(datarow);
+                        });
+
+                        btnRemoveAppendieDocuments.click(function () {
+                            const selectedrowindex = grdAppendieDocuments.jqxGrid('getselectedrowindex');
+                            const rowscount = grdAppendieDocuments.jqxGrid('getdatainformation').rowscount;
+                            if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
+                                observableSourceAppendieDocuments.splice(selectedrowindex, 1);
+                            }
+                        });
+                    },
+                    columns: [
+                        {
+                            text: 'STT',
+                            sortable: false,
+                            filterable: false,
+                            editable: false,
+                            groupable: false,
+                            draggable: false,
+                            pinned: true,
+                            datafield: '',
+                            columntype: 'number',
+                            width: 40,
+                            cellsrenderer: function (row, column, value) {
+                                return "<div style='margin:4px;'>" + (value + 1) + "</div>";
+                            }
+                        },
+                        {
+                            text: documentNameText,
+                            columntype: 'textbox',
+                            datafield: 'name',
+                            pinned: false,
+                            editable: true,
+                            width: 300,
+                            validation: function (cell, value) {
+                                if (isVariableHaveDefaultVal(value)) {
+                                    return { result: false, message: "Tên phụ lục không được bỏ trống(Enter để update thông tin)" };
+                                }
+
+                                if (isExistsAppendice(value, cell.row)) {
+                                    return { result: false, message: "Tên phụ lục đã tồn tại trong danh sách" };
+                                }
+
+                                updateAppendiceFile(observableSourceAppendieDocuments[cell.row].fileName, value);
+                                return true;
+                            }
+                        },
+                        {
+                            text: 'File',
+                            columntype: 'template',
+                            datafield: 'fileName',
+                            pinned: false,
+                            editable: true,
+                            createeditor: function (row, cellvalue, editor, celltext, cellwidth, cellheight) {
+                                let fileUpload = $(`<input name="appendiceFile" data-name="${observableSourceAppendieDocuments[row].name}" type="file"/>`).prependTo(editor);
+                                fileUpload.change(function (e) {
+                                    if (!isVariableHaveDefaultVal(e.target.files[0])) {
+                                       addFileToAppendiceFiles(e.target.files[0], $(this).attr('data-name'));
+                                    }
+                                });
+                            },
+                            initeditor: function (row, cellvalue, editor, celltext, pressedChar) {
+                                const file = getFileAppendice(observableSourceAppendieDocuments[row].name);
+                                if (!isVariableHaveDefaultVal(file)) {
+                                    let list = new DataTransfer();
+                                    list.items.add(file.file);
+                                    editor.find(`input[name=appendiceFile]`).attr('data-name', observableSourceAppendieDocuments[row].name);
+                                    editor.find(`input[name=appendiceFile]`).prop('files', list.files);
+                                }
+                            },
+                            geteditorvalue: function (row, cellvalue, editor) {
+                                const file = getFileAppendice(observableSourceAppendieDocuments[row].name);
+                                if (!isVariableHaveDefaultVal(file)) {
+                                    return file.file.name;
+                                }
+                                return '';
+                            },
+                            validation: function (cell, value) {
+                                if (isVariableHaveDefaultVal(observableSourceAppendieDocuments[cell.row].name)) {
+                                    return { result: false, message: "Vui lòng nhập tên phụ lục trước khi attach file" };
+                                }
+                                const file = getFileAppendice(observableSourceAppendieDocuments[cell.row].name);
+                                if (isVariableHaveDefaultVal(file)) {
+                                    return { result: false, message: "File phụ lục không được bỏ trống(Enter để update thông tin)" };
+                                }
+                                return true;
+                            },
+                            width: 300
+                        },
+                        {
+                            text: documentNumberText,
+                            columntype: 'textbox',
+                            datafield: 'documentNumber',
+                            hidden: true,
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        },
+                        {
+                            text: reviewNumberText,
+                            columntype: 'textbox',
+                            datafield: 'reviewNumber',
+                            hidden: false,
+                            pinned: false,
+                            editable: true,
+                            width: 300
+                        },
+                        {
+                            text: 'Mã tài liệu',
+                            columntype: 'textbox',
+                            hidden: true,
+                            datafield: 'code',
+                            pinned: false,
+                            editable: false,
+                            width: 300
+                        }
+                    ]
+                });
+        }
+
+        function updateAppendiceFile(fileName, appendiceName) {
+            const index = appendiceFiles.findIndex(f => {
+                return f.file.name === fileName;
+            });
+
+            if (index >= 0) {
+                appendiceFiles[index].appendiceName = appendiceName;
+            }
+        }
+
+        function addFileToAppendiceFiles(file, appendiceName) {
+            const index = appendiceFiles.findIndex(f => {
+                return f.appendiceName === appendiceName;
+            });
+
+            if (index >= 0) {
+                appendiceFiles[index] = {
+                    appendiceName: appendiceName,
+                    file: file
+                };
+            } else {
+                appendiceFiles.push({
+                    appendiceName: appendiceName,
+                    file: file
+                });
+            }
+        }
+
+        function isExistsAppendice(appendiceName, currentRowIndex) {
+            let index = -1;
+            for (let i = 0; i < appendieDocumentsDataAdapter.records.length; i++) {
+                if (i !== currentRowIndex && appendieDocumentsDataAdapter.records[i].name === appendiceName) {
+                    index = i;
+                    break;
+                }
+            }
+            return index >=0;
+        }
+
+        function getFileAppendice(appendiceName) {
+            const index = appendiceFiles.findIndex(f => {
+                return f.appendiceName === appendiceName;
+            });
+            return appendiceFiles[index];
+        }
+
+        function getAppendices() {
+            let appendices = appendieDocumentsDataAdapter.records.filter(function (d) {
+                if (!isVariableHaveDefaultVal(d.name)) {
+                    return true;
+                }
+                return false;
+            });
+            return appendices;
+        }
     </script>
     <!--Script get masterdata-->
     <script>
@@ -1242,6 +1548,7 @@
         const getAllStatusesUrl = `${hostUrl}/api/statuses/getallstatuses`;
         const getAllPromulgateStatusesUrl = `${hostUrl}/api/promulgatestatuses/getallpromulgatestatuses`;
         const createDocumentUrl = `${hostUrl}/api/documents/review`;
+        const createAndReleaseDocumentUrl = `${hostUrl}/api/documents/reviewandrelease`;
 
         // Get all statuses
         function getAllStatuses() {
@@ -1281,6 +1588,7 @@
                             fileName: document.fileName,
                             folderName: document.folderName,
                             documentNumber: document.documentNumber,
+                            appendices: document.appendices,
                             reviewNumber: document.reviewNumber,
                             effectiveDate: document.effectiveDate,
                             reviewDate: document.reviewDate
@@ -1296,6 +1604,10 @@
                 function (data) {
                     departments = data.map((department) => {
                         return { id: department.code, text: department.name };
+                    });
+
+                    groups = data.map((department) => {
+                        return { id: department.code, text: department.name, email: department.email };
                     });
                 });
         }
@@ -1366,6 +1678,20 @@
             return $(`<span>${text}</span>`);
         }
 
+        function formatGroupSelection(group) {
+            if (!group.id)
+                return group.text;
+            const text = group.text;
+            return $(`<span>${text}</span>`);
+        }
+
+        function formatGroupResult(group) {
+            if (!group.id)
+                return group.text;
+            const text = group.text;
+            return $(`<span>${text}</span><div><small style="color: #a5a0a0">Email: ${group.email}</small></div>`);
+        }
+
         $('#Code').val(genDocumentCode());
         $('#ReviewNumber').inputmask("99/99", {
             placeholder: "00/00",
@@ -1375,7 +1701,7 @@
             getAllDepartments(),
             getAllCompanies(),
             getAllDocumentTypes(),
-            getAllGroupsFromActiveDirectory(),
+            //getAllGroupsFromActiveDirectory(),
             getAllModules(),
             getAllDocuments(),
             getAllStatuses(),
@@ -1412,7 +1738,9 @@
             });
 
             $ScopeOfDeloyment.select2({
-                data: groups
+                data: groups,
+                templateResult: formatGroupResult,
+                templateSelection: formatGroupSelection
             });
 
             $Module.select2({
@@ -1430,6 +1758,8 @@
             initGrdReplaceOf();
 
             initGrdRelateToDocuments();
+
+            initGrdAppendieDocuments();
             // all requests finished successfully
         }).catch(() => {
             // all requests finished but one or more failed
@@ -1447,18 +1777,26 @@
             //formData[0] contain form data only
             // You can directly make object via using form id but it require all ajax operation inside $("form").submit(<!-- Ajax Here   -->)
             formData = new FormData(formData[0]);
-            for (var i = 0, len = storedFiles.length; i < len; i++) {
+            for (let i = 0, len = storedFiles.length; i < len; i++) {
                 formData.append('files', storedFiles[i]);
             }
 
-            if (!isVariableHaveDefaltVal($Approver.val()))
+            // Appendice files
+            for (let i = 0; i < appendiceFiles.length; i++) {
+                formData.append('appendiceFiles', appendiceFiles[i].file);
+            }
+
+            const appendices = getAppendices();
+            objectToFormData(appendices, formData, 'appendices', []);
+
+            if (!isVariableHaveDefaultVal($Approver.val()))
                 formData.set('Approver', $Approver.val().join(';'));
-            if (!isVariableHaveDefaltVal($Auditor.val()))
+            if (!isVariableHaveDefaultVal($Auditor.val()))
                 formData.set('Auditor', $Auditor.val().join(';'));
-            if (!isVariableHaveDefaltVal($Drafter.val()))
+            if (!isVariableHaveDefaultVal($Drafter.val()))
                 formData.set('Drafter', $Drafter.val().join(';'));
-            if (!isVariableHaveDefaltVal($ScopeOfDeloyment.val()))
-                formData.set('ScopeOfDeployment', $ScopeOfDeloyment.val().join(';'));
+            if (!isVariableHaveDefaultVal($ScopeOfDeloyment.val()))
+                formData.set('ScopeOfDeloyment', $ScopeOfDeloyment.val().join(';'));
 
             const replaceToDocuments = getReplaceToDocuments().map((document) => document.code);
             const relateToDocuments = getRelateToDocuments().map((document) => document.code);
@@ -1468,6 +1806,58 @@
 
             $.ajax({
                 url: createDocumentUrl,
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (event, settings, xhr) {
+                    xhr.message = {
+                        infor: 'Soán xét tài liệu thành công',
+                        returnUrl: `${hostUrl}/document/list`
+                    };
+                }
+            });
+        }
+
+        function createAndRelease() {
+            // Create an FormData object
+            let formData = $("#formDocument").submit(function (e) {
+                e.preventDefault();
+                return;
+            });
+            //formData[0] contain form data only
+            // You can directly make object via using form id but it require all ajax operation inside $("form").submit(<!-- Ajax Here   -->)
+            formData = new FormData(formData[0]);
+            for (let i = 0, len = storedFiles.length; i < len; i++) {
+                formData.append('files', storedFiles[i]);
+            }
+
+            // Appendice files
+            for (let i = 0; i < appendiceFiles.length; i++) {
+                formData.append('appendiceFiles', appendiceFiles[i].file);
+            }
+
+            const appendices = getAppendices();
+            objectToFormData(appendices, formData, 'appendices', []);
+
+            if (!isVariableHaveDefaultVal($Approver.val()))
+                formData.set('Approver', $Approver.val().join(';'));
+            if (!isVariableHaveDefaultVal($Auditor.val()))
+                formData.set('Auditor', $Auditor.val().join(';'));
+            if (!isVariableHaveDefaultVal($Drafter.val()))
+                formData.set('Drafter', $Drafter.val().join(';'));
+            if (!isVariableHaveDefaultVal($ScopeOfDeloyment.val()))
+                formData.set('ScopeOfDeloyment', $ScopeOfDeloyment.val().join(';'));
+
+            const replaceToDocuments = getReplaceToDocuments().map((document) => document.code);
+            const relateToDocuments = getRelateToDocuments().map((document) => document.code);
+
+            formData.set('ReplaceOf', replaceToDocuments.join(';'));
+            formData.set('RelateToDocuments', relateToDocuments.join(';'));
+
+            $.ajax({
+                url: createAndReleaseDocumentUrl,
                 type: "POST",
                 data: formData,
                 contentType: false,
@@ -1517,19 +1907,25 @@
 
             $("#formDocument").submit(function (e) {
                 e.preventDefault();
-                create();
+                // Get the submit button element
+                let btn = $(this).find("button[type=submit]:focus");
+                if (btn.id === 'btnSubmit') {
+                    create();
+                } else {
+                    createAndRelease();
+                }
             });
 
             $CompanyCode.on('change', function (e) {
                 const selectedCompany = $CompanyCode.select2('data');
-                if (!isVariableHaveDefaltVal(selectedCompany)) {
+                if (!isVariableHaveDefaultVal(selectedCompany)) {
                     $CompanyName.val(selectedCompany[0].text);
                 }
             });
 
             $DepartmentCode.on('change', function (e) {
                 const selectedDepartment = $DepartmentCode.select2('data');
-                if (!isVariableHaveDefaltVal(selectedDepartment)) {
+                if (!isVariableHaveDefaultVal(selectedDepartment)) {
                     $DepartmentName.val(selectedDepartment[0].text);
                 }
             });

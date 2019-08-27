@@ -1,0 +1,143 @@
+﻿
+@{
+    ViewBag.Title = L(DocumentResourceNames.DocumentList);
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section styles{
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.light.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/jquery-ui.css" type="text/css" />
+    <link rel="stylesheet" href="~/Scripts/pqgrid/pqgrid.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/Scripts/pqgrid/themes/Office/pqgrid.css" type="text/css" />
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-info">
+            <div class="box-header">
+                <h3 class="box-title">@L(DocumentResourceNames.DocumentList)</h3>
+                <div class="box-tools pull-right">
+                </div>
+                <div class="mailbox-controls form-inline">
+                    <div class="btn-group">
+                        <!-- Check all button -->
+                        @*<a href="@Url.ActionWithHost("DataExport", "ExportAllAirTicketToExcel")" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.ExportToExcel)</a>
+                            <a href="@Url.Action("Create")" class="btn btn-success btn-sm">
+                                <i class="fa fa-plus" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.AddNew)
+                            </a>*@
+                    </div>
+                    <div class="box-tools pull-right">
+                        <div class="input-group pull-right">
+                            <div class="input-group-addon">
+                                <i id="code-help"
+                                   class="fa fa-info-circle red-text"
+                                   data-toggle="tooltip"
+                                   data-placement="bottom"
+                                   title="Chọn tìm kiếm nâng cao sẽ tìm kiếm thông tin liên quan trong file đính kèm và loại bỏ tiếng việt có dấu. Lưu ý: sẽ lâu hơn tìm kiếm thông tin bình thường"></i>
+                            </div>
+                            <input id="txtSearch"
+                                   class="form-control"
+                                   placeholder="@Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Search)" />
+
+                            <div class="input-group-addon" style="width: 100px">
+                                <label class="checkbox-inline" style="padding-left: 0px">
+                                    <span class="form-group inline-block">
+                                        <input type="checkbox" id="AdvancedSearch" /> Nâng cao
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div id='jqxWidget'>
+                        <table id="grdDocument"></table>
+                        <div id="grDocumentPager"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <!--Auto numeric-->
+    <script src="~/Scripts/autoNumeric-1.9.41.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/pqgrid/pqgrid.min.js"></script>
+
+    <script type="text/javascript" src="~/Scripts/jqGrid/js/i18n/grid.locale-vi.js"></script>
+
+    <script>
+        const updateDocumentUrl = `${hostUrl}/document/update`;
+        const documentCodeText = '@L(DocumentResourceNames.Code)';
+        const documentNameText = '@L(DocumentResourceNames.Name)';
+        const companyText = '@L(DocumentResourceNames.CompanyCode)';
+        const departmentText = '@L(DocumentResourceNames.DepartmentCode)';
+        const moduleText = '@L(DocumentResourceNames.Module)';
+        const documentNumberText = '@L(DocumentResourceNames.DocumentNumber)';
+        const reviewNumberText = '@L(DocumentResourceNames.ReviewNumber)';
+        const documentTypeText = '@L(DocumentResourceNames.DocumentType)';
+        const relateDocumentText = '@L(DocumentResourceNames.RelateToDocuments)';
+        const replaceOfText = '@L(DocumentResourceNames.ReplaceOf)';
+    </script>
+    <script>
+        const txtSearch = $('#txtSearch');
+        const grdDocument = $("#grdDocument");
+        txtSearch.on("keyup", function (event) {
+            const key = event.charCode ? event.charCode : event.keyCode ? event.keyCode : 0;
+            if (key === 13) {
+
+            }
+        });
+
+        let documents = [];
+
+
+        $(document).ready(function () {
+            $('#AdvancedSearch').jqxCheckBox({ width: '90px', height: '20px' });
+            $('#AdvancedSearch').jqxCheckBox('uncheck');
+
+            let colM = [
+                { title: "Company", width: 100, dataIndx: "companyName" },
+                { title: "Department", width: 130, dataIndx: "departmentName" },
+                { title: "Document Name", width: 190, dataIndx: "documentName" },
+            ];
+
+            let dataModel = {
+                location: "remote",
+                dataType: "JSON",
+                method: "GET",
+                url: '@Url.ActionApiWithHost("documents", "searchdocumentsforpqgrid")',
+                getData: function (dataJSON) {
+                    var data = dataJSON.data;
+                    return { curPage: dataJSON.curPage, totalRecords: dataJSON.total, data: data };
+                },
+                beforeSend: function (jqXHR, settings) { console.log(jqXHR); }
+            };
+
+            grdDocument.pqGrid({
+                width: 800, height: 450,
+                dataModel: dataModel,
+                colModel: colM,
+                freezeCols: 2,
+                pageModel: { type: "remote", rPP: 20, strRpp: "{0}" },
+                sortable: false,
+                selectionModel: { swipe: false },
+                wrap: false, hwrap: false,
+                //virtualX:false,
+                numberCell: { resizable: true, width: 30, title: "#" },
+                title: "Shipping Orders",
+                resizable: true
+            });
+
+            $('#AdvancedSearch').on('change', function (event) {
+
+            });
+        });
+
+    </script>
+}

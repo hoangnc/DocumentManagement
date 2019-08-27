@@ -54,9 +54,7 @@ namespace DocumentManagement.Mvc
 
             builder.RegisterType<PermissionChecker>()
                 .As<IPermissionChecker>()
-                .InstancePerRequest();
-
-
+                .SingleInstance();
 
             ILocalizationConfiguration localization = new LocalizationConfiguration();
             localization.Languages.Add(new LanguageInfo("en", "English", icon: "famfamfam-flag-england", isDefault: false));
@@ -109,6 +107,7 @@ namespace DocumentManagement.Mvc
                 .InstancePerRequest();
 
             IAppCache cache = new CachingService(CachingService.DefaultCacheProvider);
+            cache.DefaultCachePolicy.DefaultCacheDurationSeconds = 60 * 3600;
             builder.Register(c => cache)
                 .As<IAppCache>()
                 .SingleInstance();

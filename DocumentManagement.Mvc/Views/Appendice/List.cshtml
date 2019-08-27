@@ -18,7 +18,7 @@
                 <div class="mailbox-controls form-inline">
                     <div class="btn-group">
                         <!-- Check all button -->
-                        <a href="@Url.ActionWithHost("DataExport", "ExportAllAirTicketToExcel")" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.ExportToExcel)</a>
+                        <!--<a href="@Url.ActionWithHost("DataExport", "ExportAllAirTicketToExcel")" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.ExportToExcel)</a>-->
                         <a href="@Url.Action("Create")" class="btn btn-success btn-sm">
                             <i class="fa fa-plus" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.AddNew)
                         </a>
@@ -59,9 +59,6 @@
 
 @section scripts
 {
-    <script>
-        const hostUrl = '@Url.GetHost()';
-    </script>
     <!--Auto numeric-->
     <script src="~/Scripts/autoNumeric-1.9.41.js"></script>
     <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcore.js"></script>
@@ -91,7 +88,6 @@
         Globalize.cultureSelector = '@CurrentLanguage.Name';
     </script>
     <script>
-        const uploadFileRootPath = '/Uploads';
         const updateDocumentUrl = `${hostUrl}/document/update`;
         const documentCodeText = '@L(DocumentResourceNames.Code)';
         const documentNameText = '@L(DocumentResourceNames.Name)';
@@ -101,6 +97,7 @@
         const documentNumberText = '@L(DocumentResourceNames.DocumentNumber)';
         const reviewNumberText = '@L(DocumentResourceNames.ReviewNumber)';
         const documentTypeText = '@L(DocumentResourceNames.DocumentType)';
+        const relateDocumentText = '@L(DocumentResourceNames.RelateToDocuments)';
     </script>
     <script>
         const txtSearch = $('#txtSearch');
@@ -147,10 +144,15 @@
                     { name: 'description', type: 'string' },
                     { name: 'fileName', type: 'string' },
                     { name: 'folderName', type: 'string' },
+                    { name: 'relateToDocuments', type: 'string' },
                     { name: 'contentChange', type: 'string'}
                 ],
             root: 'data',
-            beforeprocessing: function (data) { source.totalrecords = data.total; }
+            beforeprocessing: function (data) {
+                source.totalrecords = data.total;
+                grdDocument.jqxGrid('addgroup', 'companyName');
+                grdDocument.jqxGrid('addgroup', 'departmentName');
+            }
         };
         let dataAdapter = new $.jqx.dataAdapter(source,
             {
@@ -175,15 +177,13 @@
                     editable: true,
                     sortable: true,
                     groupable: true,
+                    groupsrenderer: groupsrenderer,
+                    showgroupsheader: false,
                     pagesizeoptions: ["20", "40", "60"],
                     localization: getLocalization('@CurrentLanguage.Name'),
                     selectionmode: 'singlerow',
                     editmode: 'singlecell',
                     showstatusbar: false,
-                    virtualMode: true,
-                    renderGridRows: function (obj) {
-                        return obj.data;
-                    },
                     columns: [
                         {
                             text: 'STT',
@@ -224,12 +224,12 @@
                                 const element = $(defaultHtml);
                                 const fileNames = value.split(';');
                                 const folderName = dataAdapter.records[row].folderName;
-                                if (!isVariableHaveDefaltVal(fileNames)
-                                    && !isVariableHaveDefaltVal(folderName)) {
+                                if (!isVariableHaveDefaultVal(fileNames)
+                                    && !isVariableHaveDefaultVal(folderName)) {
                                     if (fileNames.length > 0) {
                                         let html = '';
                                         for (let index = 0; index < fileNames.length; index++) {
-                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
+                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
                                                 const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
                                                 let fileIcon = 'fa fa-file-o';
                                                 switch (getFileExtension(fileNames[index])) {
@@ -252,7 +252,7 @@
                                                 html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
-                                        if (!isVariableHaveDefaltVal(html)) {
+                                        if (!isVariableHaveDefaultVal(html)) {
                                             element.html(html);
                                         }
                                     }
@@ -269,11 +269,38 @@
                             width: 200
                         },
                         {
+                            text: relateDocumentText,
+                            columntype: 'textbox',
+                            datafield: 'relateToDocuments',
+                            editable: false,
+                            width: 150,
+                            cellsrenderer: function (row, column, value, defaultHtml) {
+                                const element = $(defaultHtml);
+                                const documents = value.split(';');
+                                if (!isVariableHaveDefaultVal(documents)) {
+                                    if (documents.length > 0) {
+                                        let html = '';
+                                        for (let index = 0; index < documents.length; index++) {
+                                            if (!isVariableHaveDefaultVal(documents[index])) {
+                                                html = html + `<a target="_blank" href="/document/detail?code=${documents[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                            }
+                                        }
+                                        if (!isVariableHaveDefaultVal(html)) {
+                                            element.html(html);
+                                        }
+                                    }
+                                }
+                                return element[0].outerHTML;
+                            }
+                        },
+
+                        {
                             text: companyText,
                             columntype: 'textbox',
                             datafield: 'companyName',
                             pinned: false,
                             editable: false,
+                            hidden: true,
                             width: 150
                         },
                         {
@@ -281,6 +308,7 @@
                             columntype: 'textbox',
                             datafield: 'departmentName',
                             pinned: false,
+                            hidden: true,
                             editable: false,
                             width: 150
                         },
@@ -296,6 +324,7 @@
                             columntype: 'textbox',
                             datafield: 'firstName',
                             editable: false,
+                            hidden: true,
                             width: 150
                         },
                         {
@@ -303,6 +332,7 @@
                             columntype: 'textbox',
                             datafield: 'documentNumber',
                             editable: false,
+                            hidden: true,
                             width: 150
                         },
                         {

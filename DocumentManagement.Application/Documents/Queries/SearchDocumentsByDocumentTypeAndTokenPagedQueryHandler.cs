@@ -1,21 +1,13 @@
-﻿using DocumentManagement.Application.Mapper;
-using DocumentManagement.Domain.Entities;
+﻿using DocumentManagement.Domain.Entities;
 using DocumentManagement.Persistence;
 using DT.Core.Data;
 using DT.Core.Data.Models;
 using DT.Core.Data.Paged;
-using DT.Core.Helper;
 using DT.Core.Text;
 using MediatR;
-using OfficeOpenXml;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
-using Xceed.Words.NET;
 
 namespace DocumentManagement.Application.Documents.Queries
 {
@@ -30,7 +22,8 @@ namespace DocumentManagement.Application.Documents.Queries
         public async Task<DataSourceResult> Handle(SearchDocumentsByDocumentTypeAndTokenPagedQuery request, CancellationToken cancellationToken)
         {
             IQueryable<Document> query = _context.Documents.AsQueryable();
-            query = query.Where(c => !c.Deleted && c.DocumentType == request.DocumentType);
+            query = query.Where(d => !d.Deleted && d.DocumentType == request.DocumentType
+            && _context.StringSplit(d.ScopeOfDeloyment, ";").Any(a1 => a1.SplitData == request.Department));
 
             request.Token = request.Token?.ToLowerInvariant()?.NonUnicode();
 
@@ -100,13 +93,51 @@ namespace DocumentManagement.Application.Documents.Queries
                 query = query.OrderByDescending(u => u.CreatedOn);
             }
 
-            PagedList<Document> queryResult = new PagedList<Document>();
-            await queryResult.CreateAsync(query, request.DataSourceRequest.PageNum, request.DataSourceRequest.PageSize);
-            List<SearchDocumentsByDocumentTypeAndTokenPagedDto> data = queryResult.Select(u => u.ToSearchDocumentsByDocumentTypeAndTokenPagedDto()).ToList();
+            IQueryable<SearchDocumentsByDocumentTypeAndTokenPagedDto> test = query.Select(document => new SearchDocumentsByDocumentTypeAndTokenPagedDto
+            {
+                Id = document.Id,
+                Approver = document.Approver,
+                Auditor = document.Auditor,
+                Code = document.Code,
+                CompanyCode = document.CompanyCode,
+                CompanyName = document.CompanyName,
+                ContentChange = document.ContentChange,
+                DDCAudited = document.DDCAudited,
+                DepartmentCode = document.DepartmentCode,
+                DepartmentName = document.DepartmentName,
+                Description = document.Description,
+                DocumentNumber = document.DocumentNumber,
+                DocumentType = document.DocumentType,
+                Drafter = document.Drafter,
+                EffectiveDate = document.EffectiveDate,
+                FileName = document.FileName,
+                FolderName = document.FolderName,
+                LinkFile = document.LinkFile,
+                Module = document.Module,
+                Name = document.Name,
+                ReplaceEffectiveDate = document.ReplaceEffectiveDate,
+                ReplaceOf = document.ReplaceOf,
+                RelateToDocuments = document.RelateToDocuments,
+                ListReplaceOf = _context.Documents.
+                Where(d => _context.StringSplit(document.ReplaceOf, ";").Any(a1 => a1.SplitData == d.Code))
+                .Select(d => d.Name)
+                .ToList(),
+                ListRelateToDocuments = _context.Documents.
+                Where(d => _context.StringSplit(document.RelateToDocuments, ";").Any(a1 => a1.SplitData == d.Code))
+                .Select(d => d.Name)
+                .ToList(),
+                ReviewDate = document.ReviewDate,
+                ReviewNumber = document.ReviewNumber,
+                ScopeOfApplication = document.ScopeOfApplication,
+                ScopeOfDeloyment = document.ScopeOfDeloyment
+            });
+
+            PagedList<SearchDocumentsByDocumentTypeAndTokenPagedDto> queryResult = new PagedList<SearchDocumentsByDocumentTypeAndTokenPagedDto>();
+            await queryResult.CreateAsync(test, request.DataSourceRequest.PageNum, request.DataSourceRequest.PageSize);
 
             return new DataSourceResult
             {
-                Data = data,
+                Data = queryResult.ToList(),
                 Total = queryResult.TotalCount
             };
         }

@@ -224,12 +224,12 @@
                                 const element = $(defaultHtml);
                                 const fileNames = value.split(';');
                                 const folderName = dataAdapter.records[row].folderName;
-                                if (!isVariableHaveDefaltVal(fileNames)
-                                    && !isVariableHaveDefaltVal(folderName)) {
+                                if (!isVariableHaveDefaultVal(fileNames)
+                                    && !isVariableHaveDefaultVal(folderName)) {
                                     if (fileNames.length > 0) {
                                         let html = '';
                                         for (let index = 0; index < fileNames.length; index++) {
-                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
+                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
                                                 const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
                                                 let fileIcon = 'fa fa-file-o';
                                                 switch (getFileExtension(fileNames[index])) {
@@ -252,7 +252,7 @@
                                                 html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
-                                        if (!isVariableHaveDefaltVal(html)) {
+                                        if (!isVariableHaveDefaultVal(html)) {
                                             element.html(html);
                                         }
                                     }

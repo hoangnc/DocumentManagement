@@ -38,7 +38,7 @@
     "EffectiveDate": "Effective date",
     "ReviewDate": "Review date",
     "ScopeOfApplication": "Scope of application",
-    "ScopeOfDeloyment": "Scope of deloyment",
+    "ScopeOfDeloyment": "Scope of deployment",
     "ReplaceOf": "Replace of",
     "ReplaceEffectiveDate": "Replace effective date",
     "RelateToDocuments": "Relate to documents",
@@ -49,6 +49,10 @@
     "Status": "Status",
     "Active": "Active",
     "PromulgateStatus": "Promulgate status",
+    "Year": "Year",
+    "MessageCreateDocumentSuccessed": "Release document successed!",
+    "Release": "Release",
+    "SaveAndRelease": "Save and release",
 
     //Appendice
     "AppendiceList": "Appendice list",

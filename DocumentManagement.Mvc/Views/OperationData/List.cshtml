@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Danh sách tài liệu";
+    ViewBag.Title = L(DocumentResourceNames.DocumentList);
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -19,9 +19,9 @@
                     <div class="btn-group">
                         <!-- Check all button -->
                         @*<a href="@Url.ActionWithHost("DataExport", "ExportAllAirTicketToExcel")" class="btn btn-success btn-sm"><i class="fa fa-file-excel-o"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.ExportToExcel)</a>
-                        <a href="@Url.Action("Create")" class="btn btn-success btn-sm">
-                            <i class="fa fa-plus" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.AddNew)
-                        </a>*@
+                            <a href="@Url.Action("Create")" class="btn btn-success btn-sm">
+                                <i class="fa fa-plus" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.AddNew)
+                            </a>*@
                     </div>
                     <div class="box-tools pull-right">
                         <div class="input-group pull-right">
@@ -30,7 +30,7 @@
                                    class="fa fa-info-circle red-text"
                                    data-toggle="tooltip"
                                    data-placement="bottom"
-                                   title="Chọn tìm kiếm nâng cao sẽ tìm kiếm thông tin liên quan trong file đính kèm. Lưu ý: sẽ lâu hơn tìm kiếm thông tin bình thường"></i>
+                                   title="Chọn tìm kiếm nâng cao sẽ tìm kiếm thông tin liên quan trong file đính kèm và loại bỏ tiếng việt có dấu. Lưu ý: sẽ lâu hơn tìm kiếm thông tin bình thường"></i>
                             </div>
                             <input id="txtSearch"
                                    class="form-control"
@@ -59,9 +59,6 @@
 
 @section scripts
 {
-    <script>
-        const hostUrl = '@Url.GetHost()';
-    </script>
     <!--Auto numeric-->
     <script src="~/Scripts/autoNumeric-1.9.41.js"></script>
     <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcore.js"></script>
@@ -91,7 +88,6 @@
         Globalize.cultureSelector = '@CurrentLanguage.Name';
     </script>
     <script>
-        const uploadFileRootPath = '/Uploads';
         const updateDocumentUrl = `${hostUrl}/document/update`;
         const documentCodeText = '@L(DocumentResourceNames.Code)';
         const documentNameText = '@L(DocumentResourceNames.Name)';
@@ -123,13 +119,12 @@
             datatype: "json",
             id: "id",
             cache: false,
-            pagesize: 20,
-            groups: ['companyName', 'departmentName'],
+            pagesize: 100,
             sort: function () {
                 // update the grid and send a request to the server.
                 grdDocument.jqxGrid('updatebounddata', 'sort');
             },
-            pagesizeoptions: ["20", "40", "60"],
+            pagesizeoptions: ["100", "200", "300"],
             datafields:
                 [
                     { name: 'id', type: 'int' },
@@ -147,15 +142,26 @@
                     { name: 'fileName', type: 'string' },
                     { name: 'folderName', type: 'string' },
                     { name: 'replaceOf', type: 'string' },
-                    { name: 'relateToDocuments', type: 'string'},
+                    { name: 'relateToDocuments', type: 'string' },
+                    { name: 'replaceOfName', type: 'string' },
+                    { name: 'relateToDocumentNames', type: 'string' },
                     { name: 'contentChange', type: 'string'}
                 ],
             root: 'data',
             beforeprocessing: function (data) {
                 source.totalrecords = data.total;
+                grdDocument.jqxGrid('cleargroups');
                 grdDocument.jqxGrid('addgroup', 'companyName');
-                grdDocument.jqxGrid('addgroup','departmentName');
+                grdDocument.jqxGrid('addgroup', 'departmentName');
+                grdDocument.jqxGrid('addgroup', 'name');
+            },
+            loadComplete: function (data) {
+                source.totalrecords = data.total;
+            },
+            pager: function (pagenum, pagesize, oldpagenum) {
+                // callback called when a page or page size is changed.
             }
+
         };
         let dataAdapter = new $.jqx.dataAdapter(source,
             {
@@ -181,12 +187,18 @@
                     sortable: true,
                     groupable: true,
                     showgroupsheader: false,
-                    // groups: ['companyName', 'departmentName'],
-                    pagesizeoptions: ["20", "40", "60"],
+                    groupsrenderer: groupsrenderer,
+                    pagesizeoptions: ["100", "200", "300"],
                     localization: getLocalization('@CurrentLanguage.Name'),
                     selectionmode: 'singlerow',
                     editmode: 'singlecell',
                     showstatusbar: false,
+                    //groups: ['companyName', 'departmentName', 'name'],
+                   /* virtualmode: true,
+                    rendergridrows: function (obj) {
+                        console.log(obj);
+                        return obj.data;
+                    },*/
                     columns: [
                         {
                             text: 'STT',
@@ -211,9 +223,10 @@
                             editable: false,
                             width: 100,
                             cellsrenderer: function (row, column, value, defaultHtml) {
+                                console.log('hehehe ');
                                 const element = $(defaultHtml);
                                // element.html(`<a href="${updateDocumentUrl}?id=${dataAdapter.records[row].id}"> <i class="fa fa-pencil"></i> ${value} </a>`);
-                                element.html(`<a target="_blank" href="/document/detail?code=${dataAdapter.records[row].code}"> <i class="fa fa-pencil"></i> ${value} </a>`);
+                                element.html(`<a target="_blank" href="/operationdata/detail?code=${dataAdapter.records[row].code}"> <i class="fa fa-pencil"></i> ${value} </a>`);
                                 return element[0].outerHTML;
                             }
                         },
@@ -228,13 +241,13 @@
                                 const element = $(defaultHtml);
                                 const fileNames = value.split(';');
                                 const folderName = dataAdapter.records[row].folderName;
-                                if (!isVariableHaveDefaltVal(fileNames)
-                                    && !isVariableHaveDefaltVal(folderName)) {
+                                if (!isVariableHaveDefaultVal(fileNames)
+                                    && !isVariableHaveDefaultVal(folderName)) {
                                     if (fileNames.length > 0) {
                                         let html = '';
                                         for (let index = 0; index < fileNames.length; index++) {
-                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
-                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
+                                                const filePath = `${folderName}/${fileNames[index]}`;
                                                 let fileIcon = 'fa fa-file-o';
                                                 switch (getFileExtension(fileNames[index])) {
                                                     case 'pdf':
@@ -253,10 +266,10 @@
                                                         fileIcon = 'fa fa-file-word-o';
                                                         break;
                                                 }
-                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                                html = html + `<a target="_blank" href="/downloadfile/viewfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
-                                        if (!isVariableHaveDefaltVal(html)) {
+                                        if (!isVariableHaveDefaultVal(html)) {
                                             element.html(html);
                                         }
                                     }
@@ -300,22 +313,26 @@
                         {
                             text: replaceOfText,
                             columntype: 'textbox',
-                            datafield: 'replaceOf',
+                            datafield: 'replaceOfName',
                             editable: false,
                             width: 150,
                             cellsrenderer: function (row, column, value, defaultHtml) {
                                 const element = $(defaultHtml);
-                                const documents = value.split(';');
-                                if (!isVariableHaveDefaltVal(documents)) {
-                                    if (documents.length > 0) {
-                                        let html = '';
-                                        for (let index = 0; index < documents.length; index++) {
-                                            if (!isVariableHaveDefaltVal(documents[index])) {
-                                                html = html + `<a target="_blank" href="/document/detail?code=${documents[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                if (!isVariableHaveDefaultVal(value)) {
+                                    const documents = value.split(';');
+
+                                    if (!isVariableHaveDefaultVal(documents)) {
+                                        if (documents.length > 0) {
+                                            const documentCodes = dataAdapter.records[row].replaceOf.split(';');
+                                            let html = '';
+                                            for (let index = 0; index < documents.length; index++) {
+                                                if (!isVariableHaveDefaultVal(documents[index])) {
+                                                    html = html + `<a target="_blank" href="/operationdata/detail?code=${documentCodes[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                                }
                                             }
-                                        }
-                                        if (!isVariableHaveDefaltVal(html)) {
-                                            element.html(html);
+                                            if (!isVariableHaveDefaultVal(html)) {
+                                                element.html(html);
+                                            }
                                         }
                                     }
                                 }
@@ -325,22 +342,27 @@
                         {
                             text: relateDocumentText,
                             columntype: 'textbox',
-                            datafield: 'relateToDocuments',
+                            datafield: 'relateToDocumentNames',
                             editable: false,
                             width: 150,
                             cellsrenderer: function (row, column, value, defaultHtml) {
                                 const element = $(defaultHtml);
-                                const documents = value.split(';');
-                                if (!isVariableHaveDefaltVal(documents)) {
-                                    if (documents.length > 0) {
-                                        let html = '';
-                                        for (let index = 0; index < documents.length; index++) {
-                                            if (!isVariableHaveDefaltVal(documents[index])) {
-                                                html = html + `<a target="_blank" href="/document/detail?code=${documents[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                if (!isVariableHaveDefaultVal(value)) {
+                                    const documents = value.split(';');
+
+                                    if (!isVariableHaveDefaultVal(documents)) {
+
+                                        if (documents.length > 0) {
+                                            const documentCodes = dataAdapter.records[row].relateToDocuments.split(';');
+                                            let html = '';
+                                            for (let index = 0; index < documents.length; index++) {
+                                                if (!isVariableHaveDefaultVal(documents[index])) {
+                                                    html = html + `<a target="_blank" href="/operationdata/detail?code=${documentCodes[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                                }
                                             }
-                                        }
-                                        if (!isVariableHaveDefaltVal(html)) {
-                                            element.html(html);
+                                            if (!isVariableHaveDefaultVal(html)) {
+                                                element.html(html);
+                                            }
                                         }
                                     }
                                 }

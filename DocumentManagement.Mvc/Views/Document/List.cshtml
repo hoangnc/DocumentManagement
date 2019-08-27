@@ -1,12 +1,17 @@
 ﻿
 @{
-    ViewBag.Title = "Danh sách tài liệu";
+    ViewBag.Title = L(DocumentResourceNames.DocumentList);
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section styles{
     <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.base.css" type="text/css" />
     <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.light.css" type="text/css" />
+    <style>
+        .ui-datepicker-calendar {
+            display: none;
+        }
+    </style>
 }
 <div class="row">
     <div class="col-xs-12">
@@ -23,6 +28,18 @@
                             <i class="fa fa-plus" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.AddNew)
                         </a>
                     </div>
+                    <div class="input-group">
+                        <input type="text"
+                               class="form-control"
+                               id="txtDateSendMail">
+                        <span class="input-group-btn">
+                            <button type="button"
+                                    class="btn btn-success btn-flat"
+                                    id="btnSendMail">
+                                Send mail
+                            </button>
+                        </span>
+                    </div>
                     <div class="box-tools pull-right">
                         <div class="input-group pull-right">
                             <div class="input-group-addon">
@@ -30,7 +47,7 @@
                                    class="fa fa-info-circle red-text"
                                    data-toggle="tooltip"
                                    data-placement="bottom"
-                                   title="Chọn tìm kiếm nâng cao sẽ tìm kiếm thông tin liên quan trong file đính kèm. Lưu ý: sẽ lâu hơn tìm kiếm thông tin bình thường"></i>
+                                   title="Chọn tìm kiếm nâng cao sẽ tìm kiếm thông tin liên quan trong file đính kèm và loại bỏ tiếng việt có dấu. Lưu ý: sẽ lâu hơn tìm kiếm thông tin bình thường"></i>
                             </div>
                             <input id="txtSearch"
                                    class="form-control"
@@ -59,9 +76,10 @@
 
 @section scripts
 {
-    <script>
-        const hostUrl = '@Url.GetHost()';
-    </script>
+    <!-- InputMask -->
+    <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.js"></script>
+    <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+    <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.extensions.js"></script>
     <!--Auto numeric-->
     <script src="~/Scripts/autoNumeric-1.9.41.js"></script>
     <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcore.js"></script>
@@ -91,8 +109,8 @@
         Globalize.cultureSelector = '@CurrentLanguage.Name';
     </script>
     <script>
-        const uploadFileRootPath = '/Uploads';
         const updateDocumentUrl = `${hostUrl}/document/update`;
+        const sendMailDocumentByMonthUrl = `${hostUrl}/api/documents/sendmaildocumentbymonth`;
         const documentCodeText = '@L(DocumentResourceNames.Code)';
         const documentNameText = '@L(DocumentResourceNames.Name)';
         const companyText = '@L(DocumentResourceNames.CompanyCode)';
@@ -104,6 +122,43 @@
         const relateDocumentText = '@L(DocumentResourceNames.RelateToDocuments)';
         const replaceOfText = '@L(DocumentResourceNames.ReplaceOf)';
     </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#txtDateSendMail').val(moment().format('MM/YYYY'));
+            $('#txtDateSendMail').inputmask("99/9999", { "placeholder": "mm/yyyy" });
+            $('#btnSendMail').click(function () {
+
+                const dateStr = $('#txtDateSendMail').val();
+                let date = moment();
+                if (isVariableHaveDefaultVal(dateStr)) {
+                    $('#txtDateSendMail').val(date.format('MM/YYYY'));
+                } else {
+                    date = moment(dateStr, 'MM/YYYY', false);
+                }
+                
+                const data = {
+                    year: parseInt(date.format('YYYY')),
+                    month: parseInt(date.format('MM')) 
+                };
+
+                $.ajax({
+                    url: sendMailDocumentByMonthUrl,
+                    type: "POST",
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    processData: false,
+                    cache: false,
+                    success: function (event, settings, xhr) {
+                        xhr.message = {
+                            infor: '@L(DocumentResourceNames.MessageCreateDocumentSuccessed)'
+                        };
+                    }
+                });
+            });
+        });
+    </script>
+
     <script>
         const txtSearch = $('#txtSearch');
         const grdDocument = $("#grdDocument");
@@ -129,12 +184,12 @@
                 commit(true);
             },
             cache: false,
-            pagesize: 20,
+            pagesize: 100,
             sort: function () {
                 // update the grid and send a request to the server.
                 grdDocument.jqxGrid('updatebounddata', 'sort');
             },
-            pagesizeoptions: ["20", "40", "60"],
+            pagesizeoptions: ["100", "200", "500"],
             datafields:
                 [
                     { name: 'id', type: 'int' },
@@ -143,6 +198,7 @@
                     { name: 'departmentName', type: 'string' },
                     { name: 'module', type: 'string' },
                     { name: 'documentType', type: 'string' },
+                    { name: 'documentTypeName', type: 'string' },
                     { name: 'name', type: 'string' },
                     { name: 'documentNumber', type: 'string' },
                     { name: 'reviewNumber', type: 'string' },
@@ -150,15 +206,22 @@
                     { name: 'fileName', type: 'string' },
                     { name: 'folderName', type: 'string' },
                     { name: 'replaceOf', type: 'string' },
-                    { name: 'relateToDocuments', type: 'string'},
-                    { name: 'contentChange', type: 'string'}
+                    { name: 'relateToDocuments', type: 'string' },
+                    { name: 'contentChange', type: 'string' },
+                    { name: 'replaceOfName', type: 'string' },
+                    { name: 'relateToDocumentNames', type: 'string' },
                 ],
             root: 'data',
             beforeprocessing: function (data) {
                 source.totalrecords = data.total;
                 grdDocument.jqxGrid('addgroup', 'companyName');
                 grdDocument.jqxGrid('addgroup', 'departmentName');
-                grdDocument.jqxGrid('addgroup', 'documentType');
+                grdDocument.jqxGrid('addgroup', 'documentTypeName');
+                grdDocument.jqxGrid('addgroup', 'name');
+                console.log(source.totalrecords);
+            },
+            loadComplete: function (data) {
+                source.totalrecords = data.total;              
             }
         };
         let dataAdapter = new $.jqx.dataAdapter(source,
@@ -184,9 +247,9 @@
                     editable: true,
                     sortable: true,
                     groupable: true,
-                    //groups: ['companyName', 'departmentName'],
+                    groupsrenderer: groupsrenderer,
                     showgroupsheader: false,
-                    pagesizeoptions: ["20", "40", "60"],
+                    pagesizeoptions: ["100", "200", "500"],
                     localization: getLocalization('@CurrentLanguage.Name'),
                     selectionmode: 'singlerow',
                     editmode: 'singlecell',
@@ -216,9 +279,9 @@
                             width: 100,
                             cellsrenderer: function (row, column, value, defaultHtml) {
                                 const element = $(defaultHtml);
-                                //element.html(`<a href="${updateDocumentUrl}?id=${dataAdapter.records[row].id}"> <i class="fa fa-pencil"></i> ${value} </a>`);
-                                element.html(`<a href="/document/detail?code=${dataAdapter.records[row].code}"> <i class="fa fa-pencil"></i> ${value} </a>`);
-                               
+                                element.html(`<a href="${updateDocumentUrl}?id=${dataAdapter.records[row].id}"> <i class="fa fa-pencil"></i> ${value} </a>`);
+                                //element.html(`<a href="/document/detail?code=${dataAdapter.records[row].code}"> <i class="fa fa-pencil"></i> ${value} </a>`);
+
                                 return element[0].outerHTML;
                             }
                         },
@@ -233,13 +296,13 @@
                                 const element = $(defaultHtml);
                                 const fileNames = value.split(';');
                                 const folderName = dataAdapter.records[row].folderName;
-                                if (!isVariableHaveDefaltVal(fileNames)
-                                    && !isVariableHaveDefaltVal(folderName)) {
+                                if (!isVariableHaveDefaultVal(fileNames)
+                                    && !isVariableHaveDefaultVal(folderName)) {
                                     if (fileNames.length > 0) {
                                         let html = '';
                                         for (let index = 0; index < fileNames.length; index++) {
-                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
-                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
+                                                const filePath = `${folderName}/${fileNames[index]}`;
                                                 let fileIcon = 'fa fa-file-o';
                                                 switch (getFileExtension(fileNames[index])) {
                                                     case 'pdf':
@@ -258,10 +321,10 @@
                                                         fileIcon = 'fa fa-file-word-o';
                                                         break;
                                                 }
-                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                                html = html + `<a target="_blank" href="/downloadfile/viewfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
-                                        if (!isVariableHaveDefaltVal(html)) {
+                                        if (!isVariableHaveDefaultVal(html)) {
                                             element.html(html);
                                         }
                                     }
@@ -282,6 +345,7 @@
                             columntype: 'textbox',
                             datafield: 'companyName',
                             pinned: false,
+                            hidden: true,
                             editable: false,
                             width: 150
                         },
@@ -290,6 +354,7 @@
                             columntype: 'textbox',
                             datafield: 'departmentName',
                             pinned: false,
+                            hidden: true,
                             editable: false,
                             width: 150
                         },
@@ -303,22 +368,26 @@
                         {
                             text: replaceOfText,
                             columntype: 'textbox',
-                            datafield: 'replaceOf',
+                            datafield: 'replaceOfName',
                             editable: false,
                             width: 150,
                             cellsrenderer: function (row, column, value, defaultHtml) {
                                 const element = $(defaultHtml);
-                                const documents = value.split(';');
-                                if (!isVariableHaveDefaltVal(documents)) {
-                                    if (documents.length > 0) {
-                                        let html = '';
-                                        for (let index = 0; index < documents.length; index++) {
-                                            if (!isVariableHaveDefaltVal(documents[index])) {
-                                                html = html + `<a target="_blank" href="/document/detail?code=${documents[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                if (!isVariableHaveDefaultVal(value)) {
+                                    const documents = value.split(';');
+
+                                    if (!isVariableHaveDefaultVal(documents)) {
+                                        if (documents.length > 0) {
+                                            const documentCodes = dataAdapter.records[row].replaceOf.split(';');
+                                            let html = '';
+                                            for (let index = 0; index < documents.length; index++) {
+                                                if (!isVariableHaveDefaultVal(documents[index])) {
+                                                    html = html + `<a target="_blank" href="/document/detail?code=${documentCodes[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                                }
                                             }
-                                        }
-                                        if (!isVariableHaveDefaltVal(html)) {
-                                            element.html(html);
+                                            if (!isVariableHaveDefaultVal(html)) {
+                                                element.html(html);
+                                            }
                                         }
                                     }
                                 }
@@ -328,22 +397,27 @@
                         {
                             text: relateDocumentText,
                             columntype: 'textbox',
-                            datafield: 'relateToDocuments',
+                            datafield: 'relateToDocumentNames',
                             editable: false,
                             width: 150,
                             cellsrenderer: function (row, column, value, defaultHtml) {
                                 const element = $(defaultHtml);
-                                const documents = value.split(';');
-                                if (!isVariableHaveDefaltVal(documents)) {
-                                    if (documents.length > 0) {
-                                        let html = '';
-                                        for (let index = 0; index < documents.length; index++) {
-                                            if (!isVariableHaveDefaltVal(documents[index])) {
-                                                html = html + `<a target="_blank" href="/document/detail?code=${documents[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                if (!isVariableHaveDefaultVal(value)) {
+                                    const documents = value.split(';');
+
+                                    if (!isVariableHaveDefaultVal(documents)) {
+
+                                        if (documents.length > 0) {
+                                            const documentCodes = dataAdapter.records[row].relateToDocuments.split(';');
+                                            let html = '';
+                                            for (let index = 0; index < documents.length; index++) {
+                                                if (!isVariableHaveDefaultVal(documents[index])) {
+                                                    html = html + `<a target="_blank" href="/document/detail?code=${documentCodes[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                                }
                                             }
-                                        }
-                                        if (!isVariableHaveDefaltVal(html)) {
-                                            element.html(html);
+                                            if (!isVariableHaveDefaultVal(html)) {
+                                                element.html(html);
+                                            }
                                         }
                                     }
                                 }
@@ -353,7 +427,7 @@
                         {
                             text: documentTypeText,
                             columntype: 'textbox',
-                            datafield: 'documentType',
+                            datafield: 'documentTypeName',
                             editable: false,
                             width: 150
                         },

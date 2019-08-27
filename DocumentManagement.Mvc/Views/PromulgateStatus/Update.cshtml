@@ -76,8 +76,6 @@
 {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        const cultureSelector = '@CurrentLanguage.Name';
-        const hostUrl = '@Url.GetHost()';
         const updatePromulgateStatusUrl = `${hostUrl}/api/promulgatestatuses/update`;
 
         $(document).ready(function () {

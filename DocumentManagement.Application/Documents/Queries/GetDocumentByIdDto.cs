@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DocumentManagement.Application.Documents.Queries
 {
@@ -27,9 +28,14 @@ namespace DocumentManagement.Application.Documents.Queries
         public string ScopeOfDeloyment { get; set; }
         public string ReplaceOf { get; set; }
         public DateTime? ReplaceEffectiveDate { get; set; }
-        public string RelateToDocuments { get; set; }
         public bool DDCAudited { get; set; }
         public string FolderName { get; set; }
+        public int StatusId { get; set; }
+        public int PromulgateStatusId { get; set; }
+        public List<ReplaceToDocumentDto> ReplaceByDocuments { get; set; }
+        public List<ReplaceToDocumentDto> ReplaceToDocuments { get; set; }
+        public List<RelateToDocumentDto> RelateToDocuments { get; set; }
+        public List<AppendiceDto> Appendices { get; set; }
         public string LinkFile { get; set; }
     }
 }

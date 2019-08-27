@@ -25,6 +25,8 @@ namespace DocumentManagement.Mvc
 
     public class AuthorizationManager : ResourceAuthorizationManager
     {
+        private const string AdminDocumentMvcClaimType = "admindocumentmvc_permission";
+        private const string AdminDocumentApiClaimType = "admindocumentapi_permission";
         private const string DocumentMvcClaimType = "documentmvc_permission";
         private const string DocumentApiClaimType = "documentapi_permission";
 
@@ -37,9 +39,9 @@ namespace DocumentManagement.Mvc
                 case DocumentResources.ApiDocuments:
                     return AuthorizeApiDocuments(context);
                 case DocumentResources.Appendices:
-                    return AuthorizeDocuments(context);
+                    return AuthorizeAppendices(context);
                 case DocumentResources.ApiAppendices:
-                    return AuthorizeApiDocuments(context);
+                    return AuthorizeApiAppendices(context);
                 case DocumentResources.Modules:
                     return AuthorizeModules(context);
                 case DocumentResources.ApiModules:
@@ -63,11 +65,11 @@ namespace DocumentManagement.Mvc
             switch (context.Action.First().Value)
             {
                 case DtPermissionBaseTypes.Read:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Read));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Read));
                 case DtPermissionBaseTypes.Write:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Write));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Write));
                 case DtPermissionBaseTypes.Update:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Update));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Update));
                 default:
                     return Nok();
             }
@@ -78,11 +80,13 @@ namespace DocumentManagement.Mvc
             switch (context.Action.First().Value)
             {
                 case DtPermissionBaseTypes.Read:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Read));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Read));
                 case DtPermissionBaseTypes.Write:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Write));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Write));
                 case DtPermissionBaseTypes.Update:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Update));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Update));
+                case DtPermissionBaseTypes.Delete:
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Delete));
                 default:
                     return Nok();
             }
@@ -96,11 +100,11 @@ namespace DocumentManagement.Mvc
             switch (context.Action.First().Value)
             {
                 case DtPermissionBaseTypes.Read:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Read));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Read));
                 case DtPermissionBaseTypes.Write:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Write));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Write));
                 case DtPermissionBaseTypes.Update:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Update));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Update));
                 default:
                     return Nok();
             }
@@ -111,11 +115,11 @@ namespace DocumentManagement.Mvc
             switch (context.Action.First().Value)
             {
                 case DtPermissionBaseTypes.Read:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Read));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Read));
                 case DtPermissionBaseTypes.Write:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Write));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Write));
                 case DtPermissionBaseTypes.Update:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Update));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Update));
                 default:
                     return Nok();
             }
@@ -128,11 +132,11 @@ namespace DocumentManagement.Mvc
             switch (context.Action.First().Value)
             {
                 case DtPermissionBaseTypes.Read:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Read));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Read));
                 case DtPermissionBaseTypes.Write:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Write));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Write));
                 case DtPermissionBaseTypes.Update:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Update));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Update));
                 default:
                     return Nok();
             }
@@ -143,11 +147,11 @@ namespace DocumentManagement.Mvc
             switch (context.Action.First().Value)
             {
                 case DtPermissionBaseTypes.Read:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Read));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Read));
                 case DtPermissionBaseTypes.Write:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Write));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Write));
                 case DtPermissionBaseTypes.Update:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Update));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Update));
                 default:
                     return Nok();
             }
@@ -160,11 +164,11 @@ namespace DocumentManagement.Mvc
             switch (context.Action.First().Value)
             {
                 case DtPermissionBaseTypes.Read:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Read));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Read));
                 case DtPermissionBaseTypes.Write:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Write));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Write));
                 case DtPermissionBaseTypes.Update:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Update));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Update));
                 default:
                     return Nok();
             }
@@ -175,11 +179,11 @@ namespace DocumentManagement.Mvc
             switch (context.Action.First().Value)
             {
                 case DtPermissionBaseTypes.Read:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Read));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Read));
                 case DtPermissionBaseTypes.Write:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Write));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Write));
                 case DtPermissionBaseTypes.Update:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Update));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Update));
                 default:
                     return Nok();
             }
@@ -192,11 +196,11 @@ namespace DocumentManagement.Mvc
             switch (context.Action.First().Value)
             {
                 case DtPermissionBaseTypes.Read:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Read));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Read));
                 case DtPermissionBaseTypes.Write:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Write));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Write));
                 case DtPermissionBaseTypes.Update:
-                    return Eval(context.Principal.HasClaim(DocumentMvcClaimType, DtPermissionBaseTypes.Update));
+                    return Eval(context.Principal.HasClaim(AdminDocumentMvcClaimType, DtPermissionBaseTypes.Update));
                 default:
                     return Nok();
             }
@@ -206,11 +210,11 @@ namespace DocumentManagement.Mvc
             switch (context.Action.First().Value)
             {
                 case DtPermissionBaseTypes.Read:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Read));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Read));
                 case DtPermissionBaseTypes.Write:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Write));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Write));
                 case DtPermissionBaseTypes.Update:
-                    return Eval(context.Principal.HasClaim(DocumentApiClaimType, DtPermissionBaseTypes.Update));
+                    return Eval(context.Principal.HasClaim(AdminDocumentApiClaimType, DtPermissionBaseTypes.Update));
                 default:
                     return Nok();
             }

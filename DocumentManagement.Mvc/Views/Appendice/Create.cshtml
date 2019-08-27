@@ -455,10 +455,6 @@
 {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        const uploadFileRootPath = '/Uploads';
-        const cultureSelector = '@CurrentLanguage.Name';
-        const hostUrl = '@Url.GetHost()';
-
         let departments = [];
         let documentTypes = [];
         let users = [];
@@ -774,9 +770,9 @@
                                     if (event.args) {
                                         let item = event.args.item;
                                         console.log(item);
-                                        if (!isVariableHaveDefaltVal(item)) {
+                                        if (!isVariableHaveDefaultVal(item)) {
                                             const document = documents.filter(document => document.displayText === item.label);
-                                            if (!isVariableHaveDefaltVal(document)) {
+                                            if (!isVariableHaveDefaultVal(document)) {
                                                 observableSourceRelateToDocuments.set(`${row}.documentNumber`, document[0].documentNumber);
                                                 observableSourceRelateToDocuments.set(`${row}.effectiveDate`, document[0].effectiveDate);
                                                 observableSourceRelateToDocuments.set(`${row}.reviewDate`, document[0].reviewDate);
@@ -789,7 +785,7 @@
                                 });
                             },
                             validation: function (cell, value) {
-                                if (isVariableHaveDefaltVal(value)){
+                                if (isVariableHaveDefaultVal(value)){
                                     return { result: false, message: "Tên tài liệu không được bỏ trống(chú ý nếu đang edit thì cần nhấn phím Enter để update thông tin)" };
                                 }
                                 const index = getRelateToDocumentIndexByText(value, cell.row);
@@ -810,12 +806,12 @@
                                 const element = $(defaultHtml);
                                 const fileNames = value.split(';');
                                 const folderName = relateToDocumentsDataAdapter.records[row].folderName;
-                                if (!isVariableHaveDefaltVal(fileNames)
-                                    && !isVariableHaveDefaltVal(folderName)) {
+                                if (!isVariableHaveDefaultVal(fileNames)
+                                    && !isVariableHaveDefaultVal(folderName)) {
                                     if (fileNames.length > 0) {
                                         let html = '';
                                         for (let index = 0; index < fileNames.length; index++) {
-                                            if (!isVariableHaveDefaltVal(fileNames[index])) {
+                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
                                                 const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
                                                 let fileIcon = 'fa fa-file-o';
                                                 switch (getFileExtension(fileNames[index])) {
@@ -838,7 +834,7 @@
                                                 html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
-                                        if (!isVariableHaveDefaltVal(html)) {
+                                        if (!isVariableHaveDefaultVal(html)) {
                                             element.html(html);
                                         }
                                     }
@@ -909,7 +905,7 @@
 
         function getRelateToDocuments() {
             let documents = relateToDocumentsDataAdapter.records.filter(function (d) {
-                if (!isVariableHaveDefaltVal(d.code)) {
+                if (!isVariableHaveDefaultVal(d.code)) {
                     return true;
                 }
                 return false;
@@ -1050,9 +1046,9 @@
                                 editor.on('select', function (event) {
                                     if (event.args) {
                                         let item = event.args.item;
-                                        if (!isVariableHaveDefaltVal(item)) {
+                                        if (!isVariableHaveDefaultVal(item)) {
                                             const document = documents.filter(document => document.name === item.value);
-                                            if (!isVariableHaveDefaltVal(document)) {
+                                            if (!isVariableHaveDefaultVal(document)) {
                                                 appendieDocumentsDataAdapter.set(`${row}.documentNumber`, document[0].documentNumber);
                                             }
                                         }
@@ -1253,13 +1249,13 @@
                 formData.append('files', storedFiles[i]);
             }
 
-            if (!isVariableHaveDefaltVal($Approver.val()))
+            if (!isVariableHaveDefaultVal($Approver.val()))
                 formData.set('Approver', $Approver.val().join(';'));
-            if (!isVariableHaveDefaltVal($Auditor.val()))
+            if (!isVariableHaveDefaultVal($Auditor.val()))
                 formData.set('Auditor', $Auditor.val().join(';'));
-            if (!isVariableHaveDefaltVal($Drafter.val()))
+            if (!isVariableHaveDefaultVal($Drafter.val()))
                 formData.set('Drafter', $Drafter.val().join(';'));
-            if (!isVariableHaveDefaltVal($ScopeOfDeloyment.val()))
+            if (!isVariableHaveDefaultVal($ScopeOfDeloyment.val()))
                 formData.set('ScopeOfDeployment', $ScopeOfDeloyment.val().join(';'));
 
             const relateToDocuments = getRelateToDocuments().map((document) => document.code);
@@ -1327,14 +1323,14 @@
 
             $CompanyCode.on('change', function (e) {
                 const selectedCompany = $CompanyCode.select2('data');
-                if (!isVariableHaveDefaltVal(selectedCompany)) {
+                if (!isVariableHaveDefaultVal(selectedCompany)) {
                     $CompanyName.val(selectedCompany[0].text);
                 }
             });
 
             $DepartmentCode.on('change', function (e) {
                 const selectedDepartment = $DepartmentCode.select2('data');
-                if (!isVariableHaveDefaltVal(selectedDepartment)) {
+                if (!isVariableHaveDefaultVal(selectedDepartment)) {
                     $DepartmentName.val(selectedDepartment[0].text);
                 }
             });

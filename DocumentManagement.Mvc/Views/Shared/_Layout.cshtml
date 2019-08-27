@@ -121,42 +121,15 @@
     <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
     <script src="/Scripts/admin_lte/plugins/input-mask/jquery.inputmask.extensions.js"></script>
 
+    <script src="~/Scripts/helper.js"></script>
 
     <script>
-        function getFileExtension(filename) {
-            var ext = /^.+\.([^.]+)$/.exec(filename);
-            return ext == null ? "" : ext[1];
-        }
-        function typeOfVar(obj) {
-            return {}.toString.call(obj).split(' ')[1].slice(0, -1).toLowerCase();
-        }
+        const uploadFileRootPath = '/Uploads';
+        const cultureSelector = '@CurrentLanguage.Name';
+        const hostUrl = '@Url.GetHost()';
 
-        function isVariableHaveDefaltVal(variable) {
-            if (typeof (variable) === 'string') {  // number, boolean, string, object
-                return (variable.trim().length === 0) ? true : false;
-            } else if (typeof (variable) === 'boolean') {
-                return (variable === false) ? true : false;
-            } else if (typeof (variable) === 'undefined') {
-                return true;
-            } else if (typeof (variable) === 'number') {
-                return (variable === 0) ? true : false;
-            } else if (typeof (variable) === 'object') {
-                //   -----Object-----
-                if (typeOfVar(variable) === 'array' && variable.length === 0) {
-                    return true;
-                } else if (typeOfVar(variable) === 'string' && variable.length === 0) {
-                    return true;
-                } else if (typeOfVar(variable) === 'boolean') {
-                    return (variable === false) ? true : false;
-                } else if (typeOfVar(variable) === 'number') {
-                    return (variable === 0) ? true : false;
-                } else if (typeOfVar(variable) === 'regexp' && variable.source.trim().length === 0) {
-                    return true;
-                } else if (variable === null) {
-                    return true;
-                }
-            }
-            return false;
+        if (cultureSelector === 'vi-VN') {
+            moment.locale('vi');
         }
 
         $.busyLoadSetup({ background: "rgba(100, 100, 0, 0.86)" });

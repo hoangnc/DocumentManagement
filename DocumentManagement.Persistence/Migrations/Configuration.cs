@@ -23,6 +23,7 @@
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
             SeedDocumentType(context);
+            SeedGroups(context);
             context.SaveChanges();
         }
 
@@ -217,6 +218,94 @@
                 Deleted = false
             });
             context.DocumentTypes.AddOrUpdate(document => new { document.Code }, documentTypes.ToArray());
+        }
+
+        private void SeedGroups(DocumentDbContext context)
+        {
+            List<Group> groups = new List<Group>();
+            string createdBy = "NguyenCongHoang";
+
+            groups.Add(new Group
+            {
+                Code = "BTGD",
+                Name = ".1.Ban Tong Giam Doc",
+                Email = "BanTongGiamDoc@duytan.com",
+                CreatedBy = createdBy,
+                CreatedOn = DateTime.Now,
+                Deleted = false
+            });
+
+            groups.Add(new Group
+            {
+                Code = "ATLD",
+                Name = ".An Toan Lao Dong",
+                Email = "antoan@duytan.com",
+                CreatedBy = createdBy,
+                CreatedOn = DateTime.Now,
+                Deleted = false
+            });
+
+            groups.Add(new Group
+            {
+                Code = "BCC",
+                Name = ".Ba Cay Cau",
+                Email = "BaCayCau@duytan.com",
+                CreatedBy = createdBy,
+                CreatedOn = DateTime.Now,
+                Deleted = false
+            });
+
+            groups.Add(new Group
+            {
+                Code = "BH",
+                Name = ".Ban Hang",
+                Email = "BanHang@duytan.com",
+                CreatedBy = createdBy,
+                CreatedOn = DateTime.Now,
+                Deleted = false
+            });
+
+            groups.Add(new Group
+            {
+                Code = "BV",
+                Name = ".Bao Ve",
+                Email = "BaoVe@duytan.com",
+                CreatedBy = createdBy,
+                CreatedOn = DateTime.Now,
+                Deleted = false
+            });
+
+            groups.Add(new Group
+            {
+                Code = "BD",
+                Name = ".Binh Duong",
+                Email = "binhduong@duytan.com",
+                CreatedBy = createdBy,
+                CreatedOn = DateTime.Now,
+                Deleted = false
+            });
+
+            groups.Add(new Group
+            {
+                Code = "ISO",
+                Name = ".ISO",
+                Email = "ISO@duytan.com",
+                CreatedBy = createdBy,
+                CreatedOn = DateTime.Now,
+                Deleted = false
+            });
+
+            groups.Add(new Group
+            {
+                Code = "ERP",
+                Name = ".ERP",
+                Email = "ERP@duytan.com",
+                CreatedBy = createdBy,
+                CreatedOn = DateTime.Now,
+                Deleted = false
+            });
+
+            context.Groups.AddOrUpdate(group => new { group.Code, group.Name }, groups.ToArray());
         }
     }
 }

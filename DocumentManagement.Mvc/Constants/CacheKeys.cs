@@ -5,7 +5,7 @@ namespace DocumentManagement.Mvc.Constants
     {
         public const string DepartmentCacheKey = "MasterData.Department";
         public const string UserCacheKey = "MasterData.User";
-        public const string CompanyKey = "MasterData.Company";
-        public const string GroupKey = "MasterData.Group";
+        public const string CompanyCacheKey = "MasterData.Company";
+        public const string GroupCacheKey = "MasterData.Group";
     }
 }

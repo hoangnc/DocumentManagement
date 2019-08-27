@@ -76,8 +76,7 @@
 {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-        const cultureSelector = '@CurrentLanguage.Name';
-        const hostUrl = '@Url.GetHost()';
+       
         const updateModuleUrl = `${hostUrl}/api/modules/update`;
       
         $(document).ready(function () {

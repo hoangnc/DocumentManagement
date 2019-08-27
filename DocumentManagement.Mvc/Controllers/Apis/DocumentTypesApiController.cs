@@ -43,7 +43,7 @@ namespace DocumentManagement.Mvc.Controllers.Apis
 
         [Route("api/documenttypes/getalldocumenttypes")]
         [HttpGet]
-        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocumentTypes)]
+        // [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiDocumentTypes)]
         public async Task<List<GetAllDocumentTypesDto>> List()
         {
             return await Mediator.Send(new GetAllDocumentTypesQuery());

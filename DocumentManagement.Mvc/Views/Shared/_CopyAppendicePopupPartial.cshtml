@@ -1,0 +1,40 @@
+﻿<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-info">
+            <div class="box-header">
+                <div class="mailbox-controls form-inline">
+                    <div class="box-tools">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i id="code-help"
+                                   class="fa fa-info-circle red-text"
+                                   data-toggle="tooltip"
+                                   data-placement="bottom"
+                                   title="Chọn tìm kiếm nâng cao sẽ tìm kiếm thông tin liên quan trong file đính kèm. Lưu ý: sẽ lâu hơn tìm kiếm thông tin bình thường"></i>
+                            </div>
+                            <input id="txtCopySearch"
+                                   class="form-control"
+                                   placeholder="@Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Search)" />
+
+                            <div class="input-group-addon" style="width: 100px">
+                                <label class="checkbox-inline" style="padding-left: 0px">
+                                    <span class="form-group inline-block">
+                                        <input type="checkbox" id="CopyAdvancedSearch" /> Nâng cao
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div id='jqxWidget'>
+                    <div id="grdCopyDocument"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

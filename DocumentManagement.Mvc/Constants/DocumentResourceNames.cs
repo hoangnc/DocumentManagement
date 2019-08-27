@@ -51,6 +51,10 @@
         public const string Status = "Status";
         public const string Active = "Active";
         public const string PromulgateStatus = "PromulgateStatus";
+        public const string Year = "Year";
+        public const string MessageCreateDocumentSuccessed = "MessageCreateDocumentSuccessed";
+        public const string Release = "Release";
+        public const string SaveAndRelease = "SaveAndRelease";
 
         public const string AppendiceList = "AppendiceList";
         public const string CreateAppendice = "CreateAppendice";

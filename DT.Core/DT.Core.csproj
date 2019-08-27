@@ -66,6 +66,7 @@
     <Compile Include="Authorization\PermissionChecker.cs" />
     <Compile Include="Authorization\PermissionCheckerExtensions.cs" />
     <Compile Include="Application\Command\BaseCommand.cs" />
+    <Compile Include="Exceptions\ExistsException.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Helper\MailHelper.cs" />

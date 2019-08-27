@@ -43,7 +43,7 @@ namespace DocumentManagement.Mvc.Controllers.Apis
 
         [Route("api/modules/getallmodules")]
         [HttpGet]
-        [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiModules)]
+       // [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiModules)]
         public async Task<List<GetAllModulesDto>> GetAllModules()
         {
             return await Mediator.Send(new GetAllModulesQuery());

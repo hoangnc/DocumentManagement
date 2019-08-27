@@ -1,15 +1,23 @@
-﻿using DocumentManagement.Mvc.Services;
+﻿using DocumentManagement.Application.Documents.Queries;
+using DocumentManagement.Application.DocumentTypes.Queries;
+using DocumentManagement.Mvc.Services;
 using DT.Core.Web.Ui.Navigation;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using Thinktecture.IdentityModel.Mvc;
 
 namespace DocumentManagement.Mvc.Controllers
 {
-    public class OperationDataController : Controller
+    [Authorize]
+    public class OperationDataController : DocumentManagementControllerBase
     {
+        private readonly IMenuManager _menuManager;
+
+        public OperationDataController(IMenuManager menuManager)
+        {
+            _menuManager = menuManager;
+        }
         // GET: OperationData
         public ActionResult Index()
         {
@@ -18,12 +26,62 @@ namespace DocumentManagement.Mvc.Controllers
 
         public ActionResult List(string code)
         {
-            var documentType = SimpleCache.DocumentTypes.FirstOrDefault(dt => dt.Code.Equals(code));
-             IMenuManager menuManager = DependencyResolver.Current.GetService<IMenuManager>();
-            menuManager.SelectedMenu = documentType.Code;
-            ViewBag.Menu = menuManager;
+            if (string.IsNullOrEmpty(code))
+            {
+                _menuManager.SelectedMenu = "SDTC";
+            }
+            else
+            {
+                GetAllDocumentTypesDto documentType = SimpleCache.DocumentTypes.FirstOrDefault(dt => dt.Code.Equals(code));
+                _menuManager.SelectedMenu = documentType.Code;
+            }
+            ViewBag.Menu = _menuManager;
             ViewBag.DocumentType = code;
             return View();
+        }
+
+        public ActionResult List2(string code)
+        {
+            if (string.IsNullOrEmpty(code))
+            {
+                _menuManager.SelectedMenu = "SDTC";
+            }
+            else
+            {
+                GetAllDocumentTypesDto documentType = SimpleCache.DocumentTypes.FirstOrDefault(dt => dt.Code.Equals(code));
+                _menuManager.SelectedMenu = documentType.Code;
+            }
+            ViewBag.Menu = _menuManager;
+            ViewBag.DocumentType = code;
+            return View();
+        }
+
+        public ActionResult List3(string code)
+        {
+            if (string.IsNullOrEmpty(code))
+            {
+                _menuManager.SelectedMenu = "SDTC";
+            }
+            else
+            {
+                GetAllDocumentTypesDto documentType = SimpleCache.DocumentTypes.FirstOrDefault(dt => dt.Code.Equals(code));
+                _menuManager.SelectedMenu = documentType.Code;
+            }
+            ViewBag.Menu = _menuManager;
+            ViewBag.DocumentType = code;
+            return View();
+        }
+
+        [Menu(SelectedMenu = "SDTC")]
+        [HandleForbidden]
+        public async Task<ActionResult> Detail(string code)
+        {
+            GetDocumentByCodeDto getDocumentByCodeDto = await Mediator.Send(new GetDocumentByCodeQuery
+            {
+                Code = code
+            });
+
+            return View(getDocumentByCodeDto);
         }
     }
 }

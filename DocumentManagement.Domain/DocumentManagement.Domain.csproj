@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DocumentManagement.Domain</RootNamespace>
     <AssemblyName>DocumentManagement.Domain</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,6 +46,7 @@
     <Compile Include="Entities\Document.cs" />
     <Compile Include="Entities\DocumentType.cs" />
     <Compile Include="Entities\FormType.cs" />
+    <Compile Include="Entities\Group.cs" />
     <Compile Include="Entities\Module.cs" />
     <Compile Include="Entities\PromulgateStatus.cs" />
     <Compile Include="Entities\Status.cs" />

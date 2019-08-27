@@ -1,6 +1,7 @@
 ﻿using Abp.Localization;
 using DocumentManagement.Application.DocumentTypes.Queries;
 using DocumentManagement.Mvc.Constants;
+using DT.Core.Authorization;
 using DT.Core.Web.Common.Models;
 using DT.Core.Web.Ui.Navigation;
 using MediatR;
@@ -188,10 +189,14 @@ namespace DocumentManagement.Mvc.Services
     {
         private readonly ILocalizationManager _localizationManager;
         private readonly IMediator _mediator;
-        public MenuConfigurationContext(ILocalizationManager localizationManager, IMediator mediator)
+        private readonly IPermissionChecker _permissionChecker;
+        public MenuConfigurationContext(ILocalizationManager localizationManager, 
+            IMediator mediator,
+            IPermissionChecker permissionChecker)
         {
             _localizationManager = localizationManager;
             _mediator = mediator;
+            _permissionChecker = permissionChecker;
         }
         public ModuleMenuItems Menu => BuildDocumentMenu();
 
@@ -204,93 +209,97 @@ namespace DocumentManagement.Mvc.Services
             moduleMenuItem.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.ApplicationName);
             moduleMenuItem.Order = 0;
 
-            #region Release Document
-            MenuItem menuReleaseDocument = new MenuItem();
-            menuReleaseDocument.Name = MenuNameConstants.ReleaseDocument;
-            menuReleaseDocument.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReleaseDocument);
-            menuReleaseDocument.Order = 0;
-            menuReleaseDocument.Url = "#";
-            menuReleaseDocument.Icon = "fa fa-cog";
-            menuReleaseDocument.CssClass = "treeview";
-
-            menuReleaseDocument.Items.Add(new MenuItem
+            if (_permissionChecker.IsGranted("admindocumentmvc_permission", "write"))
             {
-                Name = MenuNameConstants.ReleaseNewDocument,
-                DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReleaseNewDocument),
-                Url = "/document/index",
-                Order = 0
-            });
+                #region Release Document
 
-            menuReleaseDocument.Items.Add(new MenuItem
-            {
-                Name = MenuNameConstants.ReviewDocument,
-                DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReviewDocument),
-                Url = "/document/reviewdocument",
-                Order = 1
-            });
-            #endregion
-            moduleMenuItem.Items.Add(menuReleaseDocument);
-            #region Appendice
-            MenuItem menuAppendiceDocument = new MenuItem();
-            menuAppendiceDocument.Name = MenuNameConstants.ReleaseAppendice;
-            menuAppendiceDocument.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReleaseAppendice);
-            menuAppendiceDocument.Order = 0;
-            menuAppendiceDocument.Url = "#";
-            menuAppendiceDocument.Icon = "fa fa-cog";
-            menuAppendiceDocument.CssClass = "treeview";
+                MenuItem menuReleaseDocument = new MenuItem();
+                menuReleaseDocument.Name = MenuNameConstants.ReleaseDocument;
+                menuReleaseDocument.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReleaseDocument);
+                menuReleaseDocument.Order = 0;
+                menuReleaseDocument.Url = "#";
+                menuReleaseDocument.Icon = "fa fa-cog";
+                menuReleaseDocument.CssClass = "treeview";
 
-            menuAppendiceDocument.Items.Add(new MenuItem
-            {
-                Name = MenuNameConstants.ReleaseNewAppendice,
-                DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReleaseNewAppendice),
-                Url = "/appendice/index",
-                Order = 0
-            });
+                menuReleaseDocument.Items.Add(new MenuItem
+                {
+                    Name = MenuNameConstants.ReleaseNewDocument,
+                    DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReleaseNewDocument),
+                    Url = "/document/index",
+                    Order = 0
+                });
 
-            menuAppendiceDocument.Items.Add(new MenuItem
-            {
-                Name = MenuNameConstants.ReviewAppendice,
-                DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReviewAppendice),
-                Url = "/document/reviewdocument",
-                Order = 1
-            });
-            #endregion
-            moduleMenuItem.Items.Add(menuAppendiceDocument);
+                menuReleaseDocument.Items.Add(new MenuItem
+                {
+                    Name = MenuNameConstants.ReviewDocument,
+                    DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReviewDocument),
+                    Url = "/document/reviewdocument",
+                    Order = 1
+                });
+                #endregion
+                moduleMenuItem.Items.Add(menuReleaseDocument);
+                #region Appendice
+                MenuItem menuAppendiceDocument = new MenuItem();
+                menuAppendiceDocument.Name = MenuNameConstants.ReleaseAppendice;
+                menuAppendiceDocument.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReleaseAppendice);
+                menuAppendiceDocument.Order = 0;
+                menuAppendiceDocument.Url = "#";
+                menuAppendiceDocument.Icon = "fa fa-cog";
+                menuAppendiceDocument.CssClass = "treeview";
 
-            #region Categories
-            MenuItem menuCategory = new MenuItem();
-            menuCategory.Name = MenuNameConstants.Category;
-            menuCategory.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuCategory);
-            menuCategory.Order = 0;
-            menuCategory.Url = "#";
-            menuCategory.Icon = "fa  fa-list";
-            menuCategory.CssClass = "treeview";
+                menuAppendiceDocument.Items.Add(new MenuItem
+                {
+                    Name = MenuNameConstants.ReleaseNewAppendice,
+                    DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReleaseNewAppendice),
+                    Url = "/appendice/index",
+                    Order = 0
+                });
 
-            menuCategory.Items.Add(new MenuItem
-            {
-                Name = MenuNameConstants.Module,
-                DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuModule),
-                Url = "/module/index",
-                Order = 0
-            });
+                menuAppendiceDocument.Items.Add(new MenuItem
+                {
+                    Name = MenuNameConstants.ReviewAppendice,
+                    DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuReviewAppendice),
+                    Url = "/document/reviewdocument",
+                    Order = 1
+                });
+                #endregion
+                moduleMenuItem.Items.Add(menuAppendiceDocument);
 
-            menuCategory.Items.Add(new MenuItem
-            {
-                Name = MenuNameConstants.DocumentType,
-                DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuDocumentType),
-                Url = "/documenttype/index",
-                Order = 1
-            });
+                #region Categories
+                MenuItem menuCategory = new MenuItem();
+                menuCategory.Name = MenuNameConstants.Category;
+                menuCategory.DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuCategory);
+                menuCategory.Order = 0;
+                menuCategory.Url = "#";
+                menuCategory.Icon = "fa  fa-list";
+                menuCategory.CssClass = "treeview";
 
-            menuCategory.Items.Add(new MenuItem
-            {
-                Name = MenuNameConstants.PromulgateStatus,
-                DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuPromulgateStatus),
-                Url = "/promulgatestatus/index",
-                Order = 2
-            });
-            #endregion
-            moduleMenuItem.Items.Add(menuCategory);
+                menuCategory.Items.Add(new MenuItem
+                {
+                    Name = MenuNameConstants.Module,
+                    DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuModule),
+                    Url = "/module/index",
+                    Order = 0
+                });
+
+                menuCategory.Items.Add(new MenuItem
+                {
+                    Name = MenuNameConstants.DocumentType,
+                    DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuDocumentType),
+                    Url = "/documenttype/index",
+                    Order = 1
+                });
+
+                menuCategory.Items.Add(new MenuItem
+                {
+                    Name = MenuNameConstants.PromulgateStatus,
+                    DisplayName = _localizationManager.GetString(DocumentResourceNames.DocumentResourceName, DocumentResourceNames.MenuPromulgateStatus),
+                    Url = "/promulgatestatus/index",
+                    Order = 2
+                });
+                #endregion
+                moduleMenuItem.Items.Add(menuCategory);
+            }
 
             #region Operation Data
             MenuItem menuOperationData = new MenuItem();

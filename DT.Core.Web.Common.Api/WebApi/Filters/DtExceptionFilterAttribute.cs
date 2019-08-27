@@ -36,6 +36,8 @@ namespace DT.Core.Web.Common.Api.WebApi.Filters
                     ExceptionHandling(HttpStatusCode.BadRequest, Newtonsoft.Json.JsonConvert.SerializeObject(((ValidationException)exception).Failures));
                 else if (exception is NotFoundException)
                     ExceptionHandling(HttpStatusCode.NotFound, exception.Message);
+                else if (exception is ExistsException)
+                    ExceptionHandling(HttpStatusCode.Found, exception.Message);
                 else if (exception is ApplicationException)
                     ExceptionHandling(HttpStatusCode.InternalServerError, exception.Message);
                 else
