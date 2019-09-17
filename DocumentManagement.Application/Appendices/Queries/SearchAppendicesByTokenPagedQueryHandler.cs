@@ -1,12 +1,10 @@
-﻿using DocumentManagement.Application.Mapper;
-using DocumentManagement.Domain.Entities;
+﻿using DocumentManagement.Domain.Entities;
 using DocumentManagement.Persistence;
 using DT.Core.Data;
 using DT.Core.Data.Models;
 using DT.Core.Data.Paged;
 using DT.Core.Text;
 using MediatR;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -86,13 +84,42 @@ namespace DocumentManagement.Application.Appendices.Queries
                 query = query.OrderByDescending(u => u.CreatedOn);
             }
 
-            PagedList<Appendice> queryResult = new PagedList<Appendice>();
-            await queryResult.CreateAsync(query, request.DataSourceRequest.PageNum, request.DataSourceRequest.PageSize);
-            List<SearchAppendicesByTokenPagedDto> data = queryResult.Select(u => u.ToSearchAppendicesByTokenPagedDto()).ToList();
+            IQueryable<SearchAppendicesByTokenPagedDto> test = query.Select(document => new SearchAppendicesByTokenPagedDto
+            {
+                Id = document.Id,
+                Approver = document.Approver,
+                Code = document.Code,
+                CompanyCode = document.CompanyCode,
+                CompanyName = document.CompanyName,
+                DDCAudited = document.DDCAudited,
+                DepartmentCode = document.DepartmentCode,
+                DepartmentName = document.DepartmentName,
+                DocumentType = document.DocumentType,
+                EffectiveDate = document.EffectiveDate,
+                FileName = document.FileName,
+                LinkFile = document.LinkFile,
+                Module = document.Module,
+                Name = document.Name,
+                ReplaceEffectiveDate = document.ReplaceEffectiveDate,
+                ListRelateToDocuments = _context.Documents.
+                Where(d => _context.StringSplit(document.RelateToDocuments, ";").Any(a1 => a1.SplitData == d.Code))
+                .Select(d => d.Name)
+                .ToList(),
+                ReplaceOf = document.ReplaceOf,
+                RelateToDocuments = document.RelateToDocuments,
+                ReviewDate = document.ReviewDate,
+                ReviewNumber = document.ReviewNumber,
+                ScopeOfApplication = document.ScopeOfApplication,
+                ScopeOfDeloyment = document.ScopeOfDeloyment
+            });
+
+
+            PagedList<SearchAppendicesByTokenPagedDto> queryResult = new PagedList<SearchAppendicesByTokenPagedDto>();
+            await queryResult.CreateAsync(test, request.DataSourceRequest.PageNum, request.DataSourceRequest.PageSize);
 
             return new DataSourceResult
             {
-                Data = data,
+                Data = queryResult.ToList(),
                 Total = queryResult.TotalCount
             };
         }

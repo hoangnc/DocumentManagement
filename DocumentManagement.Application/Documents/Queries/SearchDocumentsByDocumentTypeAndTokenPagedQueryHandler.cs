@@ -22,8 +22,13 @@ namespace DocumentManagement.Application.Documents.Queries
         public async Task<DataSourceResult> Handle(SearchDocumentsByDocumentTypeAndTokenPagedQuery request, CancellationToken cancellationToken)
         {
             IQueryable<Document> query = _context.Documents.AsQueryable();
+
             query = query.Where(d => !d.Deleted && d.DocumentType == request.DocumentType
-            && _context.StringSplit(d.ScopeOfDeloyment, ";").Any(a1 => a1.SplitData == request.Department));
+            && (_context.StringSplit(d.ScopeOfDeloyment, ";").Any(a1 => a1.SplitData == request.Department)
+            || d.Approver == request.UserName 
+            || d.Auditor == request.UserName 
+            || d.Drafter == request.UserName
+            || d.CreatedBy == request.UserName));
 
             request.Token = request.Token?.ToLowerInvariant()?.NonUnicode();
 
@@ -47,8 +52,8 @@ namespace DocumentManagement.Application.Documents.Queries
                             || _context.NonUnicode(c.ReviewNumber).Contains(request.Token)
                             || _context.NonUnicode(c.ScopeOfApplication).Contains(request.Token)
                             || _context.NonUnicode(c.ScopeOfDeloyment).Contains(request.Token)
-                            || _context.NonUnicode(c.Description).Contains(request.Token)
-                            || _context.CompareTwoFiles(_context.NonUnicode(c.FileName), fileNames, ";"));
+                            || _context.NonUnicode(c.Description).Contains(request.Token));
+                            //|| _context.CompareTwoFiles(_context.NonUnicode(c.FileName), fileNames, ";"));
                 }
                 else
                 {

@@ -88,7 +88,7 @@
         Globalize.cultureSelector = '@CurrentLanguage.Name';
     </script>
     <script>
-        const updateDocumentUrl = `${hostUrl}/document/update`;
+        const updateDocumentUrl = `${hostUrl}/appendice/update`;
         const documentCodeText = '@L(DocumentResourceNames.Code)';
         const documentNameText = '@L(DocumentResourceNames.Name)';
         const companyText = '@L(DocumentResourceNames.CompanyCode)';
@@ -145,7 +145,8 @@
                     { name: 'fileName', type: 'string' },
                     { name: 'folderName', type: 'string' },
                     { name: 'relateToDocuments', type: 'string' },
-                    { name: 'contentChange', type: 'string'}
+                    { name: 'contentChange', type: 'string' },
+                    { name: 'relateToDocumentNames', type: 'string' }
                 ],
             root: 'data',
             beforeprocessing: function (data) {
@@ -222,39 +223,30 @@
                             width: 250,
                             cellsrenderer: function (row, column, value, defaultHtml) {
                                 const element = $(defaultHtml);
-                                const fileNames = value.split(';');
-                                const folderName = dataAdapter.records[row].folderName;
-                                if (!isVariableHaveDefaultVal(fileNames)
-                                    && !isVariableHaveDefaultVal(folderName)) {
-                                    if (fileNames.length > 0) {
-                                        let html = '';
-                                        for (let index = 0; index < fileNames.length; index++) {
-                                            if (!isVariableHaveDefaultVal(fileNames[index])) {
-                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
-                                                let fileIcon = 'fa fa-file-o';
-                                                switch (getFileExtension(fileNames[index])) {
-                                                    case 'pdf':
-                                                        fileIcon = 'fa fa-file-pdf-o';
-                                                        break;
-                                                    case 'xls':
-                                                        fileIcon = 'fa fa-file-excel-o';
-                                                        break;
-                                                    case 'xlsx':
-                                                        fileIcon = 'fa fa-file-excel-o';
-                                                        break;
-                                                    case 'doc':
-                                                        fileIcon = 'fa fa-file-word-o';
-                                                        break;
-                                                    case 'docx':
-                                                        fileIcon = 'fa fa-file-word-o';
-                                                        break;
-                                                }
-                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
-                                            }
-                                        }
-                                        if (!isVariableHaveDefaultVal(html)) {
-                                            element.html(html);
-                                        }
+                                const linkFile = dataAdapter.records[row].linkFile;
+                                if (!isVariableHaveDefaultVal(linkFile)) {
+                                    let html = '';
+                                    let fileIcon = 'fa fa-file-o';
+                                    switch (getFileExtension(linkFile)) {
+                                        case 'pdf':
+                                            fileIcon = 'fa fa-file-pdf-o';
+                                            break;
+                                        case 'xls':
+                                            fileIcon = 'fa fa-file-excel-o';
+                                            break;
+                                        case 'xlsx':
+                                            fileIcon = 'fa fa-file-excel-o';
+                                            break;
+                                        case 'doc':
+                                            fileIcon = 'fa fa-file-word-o';
+                                            break;
+                                        case 'docx':
+                                            fileIcon = 'fa fa-file-word-o';
+                                            break;
+                                    }
+                                    html = html + `<a target="_blank" href="${linkFile}"> <i class="${fileIcon}"></i> ${value}</a><br>`;
+                                    if (!isVariableHaveDefaultVal(html)) {
+                                        element.html(html);
                                     }
                                 }
                                 return element[0].outerHTML;
@@ -271,22 +263,27 @@
                         {
                             text: relateDocumentText,
                             columntype: 'textbox',
-                            datafield: 'relateToDocuments',
+                            datafield: 'relateToDocumentNames',
                             editable: false,
                             width: 150,
                             cellsrenderer: function (row, column, value, defaultHtml) {
                                 const element = $(defaultHtml);
-                                const documents = value.split(';');
-                                if (!isVariableHaveDefaultVal(documents)) {
-                                    if (documents.length > 0) {
-                                        let html = '';
-                                        for (let index = 0; index < documents.length; index++) {
-                                            if (!isVariableHaveDefaultVal(documents[index])) {
-                                                html = html + `<a target="_blank" href="/document/detail?code=${documents[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                if (!isVariableHaveDefaultVal(value)) {
+                                    const documents = value.split(';');
+
+                                    if (!isVariableHaveDefaultVal(documents)) {
+
+                                        if (documents.length > 0) {
+                                            const documentCodes = dataAdapter.records[row].relateToDocuments.split(';');
+                                            let html = '';
+                                            for (let index = 0; index < documents.length; index++) {
+                                                if (!isVariableHaveDefaultVal(documents[index])) {
+                                                    html = html + `<a target="_blank" href="/document/detail?code=${documentCodes[index]}"> <i class="fa fa-file-o"></i> ${documents[index]}</a><br>`;
+                                                }
                                             }
-                                        }
-                                        if (!isVariableHaveDefaultVal(html)) {
-                                            element.html(html);
+                                            if (!isVariableHaveDefaultVal(html)) {
+                                                element.html(html);
+                                            }
                                         }
                                     }
                                 }

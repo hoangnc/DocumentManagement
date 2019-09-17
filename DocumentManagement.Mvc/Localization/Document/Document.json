@@ -1,7 +1,7 @@
 ﻿{
   "culture": "en",
   "texts": {
-    "ApplicationName": "ISO Document Managment",
+    "ApplicationName": "ISO Document Management",
     "MenuReleaseDocument": "Release document",
     "MenuReleaseNewDocument": "Release new document",
     "MenuReviewDocument": "Review document",
@@ -12,7 +12,7 @@
     "MenuReleaseAppendice": "Release appendice",
     "MenuReleaseNewAppendice": "Release new appendice",
     "MenuReviewAppendice": "Review appendice",
-    "MenuOperationData":  "Operation Data",
+    "MenuOperationData": "Operation Data",
 
     "DocumentList": "Document list",
     "DocumentInformation": "Document information",
@@ -51,6 +51,7 @@
     "PromulgateStatus": "Promulgate status",
     "Year": "Year",
     "MessageCreateDocumentSuccessed": "Release document successed!",
+    "MessageCreateAppendiceSuccessed": "Release appendice successed!",
     "Release": "Release",
     "SaveAndRelease": "Save and release",
 

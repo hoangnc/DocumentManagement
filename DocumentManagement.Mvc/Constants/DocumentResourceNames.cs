@@ -53,6 +53,7 @@
         public const string PromulgateStatus = "PromulgateStatus";
         public const string Year = "Year";
         public const string MessageCreateDocumentSuccessed = "MessageCreateDocumentSuccessed";
+        public const string MessageCreateAppendiceSuccessed = "MessageCreateAppendiceSuccessed";
         public const string Release = "Release";
         public const string SaveAndRelease = "SaveAndRelease";
 

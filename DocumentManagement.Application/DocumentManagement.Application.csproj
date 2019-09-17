@@ -83,6 +83,13 @@
     <Compile Include="Appendices\Commands\CreateAppendiceCommandValidator.cs" />
     <Compile Include="Appendices\Commands\DeleteAppendiceCommand.cs" />
     <Compile Include="Appendices\Commands\DeleteAppendiceCommandHandler.cs" />
+    <Compile Include="Appendices\Commands\DeleteAppendiceFileCommand.cs" />
+    <Compile Include="Appendices\Commands\DeleteAppendiceFileCommandHandler.cs" />
+    <Compile Include="Appendices\Commands\UpdateAppendiceCommand.cs" />
+    <Compile Include="Appendices\Commands\UpdateAppendiceCommandHandler.cs" />
+    <Compile Include="Appendices\Queries\GetAppendiceByIdDto.cs" />
+    <Compile Include="Appendices\Queries\GetAppendiceByIdQuery.cs" />
+    <Compile Include="Appendices\Queries\GetAppendiceByIdQueryHandler.cs" />
     <Compile Include="Appendices\Queries\SearchAppendicesByTokenPagedDto.cs" />
     <Compile Include="Appendices\Queries\SearchAppendicesByTokenPagedQuery.cs" />
     <Compile Include="Appendices\Queries\SearchAppendicesByTokenPagedQueryHandler.cs" />
@@ -166,6 +173,9 @@
     <Compile Include="Statuses\Queries\GetAllStatusesDto.cs" />
     <Compile Include="Statuses\Queries\GetAllStatusesQuery.cs" />
     <Compile Include="Statuses\Queries\GetAllStatusesQueryHandler.cs" />
+    <Compile Include="UserGroups\Queries\SearchUserGroupsByTokenPagedDto.cs" />
+    <Compile Include="UserGroups\Queries\SearchUserGroupsByTokenPagedQuery.cs" />
+    <Compile Include="UserGroups\Queries\SearchUserGroupsByTokenPagedQueryHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

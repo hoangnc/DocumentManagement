@@ -46,6 +46,7 @@ namespace DocumentManagement.Application.Documents.Queries
                     ScopeOfDeloyment = d.ScopeOfDeloyment,
                     StatusId = d.StatusId,
                     PromulgateStatusId = d.PromulgateStatusId,
+                    PromulgateStatusCode = _context.PromulgateStatuses.Where(p => p.Id == d.PromulgateStatusId).FirstOrDefault().Code,
                     ReplaceByDocuments = _context.Documents.Where(d1 => _context.StringSplit(d1.RelateToDocuments, ";").Any(d2 => d2.SplitData == d.Code))
                     .Select(d1 => new ReplaceToDocumentDto
                     {
@@ -55,6 +56,7 @@ namespace DocumentManagement.Application.Documents.Queries
                         FolderName = d1.FolderName,
                         DocumentNumber = d1.DocumentNumber,
                         EffectiveDate = d1.EffectiveDate,
+                        ReviewNumber = d1.ReviewNumber,
                         ReviewDate = d1.ReviewDate
                     }).ToList(),
                     RelateToDocuments = _context.Documents.Join(
@@ -69,6 +71,7 @@ namespace DocumentManagement.Application.Documents.Queries
                                                        FolderName = d1.FolderName,
                                                        DocumentNumber = d1.DocumentNumber,
                                                        EffectiveDate = d1.EffectiveDate,
+                                                       ReviewNumber = d1.ReviewNumber,
                                                        ReviewDate = d1.ReviewDate
                                                    }).ToList(),
                     ReplaceToDocuments = _context.Documents.Join(_context.StringSplit(d.ReplaceOf, ";"),
@@ -82,6 +85,7 @@ namespace DocumentManagement.Application.Documents.Queries
                                                        FolderName = d1.FolderName,
                                                        DocumentNumber = d1.DocumentNumber,
                                                        EffectiveDate = d1.EffectiveDate,
+                                                       ReviewNumber = d1.ReviewNumber,
                                                        ReviewDate = d1.ReviewDate
                                                    }).ToList(),
                     Appendices = _context.Appendices.Where(a => _context.StringSplit(a.RelateToDocuments, ";").Any(a1 => a1.SplitData == d.Code))

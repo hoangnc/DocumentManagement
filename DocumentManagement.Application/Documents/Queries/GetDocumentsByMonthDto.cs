@@ -2,7 +2,7 @@
 
 namespace DocumentManagement.Application.Documents.Queries
 {
-    public class GetDocumentsByMonthDto
+    public class GetDocumentsByMonthDto : ICloneable
     {
         public int Id { get; set; }
         public string Code { get; set; }
@@ -29,5 +29,10 @@ namespace DocumentManagement.Application.Documents.Queries
         public string FolderName { get; set; }
         public string StatusName { get; set; }
         public string LinkFile { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
     }
 }

@@ -32,6 +32,7 @@ namespace DocumentManagement.Application.Documents.Queries
         public string FolderName { get; set; }
         public int StatusId { get; set; }
         public int PromulgateStatusId { get; set; }
+        public string PromulgateStatusCode { get; set; }
         public List<ReplaceToDocumentDto> ReplaceByDocuments { get; set; }
         public List<ReplaceToDocumentDto> ReplaceToDocuments { get; set; }
         public List<RelateToDocumentDto> RelateToDocuments { get; set; }

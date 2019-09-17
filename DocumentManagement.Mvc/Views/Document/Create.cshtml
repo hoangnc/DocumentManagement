@@ -198,7 +198,7 @@
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
                            data-placement="top"
-                           title="Phòng ban là bắt buộc không được bỏ trống"></i>
+                           title="Ngày soát xét là bắt buộc không được bỏ trống"></i>
                         &nbsp;
                         <div class="input-group">
                             <input type="text"
@@ -235,7 +235,8 @@
                                 class="form-control"
                                 autocomplete="off"
                                 id="StatusId"
-                                name="StatusId"></select>
+                                name="StatusId"
+                                disabled></select>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -250,7 +251,8 @@
                                 class="form-control"
                                 autocomplete="off"
                                 id="PromulgateStatusId"
-                                name="PromulgateStatusId"></select>
+                                name="PromulgateStatusId"
+                                disabled></select>
                     </div>
                 </div>
             </div>
@@ -385,7 +387,18 @@
                         <select class="form-control"
                                 id="ScopeOfDeloyment"
                                 name="ScopeOfDeloyment"
-                                multiple></select>
+                                multiple
+                                data-validation="required"></select>
+                        <button type="button"
+                                id="btnAll"
+                                class="btn btn-primary btn-sm">
+                            All
+                        </button>
+                        <button type="button"
+                                id="btnRemoveAll"
+                                class="btn btn-primary btn-sm">
+                            Remove All
+                        </button>
                     </div>
                 </div>
             </div>
@@ -713,6 +726,8 @@
                         { name: 'id', type: 'int' },
                         { name: 'code', type: 'string' },
                         { name: 'name', type: 'string' },
+                        { name: 'fileName', type: 'string' },
+                        { name: 'folderName', type: 'string' },
                         { name: 'displayText', type: 'string' },
                         { name: 'documentNumber', type: 'string' },
                         { name: 'reviewNumber', type: 'string' }
@@ -871,7 +886,7 @@
                                         let html = '';
                                         for (let index = 0; index < fileNames.length; index++) {
                                             if (!isVariableHaveDefaultVal(fileNames[index])) {
-                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                                const filePath = `${folderName}/${fileNames[index]}`;
                                                 let fileIcon = 'fa fa-file-o';
                                                 switch (getFileExtension(fileNames[index])) {
                                                     case 'pdf':
@@ -890,7 +905,7 @@
                                                         fileIcon = 'fa fa-file-word-o';
                                                         break;
                                                 }
-                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                                html = html + `<a target="_blank" href="/downloadfile/viewfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
                                         if (!isVariableHaveDefaultVal(html)) {
@@ -1247,7 +1262,7 @@
         function getAllStatuses() {
             return $.getJSON(getAllStatusesUrl,
                 function (data) {
-                    statuses = data.map((status) => {
+                    statuses = data.filter(s => { return s.code.toLowerCase() === "approved"; }).map((status) => {
                         return {
                             id: status.id,
                             text: status.name
@@ -1260,7 +1275,7 @@
         function getAllPromulgateStatuses() {
             return $.getJSON(getAllPromulgateStatusesUrl,
                 function (data) {
-                    promulgateStatuses = data.map((status) => {
+                    promulgateStatuses = data.filter(s => { return s.code.toLowerCase() === "new"; }).map((status) => {
                         return {
                             id: status.id,
                             text: status.name
@@ -1573,6 +1588,16 @@
     <script>
         $(document).ready(function () {
             const enterKeyUp = $.Event("keyup", { keyCode: 13 });
+
+            $('#btnAll').click(function () {
+                $ScopeOfDeloyment.val(groups.map(g => { return g.id;})).trigger('change');;
+            });
+
+            $('#btnRemoveAll').click(function () {
+                $ScopeOfDeloyment.val([]).trigger('change');;
+            });
+
+
             $('#DCCAudited').jqxCheckBox();
 
             $('#DCCAudited').on('change', function (event) {
@@ -1618,10 +1643,12 @@
             $("#formDocument").submit(function (e) {
                 e.preventDefault();
                 let btn = $(this).find("button[type=submit]:focus");
-                if (btn.id === 'btnSubmit') {
-                    create();
-                } else {
-                    createAndRelease();
+                if (btn.length > 0) {
+                    if (btn[0].id === 'btnSubmit') {
+                        create();
+                    } else {
+                        createAndRelease();
+                    }
                 }
             });
 

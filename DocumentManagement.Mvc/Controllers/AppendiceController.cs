@@ -1,8 +1,10 @@
-﻿using DocumentManagement.Mvc.Services;
+﻿using DocumentManagement.Application.Appendices.Queries;
+using DocumentManagement.Mvc.Services;
 using DT.Core.Web.Ui.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Thinktecture.IdentityModel.Mvc;
@@ -33,6 +35,21 @@ namespace DocumentManagement.Mvc.Controllers
         public ActionResult Create()
         {
             return View();
+        }
+
+        [ResourceAuthorize(DtPermissionBaseTypes.Update, DocumentResources.Documents)]
+        [HandleForbidden]
+        [Menu(SelectedMenu = MenuNameConstants.ReleaseNewAppendice)]
+        public async Task<ActionResult> Update(int id)
+        {
+            GetAppendiceByIdDto getAppendiceByIdDto = new GetAppendiceByIdDto();
+
+            getAppendiceByIdDto = await Mediator.Send(new GetAppendiceByIdQuery
+            {
+                Id = id
+            });
+
+            return View(getAppendiceByIdDto);
         }
     }
 }

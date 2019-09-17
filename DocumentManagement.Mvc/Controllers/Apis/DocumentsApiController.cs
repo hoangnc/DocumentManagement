@@ -45,6 +45,7 @@ namespace DocumentManagement.Mvc.Controllers.Apis
                 DataSourceRequest = dataSourceRequest,
                 Token = token,
                 Department = User.Identity.GetDepartment(),
+                UserName = User.Identity.GetUserName(),
                 AdvancedSearch = advancedSearch,
                 DocumentType = documentType
             });
@@ -186,6 +187,34 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             updateDocumentCommand.FileName = await UploadDocuments(updateDocumentCommand);
 
             return await Mediator.Send(updateDocumentCommand);
+        }
+
+        [Route("api/documents/updateandrelease")]
+        [HttpPost]
+        [ResourceAuthorize(DtPermissionBaseTypes.Update, DocumentResources.ApiDocuments)]
+        public async Task<int> UpdateAndRelease([FromBody]UpdateDocumentCommand updateDocumentCommand)
+        {
+            updateDocumentCommand.ModifiedBy = User.Identity.GetUserName();
+            updateDocumentCommand.ModifiedOn = DateTime.Now;
+            updateDocumentCommand.Deleted = false;
+            updateDocumentCommand.FileName = await UploadDocuments(updateDocumentCommand);
+
+            int id = await Mediator.Send(updateDocumentCommand);
+
+            if (id > 0)
+            {
+                GetDocumentByIdDto document = await Mediator.Send(new GetDocumentByIdQuery
+                {
+                    Id = id
+                });
+
+                if (document != null && document.Id > 0)
+                {
+                    await SendMailUpdateAndReleaseDocument(document);
+                }
+                
+            }
+            return id;
         }
 
         [Route("api/documents/review")]

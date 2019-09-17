@@ -16,6 +16,9 @@ namespace DocumentManagement.Persistence.Configurations
 
             Property(e => e.DocumentId);
 
+            Property(e => e.AppendiceNumber)
+                .HasMaxLength(128);
+
             Property(e => e.Code)
                 .IsRequired()
                 .HasMaxLength(128);

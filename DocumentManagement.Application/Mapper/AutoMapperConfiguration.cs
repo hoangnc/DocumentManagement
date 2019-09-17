@@ -70,6 +70,8 @@ namespace DocumentManagement.Application.Mapper
                 cfg.CreateMap<Status, GetAllStatusesDto>();
 
                 cfg.CreateMap<Group, GetAllGroupsDto>();
+
+                cfg.CreateMap<Appendice, GetAppendiceByIdDto>();
             });
 
             Mapper = MapperConfiguration.CreateMapper();

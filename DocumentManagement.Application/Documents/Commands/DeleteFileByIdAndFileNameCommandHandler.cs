@@ -30,6 +30,7 @@ namespace DocumentManagement.Application.Documents.Commands
                     files.Remove(request.FileName);
 
                     document.FileName = string.Join(";", files);
+                    document.LinkFile = string.Empty;
                     return await _context.SaveChangesAsync();
                 }
             }

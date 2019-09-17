@@ -46,6 +46,8 @@ namespace DocumentManagement.Application.Documents.Commands
             }
 
             Document document = request.ToDocument();
+            document.StatusId = 1;
+            document.PromulgateStatusId = 1;
             _context.Documents.Add(document);
             await _context.SaveChangesAsync(cancellationToken);
             if (document.Id > 0)

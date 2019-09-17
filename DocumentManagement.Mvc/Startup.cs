@@ -13,7 +13,7 @@ using Owin;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens;
 using System.Linq;
 using System.Net;
 using System.Net.Security;
@@ -32,9 +32,9 @@ namespace DocumentManagement.Mvc
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
             AntiForgeryConfig.UniqueClaimTypeIdentifier = IdentityServer3.Core.Constants.ClaimTypes.Subject;
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap = new Dictionary<string, string>();
+            JwtSecurityTokenHandler.InboundClaimTypeMap = new Dictionary<string, string>();
             // Adjust the configuration for anti-CSRF protection to the new unique sub claim type
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            JwtSecurityTokenHandler.InboundClaimTypeMap.Clear();
 
             IContainer container = AutofacConfig.ConfigureContainer();
 
@@ -57,7 +57,7 @@ namespace DocumentManagement.Mvc
             {
                 
                 OpenIdConnectionOption openIdConnectionOption = (section as OpenIdConnectionOptionSection).OpenIdConnectionOption;
-                app.UseOpenIdConnectAuthentication(new OpenIdConnectAuthenticationOptions
+                app.UseOpenIdConnectAuthenticationPatched(new OpenIdConnectAuthenticationOptions
                 {
                     
                     Authority = openIdConnectionOption.Authority,
@@ -67,7 +67,6 @@ namespace DocumentManagement.Mvc
                     RedirectUri = openIdConnectionOption.RedirectUri,
                     SignInAsAuthenticationType = openIdConnectionOption.SignInAsAuthenticationType,
                     UseTokenLifetime = openIdConnectionOption.UseTokenLifetime,
-                    RequireHttpsMetadata = false,
                     Notifications = new OpenIdConnectAuthenticationNotifications
                     {
                         
@@ -111,19 +110,25 @@ namespace DocumentManagement.Mvc
                             return Task.FromResult(true);
                         },*/
                         RedirectToIdentityProvider = n =>
-                        {
-                            if (n.ProtocolMessage.RequestType == Microsoft.IdentityModel.Protocols.OpenIdConnect.OpenIdConnectRequestType.Logout)
+                        { 
+                            switch (n.ProtocolMessage.RequestType)
                             {
-                                string uri = ConfigurationManager.AppSettings["Host"].ToString();
-                                n.ProtocolMessage.RedirectUri = uri;
-                                n.ProtocolMessage.PostLogoutRedirectUri = uri;
+                                case OpenIdConnectRequestType.AuthenticationRequest:
+                                    // hack to work around session cookie not being removed when expires. this is preventing owin from accepting an open id response
+                                    n.OwinContext.Authentication.SignOut("Cookies");
+                                    break;
+                                case  OpenIdConnectRequestType.LogoutRequest:
+                                    string uri = ConfigurationManager.AppSettings["Host"].ToString();
+                                    n.ProtocolMessage.RedirectUri = uri;
+                                    n.ProtocolMessage.PostLogoutRedirectUri = uri;
 
-                                Claim idTokenHint = n.OwinContext.Authentication.User.FindFirst("id_token");
+                                    Claim idTokenHint = n.OwinContext.Authentication.User.FindFirst("id_token");
 
-                                if (idTokenHint != null)
-                                {
-                                    n.ProtocolMessage.IdTokenHint = idTokenHint.Value;
-                                }
+                                    if (idTokenHint != null)
+                                    {
+                                        n.ProtocolMessage.IdTokenHint = idTokenHint.Value;
+                                    }
+                                    break;
                             }
 
                             return Task.FromResult(0);
@@ -132,5 +137,71 @@ namespace DocumentManagement.Mvc
                 });
             }
         }
+
     }
+    public static class OpenIdConnectAuthenticationPatchedMiddlewareExtension
+    {
+        public static IAppBuilder UseOpenIdConnectAuthenticationPatched(this IAppBuilder app, Microsoft.Owin.Security.OpenIdConnect.OpenIdConnectAuthenticationOptions openIdConnectOptions)
+        {
+            if (app == null)
+            {
+                throw new System.ArgumentNullException("app");
+            }
+            if (openIdConnectOptions == null)
+            {
+                throw new System.ArgumentNullException("openIdConnectOptions");
+            }
+            System.Type type = typeof(OpenIdConnectAuthenticationPatchedMiddleware);
+            object[] objArray = new object[] { app, openIdConnectOptions };
+            return app.Use(type, objArray);
+        }
+    }
+
+
+    /// <summary>
+    /// Patched to fix the issue with too many nonce cookies described here: https://github.com/IdentityServer/IdentityServer3/issues/1124
+    /// Deletes all nonce cookies that weren't the current one
+    /// </summary>
+    public class OpenIdConnectAuthenticationPatchedMiddleware : OpenIdConnectAuthenticationMiddleware
+    {
+        private readonly Microsoft.Owin.Logging.ILogger _logger;
+
+        public OpenIdConnectAuthenticationPatchedMiddleware(Microsoft.Owin.OwinMiddleware next, Owin.IAppBuilder app, Microsoft.Owin.Security.OpenIdConnect.OpenIdConnectAuthenticationOptions options)
+                : base(next, app, options)
+        {
+            this._logger = Microsoft.Owin.Logging.AppBuilderLoggerExtensions.CreateLogger<OpenIdConnectAuthenticationPatchedMiddleware>(app);
+        }
+
+        protected override Microsoft.Owin.Security.Infrastructure.AuthenticationHandler<OpenIdConnectAuthenticationOptions> CreateHandler()
+        {
+            return new SawtoothOpenIdConnectAuthenticationHandler(_logger);
+        }
+
+        public class SawtoothOpenIdConnectAuthenticationHandler : OpenIdConnectAuthenticationHandler
+        {
+            public SawtoothOpenIdConnectAuthenticationHandler(Microsoft.Owin.Logging.ILogger logger)
+                : base(logger) { }
+
+            protected override void RememberNonce(OpenIdConnectMessage message , string nonce)
+            {
+                var oldNonces = Request.Cookies.Where(kvp => kvp.Key.StartsWith(OpenIdConnectAuthenticationDefaults.CookiePrefix + "nonce"));
+                if (oldNonces.Any())
+                {
+                    CookieOptions cookieOptions = new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = Request.IsSecure
+                    };
+                    foreach (KeyValuePair<string, string> oldNonce in oldNonces)
+                    {
+                        Response.Cookies.Delete(oldNonce.Key, cookieOptions);
+                    }
+                }
+                base.RememberNonce(message, nonce);
+            }
+        }
+    }
+
+
+
 }

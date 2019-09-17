@@ -28,6 +28,9 @@
                     <a href="#" id="btnRelease" class="btn btn-primary btn-sm">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i> @L(DocumentResourceNames.Release)
                     </a>
+                    <button id="btnSaveAndRelease" type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> @L(DocumentResourceNames.SaveAndRelease)
+                    </button>
                 </div>
             </div>
         </div>
@@ -277,7 +280,18 @@
                         <select class="form-control"
                                 id="ScopeOfDeloyment"
                                 name="ScopeOfDeloyment"
-                                multiple></select>
+                                multiple
+                                data-validation="required"></select>
+                        <button type="button"
+                                id="btnAll"
+                                class="btn btn-primary btn-sm">
+                            All
+                        </button>
+                        <button type="button"
+                                id="btnRemoveAll"
+                                class="btn btn-primary btn-sm">
+                            Remove All
+                        </button>
                     </div>
                 </div>
             </div>
@@ -408,6 +422,9 @@
                     </button>
                     <button id="btnRelease" class="btn btn-primary btn-sm">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i> @L(DocumentResourceNames.Release)
+                    </button>
+                    <button id="btnSaveAndRelease" type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> @L(DocumentResourceNames.SaveAndRelease)
                     </button>
                 </div>
             </div>
@@ -700,7 +717,7 @@
                             }
                         },
                         {
-                            text: 'Tên tài liệu',
+                            text: documentNameText,
                             columntype: 'textbox',
                             datafield: 'displayText',
                             pinned: false,
@@ -796,7 +813,7 @@
                                                         fileIcon = 'fa fa-file-word-o';
                                                         break;
                                                 }
-                                                html = html + `<a target="_blank" href="/dowloadfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                                html = html + `<a target="_blank" href="/downloadfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
                                         if (!isVariableHaveDefaultVal(html)) {
@@ -808,7 +825,7 @@
                             }
                         },
                         {
-                            text: 'Số hiệu',
+                            text: documentNumberText,
                             columntype: 'textbox',
                             datafield: 'documentNumber',
                             pinned: false,
@@ -816,7 +833,7 @@
                             width: 100
                         },
                         {
-                            text: 'Ban hành ngày',
+                            text: effectiveDateText,
                             datafield: 'effectiveDate',
                             columntype: 'datetimeinput',
                             width: 110,
@@ -827,7 +844,7 @@
                             editable: false
                         },
                         {
-                            text: 'Soán xét',
+                            text: reviewDateText,
                             datafield: 'reviewDate',
                             columntype: 'datetimeinput',
                             width: 110,
@@ -1080,7 +1097,7 @@
                                                         fileIcon = 'fa fa-file-word-o';
                                                         break;
                                                 }
-                                                html = html + `<a target="_blank" href="/dowloadfile/viewfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                                html = html + `<a target="_blank" href="/downloadfile/viewfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
                                         if (!isVariableHaveDefaultVal(html)) {
@@ -1444,6 +1461,7 @@
         const getAllPromulgateStatusesUrl = `${hostUrl}/api/promulgatestatuses/getallpromulgatestatuses`;
         const updateDocumentUrl = `${hostUrl}/api/documents/update`;
         const releaseDocumentUrl = `${hostUrl}/api/documents/release`;
+        const createAndReleaseDocumentUrl = `${hostUrl}/api/documents/updateandrelease`;
 
         // Get all statuses
         function getAllStatuses() {
@@ -1661,7 +1679,6 @@
             });
 
             let scopeOfDeloyment = `@Model.ScopeOfDeloyment`;
-            console.log(scopeOfDeloyment);
             $ScopeOfDeloyment.val(scopeOfDeloyment.split(';')).trigger('change');
 
             $Module.select2({
@@ -1748,11 +1765,74 @@
                 }
             });
         }
+
+        function createAndRelease() {
+            // Create an FormData object
+            let formData = $("#formDocument").submit(function (e) {
+                e.preventDefault();
+                return;
+            });
+            //formData[0] contain form data only
+            // You can directly make object via using form id but it require all ajax operation inside $("form").submit(<!-- Ajax Here   -->)
+            formData = new FormData(formData[0]);
+
+            // Document files
+            for (let i = 0, len = storedFiles.length; i < len; i++) {
+                formData.append('files', storedFiles[i]);
+            }
+
+            // Appendice files
+            for (let i = 0; i < appendiceFiles.length; i++) {
+                formData.append('appendiceFiles', appendiceFiles[i].file);
+            }
+
+            const appendices = getAppendices();
+            objectToFormData(appendices, formData, 'appendices', []);
+
+            if (!isVariableHaveDefaultVal($Approver.val()))
+                formData.set('Approver', $Approver.val().join(';'));
+            if (!isVariableHaveDefaultVal($Auditor.val()))
+                formData.set('Auditor', $Auditor.val().join(';'));
+            if (!isVariableHaveDefaultVal($Drafter.val()))
+                formData.set('Drafter', $Drafter.val().join(';'));
+            if (!isVariableHaveDefaultVal($ScopeOfDeloyment.val()))
+                formData.set('ScopeOfDeloyment', $ScopeOfDeloyment.val().join(';'));
+
+            const replaceToDocuments = getReplaceToDocuments().map((document) => document.code);
+            const relateToDocuments = getRelateToDocuments().map((document) => document.code);
+
+            formData.set('ReplaceOf', replaceToDocuments.join(';'));
+            formData.set('RelateToDocuments', relateToDocuments.join(';'));
+
+            $.ajax({
+                url: createAndReleaseDocumentUrl,
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (event, settings, xhr) {
+                    xhr.message = {
+                        infor: '@L(DocumentResourceNames.MessageCreateDocumentSuccessed)',
+                        returnUrl: `${hostUrl}/document/list`
+                    };
+                }
+            });
+        }
     </script>
     <!--Events-->
     <script>
         $(document).ready(function () {
             const enterKeyUp = $.Event("keyup", { keyCode: 13 });
+
+            $('#btnAll').click(function () {
+                $ScopeOfDeloyment.val(groups.map(g => { return g.id; })).trigger('change');;
+            });
+
+            $('#btnRemoveAll').click(function () {
+                $ScopeOfDeloyment.val([]).trigger('change');;
+            });
+
             $('#DCCAudited').jqxCheckBox();
 
             $('#DCCAudited').on('change', function (event) {
@@ -1790,7 +1870,14 @@
 
             $("#formDocument").submit(function (e) {
                 e.preventDefault();
-                create();
+                let btn = $(this).find("button[type=submit]:focus");
+                if (btn.length > 0) {
+                    if (btn[0].id === 'btnSubmit') {
+                        create();
+                    } else {
+                        createAndRelease();
+                    }
+                }
             });
 
             $('#btnRelease').click(function () {

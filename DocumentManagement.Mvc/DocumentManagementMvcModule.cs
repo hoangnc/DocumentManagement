@@ -107,7 +107,8 @@ namespace DocumentManagement.Mvc
                 .InstancePerRequest();
 
             IAppCache cache = new CachingService(CachingService.DefaultCacheProvider);
-            cache.DefaultCachePolicy.DefaultCacheDurationSeconds = 60 * 3600;
+            cache.DefaultCachePolicy.DefaultCacheDurationSeconds = 60 * 36000;
+
             builder.Register(c => cache)
                 .As<IAppCache>()
                 .SingleInstance();

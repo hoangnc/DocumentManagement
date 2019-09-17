@@ -54,13 +54,16 @@ namespace DocumentManagement.Mvc
             builder.RegisterWebApiModelBinderProvider();
 
             builder.RegisterAssemblyTypes(typeof(CreateDocumentCommandValidator).Assembly)
-                .AsImplementedInterfaces() ;
+                .AsImplementedInterfaces()
+                .SingleInstance();
 
             builder.RegisterType<FluentValidationModelValidatorProvider>()
-                .As<ModelValidatorProvider>();
+                .As<ModelValidatorProvider>()
+                .SingleInstance();
 
             builder.RegisterType<FluentValidation.WebApi.FluentValidationModelValidatorProvider>()
-                .As<System.Web.Http.Validation.ModelValidatorProvider>();
+                .As<System.Web.Http.Validation.ModelValidatorProvider>()
+                .SingleInstance();
 
             builder.RegisterType<AutofacValidatorFactory>()
                 .As<IValidatorFactory>()

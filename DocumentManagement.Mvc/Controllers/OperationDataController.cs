@@ -1,6 +1,7 @@
 ﻿using DocumentManagement.Application.Documents.Queries;
 using DocumentManagement.Application.DocumentTypes.Queries;
 using DocumentManagement.Mvc.Services;
+using DT.Core.Web.Common.Identity.Extensions;
 using DT.Core.Web.Ui.Navigation;
 using System.Linq;
 using System.Threading.Tasks;
@@ -81,7 +82,24 @@ namespace DocumentManagement.Mvc.Controllers
                 Code = code
             });
 
-            return View(getDocumentByCodeDto);
+            string department = User.Identity.GetDepartment();
+
+            if (getDocumentByCodeDto.ScopeOfDeloyment.Contains(department))
+                return View(getDocumentByCodeDto);
+
+            string userName = User.Identity.GetUserName();
+
+            if (getDocumentByCodeDto.Auditor.Equals(userName))
+                return View(getDocumentByCodeDto);
+
+            if (getDocumentByCodeDto.Drafter.Equals(userName))
+                return View(getDocumentByCodeDto);
+
+            if (getDocumentByCodeDto.Approver.Equals(userName))
+                return View(getDocumentByCodeDto);
+
+            return RedirectToAction("List");
+
         }
     }
 }

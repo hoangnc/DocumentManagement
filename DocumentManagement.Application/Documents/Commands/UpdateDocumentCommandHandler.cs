@@ -22,8 +22,9 @@ namespace DocumentManagement.Application.Documents.Commands
         }
         public async Task<int> Handle(UpdateDocumentCommand request, CancellationToken cancellationToken)
         {
-            Document document = await _context.Documents.FirstOrDefaultAsync(a => a.Id == request.Id
-                                                                                && !a.Deleted);
+            Document document = _context.Documents.Where(a => a.Id == request.Id
+                                                                        && !a.Deleted)
+                .FirstOrDefault();
             if (document != null && document.Id > 0)
             {
                 if (!string.IsNullOrEmpty(document.FileName))
@@ -65,9 +66,9 @@ namespace DocumentManagement.Application.Documents.Commands
                 document.FormType = request.FormType;
                 document.DDCAudited = request.DDCAudited;
                 document.ReviewDate = request.ReviewDate;
-                document.StatusId = request.StatusId;
                 document.LinkFile = request.LinkFile;
                 document.FolderName = request.FolderName;
+                document.Name = request.Name;
 
                 if (request.Appendices !=null && request.Appendices.Any())
                 {

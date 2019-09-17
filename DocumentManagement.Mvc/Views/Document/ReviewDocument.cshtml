@@ -235,7 +235,8 @@
                                 class="form-control"
                                 autocomplete="off"
                                 id="StatusId"
-                                name="StatusId"></select>
+                                name="StatusId"
+                                disabled></select>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -250,7 +251,8 @@
                                 class="form-control"
                                 autocomplete="off"
                                 id="PromulgateStatusId"
-                                name="PromulgateStatusId"></select>
+                                name="PromulgateStatusId"
+                                disabled></select>
                     </div>
                 </div>
             </div>
@@ -387,7 +389,18 @@
                         <select class="form-control"
                                 multiple
                                 id="ScopeOfDeloyment"
-                                name="ScopeOfDeloyment"></select>
+                                name="ScopeOfDeloyment"
+                                data-validation="required"></select>
+                        <button type="button"
+                                id="btnAll"
+                                class="btn btn-primary btn-sm">
+                            All
+                        </button>
+                        <button type="button"
+                                id="btnRemoveAll"
+                                class="btn btn-primary btn-sm">
+                            Remove All
+                        </button>
                     </div>
                 </div>
             </div>
@@ -476,6 +489,21 @@
                             {% } %}
                         </script>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-footer clearfix no-border">
+            <div class="mailbox-controls">
+                <div class="btn-group">
+                    <a href="@Url.Action("List")" class="btn btn-success btn-sm">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.List)
+                    </a>
+                    <button id="btnSubmit" type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Save)
+                    </button>
+                    <button id="btnSaveAndRelease" type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> @L(DocumentResourceNames.SaveAndRelease)
+                    </button>
                 </div>
             </div>
         </div>
@@ -707,7 +735,9 @@
                         { name: 'name', type: 'string' },
                         { name: 'displayText', type: 'string' },
                         { name: 'documentNumber', type: 'string' },
-                        { name: 'reviewNumber', type: 'string' }
+                        { name: 'reviewNumber', type: 'string' },
+                        { name: 'fileName', type: 'string' },
+                        { name: 'folderName', type: 'string' }
                     ]
             };
             let dataAdapter = new $.jqx.dataAdapter(source, { uniqueDataFields: [datafield] });
@@ -786,7 +816,7 @@
                             }
                         },
                         {
-                            text: 'Tên tài liệu',
+                            text: documentNameText,
                             columntype: 'textbox',
                             datafield: 'displayText',
                             pinned: false,
@@ -881,7 +911,7 @@
                                         let html = '';
                                         for (let index = 0; index < fileNames.length; index++) {
                                             if (!isVariableHaveDefaultVal(fileNames[index])) {
-                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                                const filePath = `${folderName}/${fileNames[index]}`;
                                                 let fileIcon = 'fa fa-file-o';
                                                 switch (getFileExtension(fileNames[index])) {
                                                     case 'pdf':
@@ -900,7 +930,7 @@
                                                         fileIcon = 'fa fa-file-word-o';
                                                         break;
                                                 }
-                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                                html = html + `<a target="_blank" href="/downloadfile/viewfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
                                         if (!isVariableHaveDefaultVal(html)) {
@@ -912,7 +942,7 @@
                             }
                         },
                         {
-                            text: 'Số hiệu',
+                            text: documentNumberText,
                             columntype: 'textbox',
                             datafield: 'documentNumber',
                             pinned: false,
@@ -920,7 +950,7 @@
                             width: 100
                         },
                         {
-                            text: 'Ban hành ngày',
+                            text: effectiveDateText,
                             datafield: 'effectiveDate',
                             columntype: 'datetimeinput',
                             width: 110,
@@ -931,7 +961,7 @@
                             editable: false
                         },
                         {
-                            text: 'Soán xét',
+                            text: reviewDateText,
                             datafield: 'reviewDate',
                             columntype: 'datetimeinput',
                             width: 110,
@@ -1131,7 +1161,6 @@
                                 editor.on('select', function (event) {
                                     if (event.args) {
                                         let item = event.args.item;
-                                        console.log(item);
                                         if (!isVariableHaveDefaultVal(item)) {
                                             const document = documents.filter(document => document.displayText === item.label);
                                             if (!isVariableHaveDefaultVal(document)) {
@@ -1175,7 +1204,7 @@
                                         let html = '';
                                         for (let index = 0; index < fileNames.length; index++) {
                                             if (!isVariableHaveDefaultVal(fileNames[index])) {
-                                                const filePath = `${uploadFileRootPath}/${folderName}/${fileNames[index]}`;
+                                                const filePath = `${folderName}/${fileNames[index]}`;
                                                 let fileIcon = 'fa fa-file-o';
                                                 switch (getFileExtension(fileNames[index])) {
                                                     case 'pdf':
@@ -1194,7 +1223,7 @@
                                                         fileIcon = 'fa fa-file-word-o';
                                                         break;
                                                 }
-                                                html = html + `<a target="_blank" href="${filePath}?"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
+                                                html = html + `<a target="_blank" href="/downloadfile/viewfile?sourceDoc=${filePath}"> <i class="${fileIcon}"></i> ${fileNames[index]}</a><br>`;
                                             }
                                         }
                                         if (!isVariableHaveDefaultVal(html)) {
@@ -1554,7 +1583,7 @@
         function getAllStatuses() {
             return $.getJSON(getAllStatusesUrl,
                 function (data) {
-                    statuses = data.map((status) => {
+                    statuses = data.filter(s => { return s.code.toLowerCase() === "approved"; }).map((status) => {
                         return {
                             id: status.id,
                             text: status.name
@@ -1567,7 +1596,7 @@
         function getAllPromulgateStatuses() {
             return $.getJSON(getAllPromulgateStatusesUrl,
                 function (data) {
-                    promulgateStatuses = data.map((status) => {
+                    promulgateStatuses = data.filter(s => { return s.code.toLowerCase() === "review"; }).map((status) => {
                         return {
                             id: status.id,
                             text: status.name
@@ -1693,9 +1722,8 @@
         }
 
         $('#Code').val(genDocumentCode());
-        $('#ReviewNumber').inputmask("99/99", {
-            placeholder: "00/00",
-        });
+
+        $('#ReviewNumber').inputmask({ mask: "9*/9*" });
 
         Promise.all([getAllUsers(),
             getAllDepartments(),
@@ -1876,7 +1904,13 @@
     <script>
         $(document).ready(function () {
             const enterKeyUp = $.Event("keyup", { keyCode: 13 });
+            $('#btnAll').click(function () {
+                $ScopeOfDeloyment.val(groups.map(g => { return g.id; })).trigger('change');;
+            });
 
+            $('#btnRemoveAll').click(function () {
+                $ScopeOfDeloyment.val([]).trigger('change');;
+            });
             // Effective date
             $('#EffectiveDate').datepicker({
                 language: cultureSelector,
@@ -1909,10 +1943,12 @@
                 e.preventDefault();
                 // Get the submit button element
                 let btn = $(this).find("button[type=submit]:focus");
-                if (btn.id === 'btnSubmit') {
-                    create();
-                } else {
-                    createAndRelease();
+                if (btn.length > 0) {
+                    if (btn[0].id === 'btnSubmit') {
+                        create();
+                    } else {
+                        createAndRelease();
+                    }
                 }
             });
 

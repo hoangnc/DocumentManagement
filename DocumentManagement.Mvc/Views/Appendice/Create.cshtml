@@ -76,6 +76,7 @@
                                class="form-control"
                                id="DocumentType"
                                name="DocumentType"
+                               disabled
                                data-validation="required" />
                     </div>
                 </div>
@@ -184,27 +185,27 @@
                 </div>
             </div>
             <!-- <div class="form-group">
-                 <label>@L(DocumentResourceNames.Description)</label>
-                 <i id="code-help"
-                    class="fa fa-info-circle red-text"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Diễn giải vắn tắt các thông tin về tài liệu"></i>
-                 <textarea class="form-control"
-                           name="Description"
-                           id="Description"></textarea>
-             </div>
-             <div class="form-group">
-                 <label>@L(DocumentResourceNames.ContentChange)</label>
-                 <i id="code-help"
-                    class="fa fa-info-circle red-text"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Nội dung thay đổi nếu có"></i>
-                 <textarea class="form-control"
-                           name="ContentChange"
-                           id="ContentChange"></textarea>
-             </div>-->
+                <label>@L(DocumentResourceNames.Description)</label>
+                <i id="code-help"
+                   class="fa fa-info-circle red-text"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   title="Diễn giải vắn tắt các thông tin về tài liệu"></i>
+                <textarea class="form-control"
+                          name="Description"
+                          id="Description"></textarea>
+            </div>
+            <div class="form-group">
+                <label>@L(DocumentResourceNames.ContentChange)</label>
+                <i id="code-help"
+                   class="fa fa-info-circle red-text"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   title="Nội dung thay đổi nếu có"></i>
+                <textarea class="form-control"
+                          name="ContentChange"
+                          id="ContentChange"></textarea>
+            </div>-->
 
             <div class="row">
                 <div class="col-md-4">
@@ -235,7 +236,8 @@
                                class="form-control"
                                autocomplete="off"
                                id="ReviewNumber"
-                               name="ReviewNumber" />
+                               name="ReviewNumber" 
+                               data-validation="required"/>
                     </div>
                 </div>
             </div>
@@ -253,7 +255,8 @@
                                class="form-control"
                                autocomplete="off"
                                id="EffectiveDate"
-                               name="EffectiveDate" />
+                               name="EffectiveDate"
+                               data-validation="required"/>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -263,12 +266,27 @@
                            class="fa fa-info-circle red-text"
                            data-toggle="tooltip"
                            data-placement="top"
-                           title="Phòng ban là bắt buộc không được bỏ trống"></i>
-                        <input type="text"
-                               class="form-control"
-                               autocomplete="off"
-                               id="ReviewDate"
-                               name="ReviewDate" />
+                           title="Ngày soát xét là bắt buộc không được bỏ trống"></i>
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   autocomplete="off"
+                                   id="ReviewDate"
+                                   name="ReviewDate" 
+                                   data-validation="required"/>
+                            <div class="input-group-btn">
+                                <div class="btn-group-sm" data-toggle="buttons">
+                                    <button class="btn btn-sm btn-success"
+                                            id="OneYear">
+                                        1 @L(DocumentResourceNames.Year)
+                                    </button>
+                                    <button class="btn btn-sm btn-success"
+                                            id="TwoYear">
+                                        2 @L(DocumentResourceNames.Year)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -304,7 +322,7 @@
                                name="DCCAudited" />
                     </div>
                 </div>
-                <div class="col-md-4">
+                <!--<div class="col-md-4">
                     <div class="form-group">
                         <label>@L(DocumentResourceNames.Active)</label>
                         <i id="clientid-help"
@@ -319,7 +337,7 @@
                         <input type="hidden"
                                name="Active" />
                     </div>
-                </div>
+                </div>-->
 
                 <!--<div class="col-md-4">
                     <div class="form-group">
@@ -448,6 +466,18 @@
                 </div>
             </div>
         </div>
+        <div class="box-footer clearfix no-border">
+            <div class="mailbox-controls">
+                <div class="btn-group">
+                    <a href="@Url.Action("List")" class="btn btn-success btn-sm">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.List)
+                    </a>
+                    <button id="btnSubmit" type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-floppy-o" aria-hidden="true"></i> @Ls(DTWebConsts.LocalizationSourceName, DTWebResourceNames.Save)
+                    </button>
+                </div>
+            </div>
+        </div>
     </form>
 </div>
 
@@ -474,6 +504,9 @@
         let $ScopeOfApplication = $('#ScopeOfApplication');
         let $ScopeOfDeloyment = $('#ScopeOfDeloyment');
         let $Module = $('#Module');
+
+        let $OneYear = $('#OneYear');
+        let $TwoYear = $('#TwoYear');
 
         let $btnSubmit = $('#btnSubmit');
         let storedFiles = [];
@@ -598,7 +631,7 @@
     <!-- Gen document code-->
     <script>
         function genDocumentCode() {
-            return 'BM' + moment().format('Ymdhmmss');;
+            return 'PL' + moment().format('Ymdhmmss');;
         }
     </script>
     <!--Relate To Documents-->
@@ -769,7 +802,6 @@
                                 editor.on('select', function (event) {
                                     if (event.args) {
                                         let item = event.args.item;
-                                        console.log(item);
                                         if (!isVariableHaveDefaultVal(item)) {
                                             const document = documents.filter(document => document.displayText === item.label);
                                             if (!isVariableHaveDefaultVal(document)) {
@@ -1105,6 +1137,10 @@
                     departments = data.map((department) => {
                         return { id: department.code, text: department.name };
                     });
+
+                    groups = data.map((department) => {
+                        return { id: department.code, text: department.name, email: department.email };
+                    });
                 });
         }
 
@@ -1132,7 +1168,7 @@
         function getAllDocumentTypes() {
             return $.getJSON(getAllDocumentTypesUrl,
                 function (data) {
-                    documentTypes = data.map((documentType) => {
+                    documentTypes = data.filter(t => t.code.toLowerCase() === 'pl').map((documentType) => {
                         return { id: documentType.code, text: documentType.name };
                     });
                 });
@@ -1174,16 +1210,29 @@
             return $(`<span>${text}</span>`);
         }
 
+        function formatGroupSelection(group) {
+            if (!group.id)
+                return group.text;
+            const text = group.text;
+            return $(`<span>${text}</span>`);
+        }
+
+        function formatGroupResult(group) {
+            if (!group.id)
+                return group.text;
+            const text = group.text;
+            return $(`<span>${text}</span><div><small style="color: #a5a0a0">Email: ${group.email}</small></div>`);
+        }
+
         $('#Code').val(genDocumentCode());
-        $('#ReviewNumber').inputmask("99/99", {
-            placeholder: "00/00",
-        });
+
+        $('#ReviewNumber').inputmask({ mask: "9*/9*" });
 
         Promise.all([getAllUsers(),
             getAllDepartments(),
             getAllCompanies(),
             getAllDocumentTypes(),
-            getAllGroupsFromActiveDirectory(),
+            // getAllGroupsFromActiveDirectory(),
             getAllModules(),
             getAllDocuments()
         ]).then(() => {
@@ -1217,8 +1266,12 @@
                 data: documentTypes
             });
 
+            $DocumentType.val(['PL']).trigger('change');;
+
             $ScopeOfDeloyment.select2({
-                data: groups
+                data: groups,
+                templateResult: formatGroupResult,
+                templateSelection: formatGroupSelection
             });
 
             $Module.select2({
@@ -1256,7 +1309,7 @@
             if (!isVariableHaveDefaultVal($Drafter.val()))
                 formData.set('Drafter', $Drafter.val().join(';'));
             if (!isVariableHaveDefaultVal($ScopeOfDeloyment.val()))
-                formData.set('ScopeOfDeployment', $ScopeOfDeloyment.val().join(';'));
+                formData.set('ScopeOfDeloyment', $ScopeOfDeloyment.val().join(';'));
 
             const relateToDocuments = getRelateToDocuments().map((document) => document.code);
             formData.set('RelateToDocuments', relateToDocuments.join(';'));
@@ -1270,7 +1323,7 @@
                 cache: false,
                 success: function (event, settings, xhr) {
                     xhr.message = {
-                        infor: 'Ban hành phụ lục mới thành công',
+                        infor: '@L(DocumentResourceNames.MessageCreateAppendiceSuccessed)',
                         returnUrl: `${hostUrl}/appendice/list`
                     };
                 }
@@ -1287,9 +1340,6 @@
                 language: cultureSelector,
                 showOn: 'focus',
                 autoclose: true
-            }).on("changeDate", function (e) {
-                $(this).trigger(enterKeyUp);
-                $(this).focus();
             });
 
             // Review date
@@ -1297,9 +1347,6 @@
                 language: cultureSelector,
                 showOn: 'focus',
                 autoclose: true
-            }).on("changeDate", function (e) {
-                $(this).trigger(enterKeyUp);
-                $(this).focus();
             });
 
             if (cultureSelector === 'vi-VN') {
@@ -1333,6 +1380,22 @@
                 if (!isVariableHaveDefaultVal(selectedDepartment)) {
                     $DepartmentName.val(selectedDepartment[0].text);
                 }
+            });
+
+            let format = 'DD/MM/YYYY HH:mm:ss';
+            if (cultureSelector !== 'en')
+                format = $.fn.datepicker.dates[cultureSelector].format.toUpperCase() + ' HH:mm:ss';
+            else
+                format = $.fn.datepicker.defaults.format.toUpperCase();
+
+            $OneYear.click(function () {
+                let date = moment($('#EffectiveDate').val(), format, false).add(1, 'year');
+                $('#ReviewDate').datepicker('setDate', date.toDate());
+            });
+
+            $TwoYear.click(function () {
+                let date = moment($('#EffectiveDate').val(), format, false).add(2, 'year');
+                $('#ReviewDate').datepicker('setDate', date.toDate());
             });
         });
     </script>

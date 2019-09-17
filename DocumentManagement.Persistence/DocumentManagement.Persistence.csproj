@@ -65,6 +65,7 @@
     <Compile Include="Configurations\ModuleConfiguration.cs" />
     <Compile Include="Configurations\PromulgateStatusConfiguration.cs" />
     <Compile Include="Configurations\StatusConfiguration.cs" />
+    <Compile Include="Configurations\UserGroupConfiguration.cs" />
     <Compile Include="DocumentDbContext.cs" />
     <Compile Include="DocumentDbInitializer.cs" />
     <Compile Include="DocumentManagementPersistenceModule.cs" />
@@ -91,6 +92,14 @@
     <Compile Include="Migrations\201908210740458_AddGroup.cs" />
     <Compile Include="Migrations\201908210740458_AddGroup.Designer.cs">
       <DependentUpon>201908210740458_AddGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908280126516_AddAppendiceNumberToAppendice.cs" />
+    <Compile Include="Migrations\201908280126516_AddAppendiceNumberToAppendice.Designer.cs">
+      <DependentUpon>201908280126516_AddAppendiceNumberToAppendice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201909130434131_AddUserGroups.cs" />
+    <Compile Include="Migrations\201909130434131_AddUserGroups.Designer.cs">
+      <DependentUpon>201909130434131_AddUserGroups.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -131,6 +140,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908210740458_AddGroup.resx">
       <DependentUpon>201908210740458_AddGroup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908280126516_AddAppendiceNumberToAppendice.resx">
+      <DependentUpon>201908280126516_AddAppendiceNumberToAppendice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909130434131_AddUserGroups.resx">
+      <DependentUpon>201909130434131_AddUserGroups.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

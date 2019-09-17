@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DocumentManagement.Application.Appendices.Queries
 {
@@ -32,5 +34,18 @@ namespace DocumentManagement.Application.Appendices.Queries
         public bool DDCAudited { get; set; }
         public string FolderName { get; set; }
         public string LinkFile { get; set; }
+
+        public string RelateToDocumentNames
+        {
+            get
+            {
+                if (ListRelateToDocuments != null && ListRelateToDocuments.Any())
+                {
+                    return string.Join(";", ListRelateToDocuments);
+                }
+                return string.Empty;
+            }
+        }
+        public List<string> ListRelateToDocuments { get; set; }
     }
 }

@@ -342,6 +342,19 @@
         let $ScopeOfDeloyment = $('#ScopeOfDeloyment');
         let $Module = $('#Module');
 
+         const documentCodeText = '@L(DocumentResourceNames.Code)';
+        const documentNameText = '@L(DocumentResourceNames.Name)';
+        const companyText = '@L(DocumentResourceNames.CompanyCode)';
+        const departmentText = '@L(DocumentResourceNames.DepartmentCode)';
+        const moduleText = '@L(DocumentResourceNames.Module)';
+        const documentNumberText = '@L(DocumentResourceNames.DocumentNumber)';
+         const reviewNumberText = '@L(DocumentResourceNames.ReviewNumber)';
+        const documentTypeText = '@L(DocumentResourceNames.DocumentType)';
+        const relateDocumentText = '@L(DocumentResourceNames.RelateToDocuments)';
+        const replaceOfText = '@L(DocumentResourceNames.ReplaceOf)';
+        const effectiveDateText = '@L(DocumentResourceNames.EffectiveDate)';
+        const reviewDateText = '@L(DocumentResourceNames.ReviewDate)';
+
         let relateToDocuments = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(
     Newtonsoft.Json.JsonConvert.SerializeObject(Model.RelateToDocuments, new Newtonsoft.Json.JsonSerializerSettings { ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver() })))");
         let replaceToDocuments = JSON.parse("@Html.Raw(HttpUtility.JavaScriptStringEncode(
@@ -726,7 +739,7 @@
                         },
 
                         {
-                            text: 'Tên tài liệu',
+                            text: documentNameText,
                             columntype: 'textbox',
                             datafield: 'name',
                             pinned: false,
@@ -734,7 +747,7 @@
                             width: 300
                         },
                         {
-                            text: 'Số hiệu',
+                            text: documentNumberText,
                             columntype: 'textbox',
                             datafield: 'documentNumber',
                             pinned: false,
@@ -742,7 +755,7 @@
                             width: 100
                         },
                         {
-                            text: 'Ban hành ngày',
+                            text: effectiveDateText,
                             datafield: 'effectiveDate',
                             columntype: 'datetimeinput',
                             width: 110,
@@ -753,7 +766,7 @@
                             editable: false
                         },
                         {
-                            text: 'Soán xét',
+                            text: reviewDateText,
                             datafield: 'reviewDate',
                             columntype: 'datetimeinput',
                             width: 110,
@@ -889,7 +902,7 @@
                             }
                         },
                         {
-                            text: 'Tên tài liệu',
+                            text: documentNameText,
                             columntype: 'textbox',
                             datafield: 'name',
                             pinned: false,
@@ -897,7 +910,7 @@
                             width: 300
                         },
                         {
-                            text: 'Số hiệu',
+                            text: documentNumberText,
                             columntype: 'textbox',
                             datafield: 'documentNumber',
                             pinned: false,
@@ -905,7 +918,7 @@
                             width: 100
                         },
                         {
-                            text: 'Ban hành ngày',
+                            text: effectiveDateText,
                             datafield: 'effectiveDate',
                             columntype: 'datetimeinput',
                             width: 110,
@@ -916,7 +929,7 @@
                             editable: false
                         },
                         {
-                            text: 'Soán xét',
+                            text: reviewDateText,
                             datafield: 'reviewDate',
                             columntype: 'datetimeinput',
                             width: 110,
@@ -1043,7 +1056,7 @@
                             width: 300
                         },
                         {
-                            text: 'Số hiệu',
+                            text: documentNumberText,
                             columntype: 'textbox',
                             datafield: 'documentNumber',
                             pinned: false,
@@ -1051,7 +1064,7 @@
                             width: 150
                         },
                         {
-                            text: 'Số soán xét',
+                            text: reviewDateText,
                             columntype: 'textbox',
                             datafield: 'reviewNumber',
                             pinned: false,

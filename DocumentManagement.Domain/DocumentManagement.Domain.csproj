@@ -50,6 +50,7 @@
     <Compile Include="Entities\Module.cs" />
     <Compile Include="Entities\PromulgateStatus.cs" />
     <Compile Include="Entities\Status.cs" />
+    <Compile Include="Entities\UserGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

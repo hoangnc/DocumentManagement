@@ -1,0 +1,241 @@
+﻿
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles{
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="/Scripts/jqwidgets/styles/jqx.light.css" type="text/css" />
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Scripts/admin_lte/bower_components/select2/dist/css/select2.min.css">
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-info">
+            <div class="box-header">
+                <h3 class="box-title">Danh sách User - Groups</h3>
+                <div class="box-tools pull-right">
+                </div>
+                <div class="mailbox-controls">
+                    <div class="box-tools pull-right">
+                        <input id="txtSearch"
+                               class="form-control"
+                               placeholder="Tìm kiếm" />
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                        <div id="grdUserGroups"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <!-- Select 2-->
+    <script src="~/Scripts/admin_lte/bower_components/select2/dist/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxmenu.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.edit.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.selection.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.columnsresize.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxtextarea.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxcalendar.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxnumberinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxdatetimeinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxgrid.pager.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxinput.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/jqxtabs.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/globalization/globalize.js"></script>
+    <script type="text/javascript" src="~/Scripts/jqwidgets/localization.js"></script>
+    <script type="text/javascript" src="~/Scripts/demos.js"></script>
+    <script type="text/javascript">
+        Globalize.cultureSelector = "vi";
+    </script>
+    <script>
+        const getAllDepartmentsUrl = `${hostUrl}/api/masterdatas/getalldepartments`;
+
+        const insertOrUpdateUserScopeUrl = `${hostUrl}/api/userscopes/insertorupdate`;
+        let departments
+
+        const txtSearch = $('#txtSearch');
+        const grdUserGroups = $("#grdUserGroups");
+
+        const updateScopeUrl = `${hostUrl}/administration/scopes/update`;
+
+        txtSearch.on("keyup", function (e) {
+            const key = event.charCode ? event.charCode : event.keyCode ? event.keyCode : 0;
+            if (key === 13) {
+                grdUserGroups.jqxGrid('updatebounddata');
+            }
+        });
+
+
+        // Get departments
+        function getAllDepartments() {
+            return $.getJSON(getAllDepartmentsUrl,
+                function (data) {
+                    departments = data.map((department) => {
+                        return { id: department.code, text: department.name, email: department.email };
+                    });
+                });
+        }
+
+        function formatGroupSelection(group) {
+            if (!group.id)
+                return group.text;
+            const text = group.text;
+            return $(`<span>${text}</span>`);
+        }
+
+        function formatGroupResult(group) {
+            if (!group.id)
+                return group.text;
+            const text = group.text;
+            return $(`<span>${text}</span><div><small style="color: #a5a0a0">Email: ${group.email}</small></div>`);
+        }
+
+        const initrowdetails = function (index, parentElement, gridElement, datarecord) {
+            let container = $($(parentElement).children()[0]);
+            if (container != null) {
+                const selectGroups = container.find('#selectGroups');
+
+                selectGroups.select2({
+                    data: departments,
+                    templateResult: formatGroupResult,
+                    templateSelection: formatGroupSelection
+                });
+
+                if (!isVariableHaveDefaltVal(datarecord.groups)) {
+                    selectGroups.val(datarecord.groups.split(';')).trigger('change');
+                }               
+
+                selectGroups.on("change", function (e) {
+                    let groups = '';
+                    if (!isVariableHaveDefaltVal(selectGroups.val()))
+                        groups = selectGroups.val().join(';');
+
+                    let data = {
+                        groups: groups,
+                        userName: datarecord.userName
+                    };
+
+                    $.ajax({
+                        url: insertOrUpdateUserScopeUrl,
+                        type: "POST",
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        success: function (event, settings, xhr) {
+                            xhr.message = {
+                                infor: 'Thêm người dùng vào group thành công',
+                                returnUrl: ''
+                            };
+                        }
+                    });
+                });
+            }
+        };
+
+        function initGrid() {
+            let source =
+            {
+                url: '@Url.ActionApiWithHost("usergroups", "searchusergroupsbytokenpaged")',
+                datatype: "json",
+                id: "id",
+                updaterow: function (rowid, rowdata, commit) {
+                    // synchronize with the server - send update command
+                    // call commit with parameter true if the synchronization with the server is successful
+                    // and with parameter false if the synchronization failder.
+                    commit(true);
+                },
+                cache: false,
+                pagesize: 20,
+                pagesizeoptions: ["20", "40", "60"],
+                datafields:
+                    [
+                        { name: 'id', type: 'int' },
+                        { name: 'userName', type: 'string' },
+                        { name: 'groups', type: 'string' }
+                    ],
+                root: 'data',
+                beforeprocessing: function (data) { source.totalrecords = data.total; }
+            };
+
+            let dataAdapter = new $.jqx.dataAdapter(source,
+            {
+                beforeSend: function (jqXHR, settings) {
+                    settings.url = `${settings.url}&token=${txtSearch.val()}`;
+                    jqXHR.setRequestHeader('token', txtSearch.val());
+                }
+                });
+
+            grdUserGroups.jqxGrid(
+                {
+                    width: '100%',
+                    height: 600,
+                    source: dataAdapter,
+                    pageable: true,
+                    autorowheight: true,
+                    columnsresize: true,
+                    altrows: true,
+                    editable: true,
+                    pagesizeoptions: ["20", "40", "60"],
+                    localization: getLocalization('vi'),
+                    selectionmode: 'singlerow',
+                    editmode: 'singlecell',
+                    showstatusbar: true,
+                    virtualMode: true,
+                    rowdetails: true,
+                    rowdetailstemplate: {
+                        rowdetails: `<div style='margin: 10px;'>
+                                            <select id="selectGroups" multiple style="width: 680px; height: 150px"><select>                                       
+                                     </div>`,
+                        rowdetailsheight: 250
+                    },
+                    ready: function () {
+                        const rows = grdUserGroups.jqxGrid('getdatainformation');
+                        for (let ri = 0; ri < rows.rowscount; ri++) {
+                            grdUserGroups.jqxGrid('showrowdetails', ri);
+                        }
+                    },
+                    initrowdetails: initrowdetails,
+
+                    renderGridRows: function (obj) {
+                        return obj.data;
+                    },
+                    columns: [
+                        {
+                            text: 'User',
+                            columntype: 'textbox',
+                            datafield: 'userName',
+                            pinned: false,
+                            editable: false,
+                            width: 700
+                        }
+                    ]
+                });
+        }
+
+        $(document).ready(function () {
+            Promise.all([getAllDepartments()
+            ]).then(() => {
+                initGrid();
+                // all requests finished successfully
+            }).catch((reason) => {
+                // all requests finished but one or more failed
+            })
+        });
+
+    </script>
+
+}

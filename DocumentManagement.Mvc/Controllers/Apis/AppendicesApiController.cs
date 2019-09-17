@@ -1,11 +1,13 @@
 ﻿using DocumentManagement.Application.Appendices.Commands;
 using DocumentManagement.Application.Appendices.Queries;
+using DocumentManagement.Application.Documents.Commands;
 using DT.Core.Data.Models;
 using DT.Core.Web.Common.Api.WebApi.Controllers;
 using DT.Core.Web.Common.Identity.Extensions;
 using MultipartDataMediaFormatter.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,8 +18,10 @@ using static DT.Core.Web.Common.Identity.Constants;
 
 namespace DocumentManagement.Mvc.Controllers.Apis
 {
-    public class AppendicesApiController : BaseApiController
+    public class AppendicesApiController : DocumentManagementApiControllerBase
     {
+        private readonly string UploadFolderPath = ConfigurationManager.AppSettings["UploadFolderPath"];
+
         [Route("api/appendices/searchappendicesbytokenpaged")]
         [HttpGet]
         [ResourceAuthorize(DtPermissionBaseTypes.Read, DocumentResources.ApiAppendices)]
@@ -44,6 +48,19 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             return await Mediator.Send(createAppendiceCommand);
         }
 
+        [Route("api/appendices/update")]
+        [HttpPost]
+        [ResourceAuthorize(DtPermissionBaseTypes.Write, DocumentResources.ApiAppendices)]
+        public async Task<int> Update([FromBody]UpdateAppendiceCommand updateAppendiceCommand)
+        {
+            updateAppendiceCommand.ModifiedBy = User.Identity.GetUserName();
+            updateAppendiceCommand.ModifiedOn = DateTime.Now;
+            updateAppendiceCommand.Deleted = false;
+            updateAppendiceCommand.FileName = await UploadAppendices(updateAppendiceCommand);
+
+            return await Mediator.Send(updateAppendiceCommand);
+        }
+
 
         [Route("api/appendices/delete")]
         [HttpPost]
@@ -56,6 +73,14 @@ namespace DocumentManagement.Mvc.Controllers.Apis
             }
 
             return await Mediator.Send(deleteAppendiceCommand);
+        }
+
+        [Route("api/appendices/deletefile")]
+        [HttpPost]
+        [ResourceAuthorize(DtPermissionBaseTypes.Delete, DocumentResources.ApiAppendices)]
+        public async Task<int> DeleteFile([FromBody]DeleteAppendiceFileCommand deleteAppendiceFileCommand)
+        {
+            return await Mediator.Send(deleteAppendiceFileCommand);
         }
 
         public void SaveAs(string filePath, HttpFile httpFile)
@@ -72,15 +97,36 @@ namespace DocumentManagement.Mvc.Controllers.Apis
         private Task<string> UploadAppendices(CreateAppendiceCommand command)
         {
             List<string> files = new List<string>();
-            if (command.Files.Any())
+            string folderPath = GetFolderPath(command.Code);
+            if (command.Files != null && command.Files.Any())
             {
                 foreach (HttpFile file in command.Files)
                 {
-                    string filePath = HttpContext.Current.Server.MapPath("~/" + $"Uploads/{command.DocumentType}/{file.FileName}");
+                    string filePath = $"{folderPath}/{file.FileName}";
+                    command.LinkFile = $"/downloadfile/viewfile?sourcedoc={folderPath.Replace(UploadFolderPath, string.Empty)}/{file.FileName}";
                     files.Add(file.FileName);
                     SaveAs(filePath, file);
                 }
             }
+
+            return Task.FromResult(string.Join(";", files));
+        }
+
+        private Task<string> UploadAppendices(UpdateAppendiceCommand command)
+        {
+            List<string> files = new List<string>();
+            string folderPath = GetFolderPath(command.Code);
+            if (command.Files != null && command.Files.Any())
+            {
+                foreach (HttpFile file in command.Files)
+                {
+                    string filePath = $"{folderPath}/{file.FileName}";
+                    command.LinkFile = $"/downloadfile/viewfile?sourcedoc={folderPath.Replace(UploadFolderPath, string.Empty)}/{file.FileName}";
+                    files.Add(file.FileName);
+                    SaveAs(filePath, file);
+                }
+            }
+
             return Task.FromResult(string.Join(";", files));
         }
     }

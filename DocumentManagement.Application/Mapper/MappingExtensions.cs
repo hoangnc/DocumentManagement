@@ -78,6 +78,11 @@ namespace DocumentManagement.Application.Mapper
         {
             return command.MapTo<CreateAppendiceCommand, Appendice>();
         }
+
+        public static GetAppendiceByIdDto ToGetAppendiceByIdDto(this Appendice entity)
+        {
+            return entity.MapTo<Appendice, GetAppendiceByIdDto>();
+        }
         #endregion
 
         #region DocumentTypes

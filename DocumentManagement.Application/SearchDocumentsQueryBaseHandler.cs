@@ -2,6 +2,7 @@
 using DT.Core.Text;
 using OfficeOpenXml;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -13,7 +14,7 @@ namespace DocumentManagement.Application
     {
         protected List<string> FindFilesByToken(string token)
         {
-            string folder = HttpContext.Current.Server.MapPath("~/" + $"Uploads");
+            string folder = ConfigurationManager.AppSettings["UploadFolderPath"];
             List<string> fileNames = new List<string>();
             if (Directory.Exists(folder))
             {
