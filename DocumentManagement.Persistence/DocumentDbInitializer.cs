@@ -342,7 +342,7 @@ END
             groups.Add(new Group {
                 Code = "BTGD",
                 Name = ".1.Ban Tong Giam Doc",
-                Email = "BanTongGiamDoc@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted= false
@@ -352,7 +352,7 @@ END
             {
                 Code = "ATLD",
                 Name = ".An Toan Lao Dong",
-                Email = "antoan@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false
@@ -362,7 +362,7 @@ END
             {
                 Code = "BCC",
                 Name = ".Ba Cay Cau",
-                Email = "BaCayCau@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false
@@ -372,7 +372,7 @@ END
             {
                 Code = "BH",
                 Name = ".Ban Hang",
-                Email = "BanHang@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false
@@ -382,7 +382,7 @@ END
             {
                 Code = "BV",
                 Name = ".Bao Ve",
-                Email = "BaoVe@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false
@@ -392,7 +392,7 @@ END
             {
                 Code = "BD",
                 Name = ".Binh Duong",
-                Email = "binhduong@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false

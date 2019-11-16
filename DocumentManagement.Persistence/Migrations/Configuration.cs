@@ -229,7 +229,7 @@
             {
                 Code = "BTGD",
                 Name = ".1.Ban Tong Giam Doc",
-                Email = "BanTongGiamDoc@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false
@@ -239,7 +239,7 @@
             {
                 Code = "ATLD",
                 Name = ".An Toan Lao Dong",
-                Email = "antoan@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false
@@ -249,7 +249,7 @@
             {
                 Code = "BCC",
                 Name = ".Ba Cay Cau",
-                Email = "BaCayCau@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false
@@ -259,7 +259,7 @@
             {
                 Code = "BH",
                 Name = ".Ban Hang",
-                Email = "BanHang@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false
@@ -269,7 +269,7 @@
             {
                 Code = "BV",
                 Name = ".Bao Ve",
-                Email = "BaoVe@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false
@@ -279,7 +279,7 @@
             {
                 Code = "BD",
                 Name = ".Binh Duong",
-                Email = "binhduong@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false
@@ -289,7 +289,7 @@
             {
                 Code = "ISO",
                 Name = ".ISO",
-                Email = "ISO@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false
@@ -299,7 +299,7 @@
             {
                 Code = "ERP",
                 Name = ".ERP",
-                Email = "ERP@duytan.com",
+                Email = "diemhoang8488@gmail.com",
                 CreatedBy = createdBy,
                 CreatedOn = DateTime.Now,
                 Deleted = false
